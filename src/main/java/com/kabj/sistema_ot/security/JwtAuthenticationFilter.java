@@ -1,4 +1,4 @@
-package com.kabj.security;
+package com.kabj.sistema_ot.security;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

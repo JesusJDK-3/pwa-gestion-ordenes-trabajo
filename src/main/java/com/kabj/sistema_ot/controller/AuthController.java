@@ -1,6 +1,6 @@
-package com.kabj.controller;
+package com.kabj.sistema_ot.controller;
 
-import com.kabj.security.JwtTokenProvider;
+import com.kabj.sistema_ot.security.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

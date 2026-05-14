@@ -1,7 +1,7 @@
-package com.kabj.config;
+package com.kabj.sistema_ot.config;
 
-import com.kabj.security.JwtAuthenticationFilter;
-import com.kabj.security.JwtTokenProvider;
+import com.kabj.sistema_ot.security.JwtAuthenticationFilter;
+import com.kabj.sistema_ot.security.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -38,3 +38,4 @@ public class SecurityConfig {
         return http.build();
     }
 }
+

@@ -1,5 +1,5 @@
 // Ubicación: java/com.kabj/security/JwtTokenProvider.java
-package com.kabj.security;
+package com.kabj.sistema_ot.security;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
