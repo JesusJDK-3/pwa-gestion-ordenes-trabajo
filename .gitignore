@@ -1,10 +1,22 @@
-HELP.md
-target/
-.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
+# ─── FRONTEND ───────────────────────────
+frontend/node_modules/
+frontend/dist/
+frontend/.env
+frontend/.env.local
 
-### STS ###
+# ─── BACKEND ────────────────────────────
+backend/target/
+backend/.mvn/wrapper/maven-wrapper.jar
+backend/.env
+
+# ─── IDE / OS ────────────────────────────
+.vscode/settings.json
+.idea/
+*.iws
+*.iml
+*.ipr
+.DS_Store
+Thumbs.db
 .apt_generated
 .classpath
 .factorypath
@@ -12,22 +24,14 @@ target/
 .settings
 .springBeans
 .sts4-cache
-
-### IntelliJ IDEA ###
-.idea
-*.iws
-*.iml
-*.ipr
-
-### NetBeans ###
 /nbproject/private/
 /nbbuild/
 /dist/
 /nbdist/
 /.nb-gradle/
-build/
-!**/src/main/**/build/
-!**/src/test/**/build/
 
-### VS Code ###
-.vscode/
+# ─── SECRETOS ────────────────────────────
+*.env
+*.env.local
+application-prod.properties
+backend/src/main/resources/application-prod.properties
