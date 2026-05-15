@@ -2,6 +2,7 @@ package com.kabj.sistema_ot.security;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import java.security.Key;
 import java.util.Date;
@@ -9,11 +10,14 @@ import java.util.Date;
 @Component
 public class JwtUtil {
 
-    private static final String SECRET = "kabj-sistema-ot-secret-key-2024-muy-larga-para-seguridad";
-    private static final long EXPIRATION = 1000 * 60 * 60 * 10; // 10 horas
+    @Value("${jwt.secret}")
+    private String secret;
+
+    @Value("${jwt.expiration}")
+    private long expiration;
 
     private Key getKey() {
-        return Keys.hmacShaKeyFor(SECRET.getBytes());
+        return Keys.hmacShaKeyFor(secret.getBytes());
     }
 
     public String generateToken(String username, String rol) {
@@ -21,7 +25,7 @@ public class JwtUtil {
                 .setSubject(username)
                 .claim("rol", rol)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION))
+                .setExpiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(getKey(), SignatureAlgorithm.HS256)
                 .compact();
     }

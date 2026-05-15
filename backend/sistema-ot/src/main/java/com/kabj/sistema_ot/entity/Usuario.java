@@ -3,6 +3,7 @@ package com.kabj.sistema_ot.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 import java.time.LocalDateTime;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Data
 @Entity
@@ -20,6 +21,7 @@ public class Usuario {
     @Column(nullable = false, unique = true, length = 60)
     private String username;
 
+    @JsonIgnore
     @Column(name = "password_hash", nullable = false, length = 255)
     private String passwordHash;
 
