@@ -1,0 +1,22 @@
+# ─── FRONTEND ───────────────────────────
+frontend/node_modules/
+frontend/dist/
+frontend/.env
+frontend/.env.local
+
+# ─── BACKEND ────────────────────────────
+backend/target/
+backend/.env
+
+# ─── IDE / OS ────────────────────────────
+.vscode/settings.json
+.idea/
+*.iml
+.DS_Store
+Thumbs.db
+
+# ─── SECRETOS ────────────────────────────
+*.env
+*.env.local
+application-prod.properties
+backend/src/main/resources/application-prod.properties
