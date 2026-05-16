@@ -178,6 +178,3 @@ pwa-gestion-ordenes-trabajo/
 
 ---
 
-## Contacto del proyecto
-
-Proyecto académico — Consultores & Constructores K.A.B.J. S.A.C.
