@@ -3,6 +3,7 @@ import { ordenService, puntoService } from '../../services/api'
 import type { OrdenTrabajo, PuntoTrabajo, User } from '../../types'
 import api from '../../services/api'
 import type { ApiResponse } from '../../types'
+import { Filter, Loader2 } from 'lucide-react'
 
 export default function AsignarPuntos() {
   const [ordenes,   setOrdenes]   = useState<OrdenTrabajo[]>([])
@@ -36,21 +37,28 @@ export default function AsignarPuntos() {
     }
   }
 
-  const puntosFiltrados = filtro
-    ? puntos.filter(p => p.estado === filtro)
-    : puntos
+  const puntosFiltrados = filtro ? puntos.filter(p => p.estado === filtro) : puntos
+
+  const selectClass = 'border border-gray-200 rounded-xl px-3 py-2.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#CC1111]/20 focus:border-[#CC1111] transition-all'
 
   return (
-    <div className="space-y-5">
-      <h2 className="text-xl font-bold text-gray-800">Asignar Puntos a Capataces</h2>
+    <div className="space-y-6">
 
-      <div className="flex gap-3 flex-wrap">
+      {/* Page title */}
+      <div>
+        <h1 className="text-[22px] font-bold text-gray-900">Asignar Puntos a Capataces</h1>
+        <p className="text-sm text-gray-500 mt-0.5">Selecciona una orden para ver y asignar sus puntos</p>
+      </div>
+
+      {/* Filters */}
+      <div className="bg-white rounded-2xl shadow-card p-4 flex gap-3 flex-wrap items-center">
+        <Filter size={16} className="text-gray-400" />
         <select
           value={ordenId ?? ''}
           onChange={e => setOrdenId(e.target.value ? Number(e.target.value) : null)}
-          className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1D9E75]"
+          className={`flex-1 min-w-[200px] ${selectClass}`}
         >
-          <option value="">Seleccionar orden…</option>
+          <option value="">Seleccionar orden de trabajo…</option>
           {ordenes.map(o => (
             <option key={o.id} value={o.id}>{o.codigoOt} — {o.descripcion}</option>
           ))}
@@ -59,55 +67,74 @@ export default function AsignarPuntos() {
         <select
           value={filtro}
           onChange={e => setFiltro(e.target.value)}
-          className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1D9E75]"
+          className={selectClass}
         >
           <option value="">Todos los estados</option>
-          {['PENDIENTE','EN_PROGRESO','COMPLETADO','OBSERVADO'].map(s => (
+          {['PENDIENTE', 'EN_PROGRESO', 'COMPLETADO', 'OBSERVADO'].map(s => (
             <option key={s} value={s}>{s}</option>
           ))}
         </select>
       </div>
 
+      {/* Table */}
       {!ordenId ? (
-        <p className="text-gray-400 text-sm py-8 text-center">Selecciona una orden para ver sus puntos.</p>
+        <div className="bg-white rounded-2xl shadow-card p-12 text-center text-gray-400">
+          <div className="w-16 h-16 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-3">
+            <Filter size={28} className="opacity-40" />
+          </div>
+          <p className="text-sm">Selecciona una orden para ver sus puntos.</p>
+        </div>
       ) : (
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead className="bg-gray-50 text-xs text-gray-500">
-              <tr>
-                {['Descripción','Dirección','Estado','Capataz asignado','Acción'].map(h => (
-                  <th key={h} className="px-4 py-3 text-left font-medium">{h}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-50">
-              {puntosFiltrados.length === 0 ? (
-                <tr><td colSpan={5} className="px-4 py-8 text-center text-gray-400">Sin puntos.</td></tr>
-              ) : puntosFiltrados.map(p => (
-                <tr key={p.id} className="hover:bg-gray-50">
-                  <td className="px-4 py-3 text-gray-800">{p.descripcion}</td>
-                  <td className="px-4 py-3 text-gray-500 max-w-xs truncate">{p.direccion}</td>
-                  <td className="px-4 py-3">
-                    <EstadoBadge estado={p.estado} />
-                  </td>
-                  <td className="px-4 py-3 text-gray-600">{p.capatazNombre ?? '—'}</td>
-                  <td className="px-4 py-3">
-                    <select
-                      defaultValue={p.capatazId ?? ''}
-                      onChange={e => handleAsignar(p.id, Number(e.target.value))}
-                      disabled={saving[p.id]}
-                      className="border border-gray-300 rounded px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-[#1D9E75]"
-                    >
-                      <option value="">Sin asignar</option>
-                      {capataces.map(c => (
-                        <option key={c.id} value={c.id}>{c.nombre}</option>
-                      ))}
-                    </select>
-                  </td>
+        <div className="bg-white rounded-2xl shadow-card overflow-hidden">
+          <div className="px-6 py-4 border-b border-gray-100">
+            <h2 className="font-semibold text-gray-800">
+              Puntos{filtro ? ` · ${filtro}` : ''}{' '}
+              <span className="text-gray-400 font-normal text-sm">({puntosFiltrados.length})</span>
+            </h2>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="bg-gray-50 text-gray-500 text-xs uppercase tracking-wide">
+                  {['Descripción', 'Dirección', 'Estado', 'Capataz asignado', 'Acción'].map(h => (
+                    <th key={h} className="px-5 py-3 text-left font-semibold">{h}</th>
+                  ))}
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-gray-50">
+                {puntosFiltrados.length === 0 ? (
+                  <tr>
+                    <td colSpan={5} className="px-5 py-10 text-center text-gray-400 text-sm">
+                      Sin puntos que coincidan con el filtro.
+                    </td>
+                  </tr>
+                ) : puntosFiltrados.map(p => (
+                  <tr key={p.id} className="hover:bg-gray-50/60 transition-colors">
+                    <td className="px-5 py-3.5 font-medium text-gray-800">{p.descripcion}</td>
+                    <td className="px-5 py-3.5 text-gray-500 max-w-xs truncate">{p.direccion}</td>
+                    <td className="px-5 py-3.5"><EstadoBadge estado={p.estado} /></td>
+                    <td className="px-5 py-3.5 text-gray-600 text-[13px]">{p.capatazNombre ?? <span className="text-gray-300">—</span>}</td>
+                    <td className="px-5 py-3.5">
+                      <div className="flex items-center gap-2">
+                        <select
+                          defaultValue={p.capatazId ?? ''}
+                          onChange={e => handleAsignar(p.id, Number(e.target.value))}
+                          disabled={saving[p.id]}
+                          className="border border-gray-200 rounded-lg px-2 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-[#CC1111]/20 focus:border-[#CC1111] bg-white transition-all disabled:opacity-60"
+                        >
+                          <option value="">Sin asignar</option>
+                          {capataces.map(c => (
+                            <option key={c.id} value={c.id}>{c.nombre}</option>
+                          ))}
+                        </select>
+                        {saving[p.id] && <Loader2 size={14} className="animate-spin text-[#CC1111]" />}
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
     </div>
@@ -122,7 +149,7 @@ function EstadoBadge({ estado }: { estado: string }) {
     OBSERVADO:   'bg-yellow-100 text-yellow-700',
   }
   return (
-    <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${map[estado] ?? 'bg-gray-100'}`}>
+    <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${map[estado] ?? 'bg-gray-100'}`}>
       {estado}
     </span>
   )

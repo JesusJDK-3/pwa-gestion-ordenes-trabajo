@@ -37,6 +37,16 @@ if ! command -v node &>/dev/null; then
 fi
 echo -e "${GREEN}  ✓ Node: $(node --version)${NC}"
 
+# Verificar que PostgreSQL esté accesible en el puerto 5432
+PG_HOST="${PG_HOST:-localhost}"
+PG_PORT="${PG_PORT:-5432}"
+if ! (echo >/dev/tcp/$PG_HOST/$PG_PORT) 2>/dev/null; then
+  echo -e "${RED}✗ PostgreSQL no responde en $PG_HOST:$PG_PORT.${NC}"
+  echo -e "  Asegúrate de que el servicio PostgreSQL esté iniciado y el puerto $PG_PORT abierto."
+  exit 1
+fi
+echo -e "${GREEN}  ✓ PostgreSQL accesible en $PG_HOST:$PG_PORT${NC}"
+
 # ── 2. Frontend: instalar deps si falta node_modules ────────
 echo ""
 echo -e "${YELLOW}[2/4] Verificando dependencias frontend...${NC}"

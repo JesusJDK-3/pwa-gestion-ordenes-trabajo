@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { puntoService } from '../../services/api'
 import { useOfflineSync } from '../../hooks/useOfflineSync'
 import type { ApiResponse, PuntoTrabajo } from '../../types'
+import { Clock3, CheckCircle2, AlertCircle, Map, WifiOff, ArrowRight } from 'lucide-react'
 
 export default function CapatazDashboard() {
   const [puntos,  setPuntos]  = useState<PuntoTrabajo[]>([])
@@ -19,70 +20,108 @@ export default function CapatazDashboard() {
   const enProgreso  = puntos.filter(p => p.estado === 'EN_PROGRESO')
   const completados = puntos.filter(p => p.estado === 'COMPLETADO')
 
-  if (loading) return <div className="text-center py-12 text-gray-500">Cargando…</div>
+  if (loading) return <PageSkeleton />
+
+  const stats = [
+    { label: 'Pendientes',  value: pendientes.length,  icon: Clock3,        bg: 'bg-gray-50',    text: 'text-gray-700',    icon_c: 'text-gray-400' },
+    { label: 'En progreso', value: enProgreso.length,  icon: AlertCircle,   bg: 'bg-orange-50',  text: 'text-orange-700',  icon_c: 'text-orange-500' },
+    { label: 'Completados', value: completados.length, icon: CheckCircle2,  bg: 'bg-emerald-50', text: 'text-emerald-700', icon_c: 'text-emerald-500' },
+  ]
 
   return (
     <div className="space-y-6">
-      <h2 className="text-xl font-bold text-gray-800">Mi Panel</h2>
+
+      {/* Page title */}
+      <div>
+        <h1 className="text-[22px] font-bold text-gray-900">Mi Panel</h1>
+        <p className="text-sm text-gray-500 mt-0.5">Resumen de tus puntos asignados</p>
+      </div>
 
       {/* Offline alert */}
       {!isOnline && (
-        <div className="bg-red-50 border border-red-200 rounded-xl px-5 py-4 text-red-700 text-sm font-medium">
-          📵 Sin conexión — Los registros se guardarán localmente ({pendingCount} pendiente{pendingCount !== 1 ? 's' : ''})
+        <div className="flex items-center gap-3 bg-red-50 border border-red-100 rounded-2xl px-5 py-4 text-red-700 text-sm font-medium">
+          <WifiOff size={18} className="flex-shrink-0" />
+          Sin conexión — Los registros se guardarán localmente ({pendingCount} pendiente{pendingCount !== 1 ? 's' : ''})
         </div>
       )}
 
       {/* Stats */}
       <div className="grid grid-cols-3 gap-4">
-        {[
-          { label: 'Pendientes',   value: pendientes.length,  color: 'bg-gray-50 text-gray-700' },
-          { label: 'En progreso',  value: enProgreso.length,  color: 'bg-orange-50 text-orange-700' },
-          { label: 'Completados',  value: completados.length, color: 'bg-emerald-50 text-emerald-700' },
-        ].map(c => (
-          <div key={c.label} className={`rounded-xl p-4 text-center ${c.color}`}>
-            <p className="text-2xl font-bold">{c.value}</p>
-            <p className="text-xs mt-1 opacity-75">{c.label}</p>
-          </div>
-        ))}
+        {stats.map(s => {
+          const Icon = s.icon
+          return (
+            <div key={s.label} className={`rounded-2xl p-5 ${s.bg} shadow-card`}>
+              <Icon size={20} className={`${s.icon_c} mb-3`} />
+              <p className={`text-3xl font-bold ${s.text}`}>{s.value}</p>
+              <p className="text-xs text-gray-500 mt-1">{s.label}</p>
+            </div>
+          )
+        })}
       </div>
 
-      {/* Botón mapa */}
+      {/* Map CTA */}
       <Link
         to="/capataz/mapa"
-        className="flex items-center justify-center gap-2 w-full bg-[#1D9E75] hover:bg-[#178060] text-white font-semibold py-3 rounded-xl transition-colors text-sm"
+        className="flex items-center justify-between w-full bg-[#1A2535] hover:bg-[#243347] text-white font-semibold py-4 px-5 rounded-2xl transition-colors shadow-card group"
       >
-        🗺️ Ver mis puntos en el mapa
+        <div className="flex items-center gap-3">
+          <div className="w-9 h-9 bg-white/10 rounded-xl flex items-center justify-center">
+            <Map size={18} />
+          </div>
+          Ver mis puntos en el mapa
+        </div>
+        <ArrowRight size={18} className="opacity-50 group-hover:opacity-100 transition-opacity" />
       </Link>
 
-      {/* Lista de puntos activos */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+      {/* Puntos activos */}
+      <div className="bg-white rounded-2xl shadow-card overflow-hidden">
         <div className="px-5 py-4 border-b border-gray-100">
-          <h3 className="font-semibold text-gray-800">Puntos activos ({pendientes.length + enProgreso.length})</h3>
+          <h2 className="font-semibold text-gray-800">
+            Puntos activos{' '}
+            <span className="text-gray-400 font-normal text-sm">({pendientes.length + enProgreso.length})</span>
+          </h2>
         </div>
         {[...enProgreso, ...pendientes].length === 0 ? (
-          <p className="px-5 py-8 text-center text-gray-400 text-sm">No tienes puntos activos.</p>
+          <div className="px-5 py-10 text-center text-gray-400">
+            <CheckCircle2 size={32} className="mx-auto mb-2 text-emerald-400" />
+            <p className="text-sm">No tienes puntos activos.</p>
+          </div>
         ) : (
           <ul className="divide-y divide-gray-50">
             {[...enProgreso, ...pendientes].map(p => (
               <li key={p.id} className="px-5 py-4 flex items-start justify-between gap-4">
                 <div>
-                  <p className="text-sm font-medium text-gray-800">{p.descripcion}</p>
+                  <p className="text-sm font-semibold text-gray-800">{p.descripcion}</p>
                   <p className="text-xs text-gray-500 mt-0.5">{p.direccion}</p>
-                  <span className={`inline-block mt-1.5 text-xs px-2 py-0.5 rounded-full font-medium ${
+                  <span className={`inline-block mt-2 text-xs px-2.5 py-0.5 rounded-full font-medium ${
                     p.estado === 'EN_PROGRESO' ? 'bg-orange-100 text-orange-700' : 'bg-gray-100 text-gray-600'
                   }`}>{p.estado}</span>
                 </div>
                 <Link
                   to={`/capataz/registrar/${p.id}`}
-                  className="flex-shrink-0 text-xs bg-[#1D9E75] hover:bg-[#178060] text-white px-3 py-1.5 rounded-lg font-medium transition-colors"
+                  className="flex-shrink-0 flex items-center gap-1.5 text-xs bg-[#CC1111] hover:bg-[#AA0E0E] text-white px-3 py-2 rounded-xl font-semibold transition-colors"
                 >
                   Registrar
+                  <ArrowRight size={12} />
                 </Link>
               </li>
             ))}
           </ul>
         )}
       </div>
+    </div>
+  )
+}
+
+function PageSkeleton() {
+  return (
+    <div className="space-y-6 animate-pulse">
+      <div className="h-8 w-32 bg-gray-200 rounded-lg" />
+      <div className="grid grid-cols-3 gap-4">
+        {[...Array(3)].map((_, i) => <div key={i} className="h-28 bg-gray-200 rounded-2xl" />)}
+      </div>
+      <div className="h-14 bg-gray-200 rounded-2xl" />
+      <div className="h-64 bg-gray-200 rounded-2xl" />
     </div>
   )
 }

@@ -4,8 +4,8 @@ import L from 'leaflet'
 import { useNavigate } from 'react-router-dom'
 import { puntoService } from '../../services/api'
 import type { ApiResponse, EstadoPunto, PuntoTrabajo } from '../../types'
+import { ArrowRight } from 'lucide-react'
 
-// Fix Leaflet default marker icon en bundlers
 delete (L.Icon.Default.prototype as unknown as Record<string, unknown>)._getIconUrl
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon-2x.png',
@@ -20,9 +20,16 @@ const ESTADO_COLORS: Record<EstadoPunto, string> = {
   OBSERVADO:   '#eab308',
 }
 
+const ESTADO_LABELS: Record<EstadoPunto, string> = {
+  PENDIENTE:   'Pendiente',
+  EN_PROGRESO: 'En progreso',
+  COMPLETADO:  'Completado',
+  OBSERVADO:   'Observado',
+}
+
 function createIcon(estado: EstadoPunto) {
   return L.divIcon({
-    html: `<div style="width:18px;height:18px;background:${ESTADO_COLORS[estado]};border-radius:50%;border:2px solid white;box-shadow:0 2px 4px rgba(0,0,0,.4)"></div>`,
+    html: `<div style="width:18px;height:18px;background:${ESTADO_COLORS[estado]};border-radius:50%;border:2.5px solid white;box-shadow:0 2px 6px rgba(0,0,0,.35)"></div>`,
     iconSize:   [18, 18],
     iconAnchor: [9, 9],
     className:  '',
@@ -51,53 +58,63 @@ export default function MapaPuntos() {
       .finally(() => setLoading(false))
   }, [])
 
-  if (loading) return <div className="text-center py-12 text-gray-500">Cargando mapa…</div>
+  if (loading) return (
+    <div className="space-y-4 animate-pulse">
+      <div className="h-8 w-48 bg-gray-200 rounded-lg" />
+      <div className="h-[calc(100vh-200px)] bg-gray-200 rounded-2xl" />
+    </div>
+  )
 
   return (
     <div className="space-y-4 h-full">
-      <div className="flex items-center justify-between">
-        <h2 className="text-xl font-bold text-gray-800">Mapa de mis puntos</h2>
+
+      {/* Header */}
+      <div className="flex items-start justify-between flex-wrap gap-3">
+        <div>
+          <h1 className="text-[22px] font-bold text-gray-900">Mapa de mis puntos</h1>
+          <p className="text-sm text-gray-500 mt-0.5">{puntos.length} punto{puntos.length !== 1 ? 's' : ''} asignado{puntos.length !== 1 ? 's' : ''}</p>
+        </div>
+
         {/* Leyenda */}
-        <div className="flex gap-3 text-xs flex-wrap">
+        <div className="flex flex-wrap gap-2">
           {(Object.entries(ESTADO_COLORS) as [EstadoPunto, string][]).map(([estado, color]) => (
-            <span key={estado} className="flex items-center gap-1">
-              <span className="w-3 h-3 rounded-full border border-white shadow-sm" style={{ background: color }} />
-              {estado}
+            <span
+              key={estado}
+              className="flex items-center gap-1.5 text-xs bg-white rounded-xl px-3 py-1.5 shadow-card border border-gray-100 font-medium text-gray-600"
+            >
+              <span className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ background: color }} />
+              {ESTADO_LABELS[estado]}
             </span>
           ))}
         </div>
       </div>
 
-      <div className="rounded-xl overflow-hidden shadow-sm border border-gray-200" style={{ height: 'calc(100vh - 200px)' }}>
-        <MapContainer
-          center={[-12.046, -77.043]}
-          zoom={12}
-          style={{ height: '100%', width: '100%' }}
-        >
+      {/* Map */}
+      <div className="rounded-2xl overflow-hidden shadow-card border border-gray-200/60" style={{ height: 'calc(100vh - 200px)' }}>
+        <MapContainer center={[-12.046, -77.043]} zoom={12} style={{ height: '100%', width: '100%' }}>
           <TileLayer
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             attribution='&copy; <a href="https://openstreetmap.org">OpenStreetMap</a>'
           />
           <FitBounds puntos={puntos} />
           {puntos.map(p => (
-            <Marker
-              key={p.id}
-              position={[p.latitud, p.longitud]}
-              icon={createIcon(p.estado)}
-            >
+            <Marker key={p.id} position={[p.latitud, p.longitud]} icon={createIcon(p.estado)}>
               <Popup>
-                <div className="text-sm min-w-[200px]">
+                <div className="text-sm min-w-[200px] font-sans">
                   <p className="font-semibold text-gray-800 mb-1">{p.descripcion}</p>
                   <p className="text-gray-500 text-xs mb-2">{p.direccion}</p>
-                  <span className={`inline-block text-xs px-2 py-0.5 rounded-full font-medium`}
-                    style={{ background: ESTADO_COLORS[p.estado] + '22', color: ESTADO_COLORS[p.estado] }}>
-                    {p.estado}
+                  <span
+                    className="inline-block text-xs px-2.5 py-1 rounded-full font-medium mb-3"
+                    style={{ background: ESTADO_COLORS[p.estado] + '22', color: ESTADO_COLORS[p.estado] }}
+                  >
+                    {ESTADO_LABELS[p.estado]}
                   </span>
                   <button
                     onClick={() => navigate(`/capataz/registrar/${p.id}`)}
-                    className="block w-full mt-3 text-center text-xs bg-[#1D9E75] text-white py-1.5 rounded-lg font-medium hover:bg-[#178060]"
+                    className="flex items-center justify-center gap-1.5 w-full text-xs bg-[#CC1111] hover:bg-[#AA0E0E] text-white py-2 rounded-lg font-semibold transition-colors"
                   >
                     Registrar actividad
+                    <ArrowRight size={12} />
                   </button>
                 </div>
               </Popup>
