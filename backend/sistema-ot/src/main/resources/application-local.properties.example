@@ -1,0 +1,17 @@
+# ──────────────────────────────────────────────────────────────────────────────
+# Plantilla para desarrollo local.
+# Copia este archivo como application-local.properties y ajusta los valores.
+# Este archivo NO debe subirse al repositorio (ya está en .gitignore).
+# ──────────────────────────────────────────────────────────────────────────────
+
+# Sobreescribe el password de PostgreSQL si no es "A18$7"
+spring.datasource.password=TU_PASSWORD_POSTGRES
+
+# Sobreescribe el secret del JWT en producción (mínimo 32 caracteres)
+jwt.secret=reemplaza-esto-por-una-clave-larga-y-aleatoria-en-produccion
+
+# Origen permitido si el frontend corre en otro puerto
+# cors.allowed-origin=http://localhost:3000
+
+# Mostrar SQL en consola (útil para debug)
+# spring.jpa.show-sql=true
