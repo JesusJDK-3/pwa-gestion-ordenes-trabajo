@@ -7,11 +7,13 @@ import com.kabj.sistema_ot.entity.RrhhCapataz;
 import com.kabj.sistema_ot.repository.CatEstadoOtRepository;
 import com.kabj.sistema_ot.repository.OpOrdenTrabajoRepository;
 import com.kabj.sistema_ot.repository.RrhhCapatazRepository;
+import com.kabj.sistema_ot.service.ExcelCargaService;
 import com.kabj.sistema_ot.service.OrdenTrabajoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -23,6 +25,7 @@ import java.util.Map;
 public class OrdenTrabajoController {
 
     private final OrdenTrabajoService ordenService;
+    private final ExcelCargaService excelCargaService;
     private final OpOrdenTrabajoRepository ordenRepo;
     private final RrhhCapatazRepository capatazRepository;
     private final CatEstadoOtRepository estadoRepo;
@@ -30,6 +33,21 @@ public class OrdenTrabajoController {
     @GetMapping("/ordenes")
     public ResponseEntity<List<OrdenTrabajoResponse>> listar() {
         return ResponseEntity.ok(ordenService.listarTodas());
+    }
+
+    @PostMapping("/ordenes/carga-excel")
+    public ResponseEntity<ApiResponse<Map<String, Object>>> cargarExcel(
+            @RequestParam("file") MultipartFile file,
+            Authentication auth) {
+        try {
+            String username = auth != null ? auth.getName() : "sistema";
+            Map<String, Object> resultado = excelCargaService.cargarExcel(file, username);
+            return ResponseEntity.ok(new ApiResponse<>(true,
+                    resultado.get("message").toString(), resultado));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest()
+                    .body(new ApiResponse<>(false, "Error al procesar Excel: " + e.getMessage(), null));
+        }
     }
 
     @GetMapping("/ordenes/{id}")

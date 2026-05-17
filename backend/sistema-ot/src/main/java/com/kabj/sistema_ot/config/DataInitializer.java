@@ -1,6 +1,7 @@
 package com.kabj.sistema_ot.config;
 
 import com.kabj.sistema_ot.entity.*;
+import com.kabj.sistema_ot.repository.CatSubactividadRepository;
 import com.kabj.sistema_ot.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,12 +28,14 @@ public class DataInitializer implements ApplicationRunner {
     private final PasswordEncoder passwordEncoder;
     private final RrhhTrabajadorRepository trabajadorRepository;
     private final RrhhCapatazRepository capatazRepository;
+    private final CatSubactividadRepository subactividadRepository;
 
     @Override
     @Transactional
     public void run(ApplicationArguments args) {
         seedRoles();
         seedUsuarios();
+        seedSubactividades();
     }
 
     private void seedRoles() {
@@ -75,6 +78,30 @@ public class DataInitializer implements ApplicationRunner {
             capatazRepository.save(buildCapataz(cap2, t2, "CAP-002"));
             log.info("Trabajadores y capataces creados.");
         }
+    }
+
+    private void seedSubactividades() {
+        if (subactividadRepository.count() > 0) return;
+        java.util.List<String[]> subacts = java.util.List.of(
+            new String[]{"INST_MED",   "Instalación de medidor"},
+            new String[]{"CAMB_MED",   "Cambio de medidor"},
+            new String[]{"INSP_RED",   "Inspección de red"},
+            new String[]{"MANT_VALV",  "Mantenimiento de válvula"},
+            new String[]{"REPAR_CAM",  "Reparación de cámara"},
+            new String[]{"REPAR_TUB",  "Reparación de tubería"},
+            new String[]{"LIMPIEZA",   "Limpieza de red"},
+            new String[]{"INSP_HID",   "Inspección de hidrante"},
+            new String[]{"OBRA_CIVIL", "Obra civil"},
+            new String[]{"OTRO",       "Otro trabajo"}
+        );
+        for (String[] s : subacts) {
+            CatSubactividad sub = new CatSubactividad();
+            sub.setCodigo(s[0]);
+            sub.setNombre(s[1]);
+            sub.setActivo(true);
+            subactividadRepository.save(sub);
+        }
+        log.info("Subactividades sembradas.");
     }
 
     private Rol buildRol(String codigo, String nombre, String descripcion) {

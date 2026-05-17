@@ -14,7 +14,10 @@ export default function AsignarPuntos() {
   const [filtro,    setFiltro]    = useState('')
 
   useEffect(() => {
-    ordenService.listar().then(r => setOrdenes((r.data as ApiResponse<OrdenTrabajo[]>).data ?? []))
+    ordenService.listar().then(r => {
+      const d = r.data as any
+      setOrdenes(Array.isArray(d) ? d : (d?.data ?? []))
+    })
     api.get<ApiResponse<User[]>>('/usuarios').then(r => {
       const todos = r.data.data ?? []
       setCapataces(todos.filter(u => u.rol === 'capataz'))

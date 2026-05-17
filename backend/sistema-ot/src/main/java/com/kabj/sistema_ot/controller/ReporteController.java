@@ -33,6 +33,25 @@ public class ReporteController {
         return ResponseEntity.ok(new ApiResponse<>(true, null, data));
     }
 
+    @GetMapping("/mensual")
+    public ResponseEntity<ApiResponse<Map<String, Object>>> mensual(
+            @RequestParam(required = false, defaultValue = "0") int mes,
+            @RequestParam(required = false, defaultValue = "0") int anio) {
+        var todas = ordenRepo.findByActivoTrueOrderByCreatedAtDesc();
+        long total       = todas.size();
+        long completadas = todas.stream().filter(o -> o.getEstadoOt() != null && "COMPLETADA".equals(o.getEstadoOt().getCodigo())).count();
+        long enProgreso  = todas.stream().filter(o -> o.getEstadoOt() != null && "EN_PROGRESO".equals(o.getEstadoOt().getCodigo())).count();
+        long pendientes  = todas.stream().filter(o -> o.getEstadoOt() != null && "PENDIENTE".equals(o.getEstadoOt().getCodigo())).count();
+        Map<String, Object> data = Map.of(
+                "total", total,
+                "completadas", completadas,
+                "enProgreso", enProgreso,
+                "pendientes", pendientes,
+                "periodo", (mes > 0 ? mes + "/" + anio : "general")
+        );
+        return ResponseEntity.ok(new ApiResponse<>(true, null, data));
+    }
+
     @GetMapping("/diario")
     public ResponseEntity<ApiResponse<List<Map<String, Object>>>> diario(@RequestParam(required = false) String fecha) {
         var ordenes = ordenRepo.findByActivoTrueOrderByCreatedAtDesc()
