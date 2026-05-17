@@ -1,105 +1,131 @@
-# KABJ GIS Field Operations
-> PWA para gestión de órdenes de trabajo de campo — Consultores & Constructores K.A.B.J. S.A.C.
+# KABJ GIS — Sistema de Operaciones de Campo
+> PWA para gestión de órdenes de trabajo de campo · SEDAPAL · Mantenimiento de Redes  
+> Consultores & Constructores K.A.B.J. S.A.C.
+
+---
+
+## ⚡ Inicio rápido (Git Bash)
+
+```bash
+# 1. Primera vez en una PC nueva — configuración automática
+bash setup.sh
+
+# 2. Iniciar el sistema completo (backend + frontend)
+bash start.sh
+
+# 3. Detener todo
+bash stop.sh
+```
 
 ---
 
 ## Requisitos previos
 
-Instala esto antes de clonar:
-
 | Herramienta | Versión mínima | Descarga |
 |---|---|---|
-| Java (Temurin) | 21 LTS | https://adoptium.net |
-| Node.js | 18+ | https://nodejs.org |
-| PostgreSQL | 15+ | https://www.postgresql.org/download |
-| Git | cualquier | https://git-scm.com |
+| **Java** (Temurin) | 21 LTS | https://adoptium.net |
+| **Node.js** | 18+ | https://nodejs.org |
+| **MySQL** | 8.0 | https://dev.mysql.com/downloads |
+| **Git Bash** | cualquier | https://gitforwindows.org |
+
+> **MySQL Workbench** (opcional, para visualizar la BD): https://dev.mysql.com/downloads/workbench/
 
 ---
 
-## 1. Clonar el repositorio
+## Instalación manual paso a paso
+
+### 1. Clonar el repositorio
 
 ```bash
 git clone https://github.com/TU_USUARIO/pwa-gestion-ordenes-trabajo.git
 cd pwa-gestion-ordenes-trabajo
 ```
 
----
+### 2. Configurar MySQL
 
-## 2. Configurar la base de datos
-
-1. Abre **pgAdmin** o tu cliente PostgreSQL preferido
-2. Crea la base de datos:
-```sql
-CREATE DATABASE sistema_ot;
-```
-3. Conéctate a `sistema_ot` y ejecuta el script completo:
-```
-archivo: sistema_OT_BD_v3.sql
-```
-Esto creará las 27 tablas con sus relaciones, triggers e índices.
-
----
-
-## 3. Configurar el Backend
-
-Edita el archivo:
-```
-backend/sistema-ot/src/main/resources/application.properties
-```
-
-Cambia solo el password:
-```properties
-spring.datasource.password=TU_PASSWORD_POSTGRES
-```
-
-> El resto de la configuración ya está lista. No cambies nada más salvo que tu usuario de PostgreSQL no sea `postgres`.
-
----
-
-## 4. Correr el Backend
+En MySQL Workbench o en Git Bash:
 
 ```bash
-cd backend/sistema-ot
-.\mvnw.cmd spring-boot:run        # Windows
-./mvnw spring-boot:run            # Mac / Linux
+# Conectar a MySQL (reemplaza con tu contraseña)
+mysql -u root -p
+
+# Dentro de MySQL:
+CREATE DATABASE IF NOT EXISTS sistema_ot CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+exit
 ```
 
-La primera vez descarga dependencias (~2 min). Espera ver:
+### 3. Configurar el backend
+
+Edita `backend/sistema-ot/src/main/resources/application.properties`:
+
+```properties
+# Cambia solo si tu usuario/contraseña de MySQL son diferentes
+spring.datasource.username=${MYSQL_USER:root}
+spring.datasource.password=${MYSQL_PASSWORD:TU_PASSWORD_AQUI}
 ```
-Started SistemaOtApplication in X seconds
-HikariPool-1 - Start completed.
-```
-✅ Backend corriendo en: `http://localhost:8080`
 
----
-
-## 5. Correr el Frontend
-
-Abre **otra terminal**:
+### 4. Instalar dependencias frontend
 
 ```bash
 cd frontend
-npm install
-npm run dev
+npm install --legacy-peer-deps
+cd ..
 ```
 
-✅ Frontend corriendo en: `http://localhost:5173`
+### 5. Iniciar el sistema
+
+```bash
+bash start.sh
+```
 
 ---
 
-## 6. Flujo de trabajo en equipo (ramas)
+## URLs del sistema
 
-```bash
-# Crear tu rama de trabajo
-git checkout -b feature/nombre-de-lo-que-haces
+| Servicio | URL |
+|---|---|
+| **Frontend PWA** | http://localhost:5173 |
+| **Backend API** | http://localhost:8080 |
+| **API Docs** (manual) | http://localhost:8080/api/auth/me |
 
-# Subir cambios
-git add .
-git commit -m "descripción del cambio"
-git push origin feature/nombre-de-lo-que-haces
+---
+
+## Credenciales de prueba
+
+> Todos usan la contraseña: **`password123`**
+
+| Email | Rol | Acceso |
+|---|---|---|
+| `supervisor@ot.com` | SUPERVISOR | Panel supervisor, carga Excel, asignación |
+| `capataz1@ot.com` | CAPATAZ | App de campo KABJ GIS (técnico en campo) |
+| `capataz2@ot.com` | CAPATAZ | App de campo KABJ GIS (técnico en campo) |
+| `admin@ot.com` | ADMINISTRADOR | Panel administrador, reportes, auditoría |
+
+---
+
+## Flujos de usuario
+
+### Capataz / Técnico de campo
+```
+Login → /dashboard (Seleccionar Actividad)
+     → /actividad/:id (Ver subactividades)
+     → /ficha/:subId (Ficha técnica + CTA)
+     → /capataz/mapa (Mapa GIS con OT activa)
+     → /historial (Historial diario)
 ```
 
-> **Nunca trabajes directo en `main`.** Siempre usa tu rama y luego haz Pull Request.
+### Supervisor
+```
+Login → /supervisor (Dashboard + alertas)
+     → /supervisor/cargar-ot (Subir Excel)
+     → /supervisor/asignar (Asignar capataces)
+     → /supervisor/seguimiento (Seguimiento en tiempo real)
+```
+
+### Administrador
+```
+Login → /admin (Panel: actividades, reportes, auditoría)
+```
 
 ---
 
@@ -107,77 +133,94 @@ git push origin feature/nombre-de-lo-que-haces
 
 ```
 pwa-gestion-ordenes-trabajo/
+├── start.sh                  ← Iniciar sistema completo (Git Bash)
+├── stop.sh                   ← Detener sistema
+├── setup.sh                  ← Configuración inicial (primera vez)
+│
 ├── backend/
-│   └── sistema-ot/          ← Spring Boot (Java 21)
-│       ├── src/
-│       │   └── main/
-│       │       ├── java/com/kabj/sistema_ot/
-│       │       └── resources/
-│       │           └── application.properties  ← EDITAR PASSWORD AQUÍ
-│       └── pom.xml
-├── frontend/                ← React + TypeScript + Vite
-│   ├── src/
-│   ├── package.json
-│   └── vite.config.ts
-├── sistema_OT_BD_v3.sql     ← Script completo de la BD
-└── README.md
+│   └── sistema-ot/           ← Spring Boot (Java 21)
+│       ├── src/main/java/com/kabj/sistema_ot/
+│       │   ├── controller/   ← REST endpoints
+│       │   ├── service/      ← Lógica de negocio
+│       │   ├── entity/       ← JPA entities
+│       │   ├── security/     ← JWT + filtros
+│       │   └── config/       ← DataInitializer, SecurityConfig
+│       └── src/main/resources/application.properties
+│
+├── frontend/
+│   └── src/
+│       ├── pages/
+│       │   ├── LoginPage.tsx         ← Login KABJ
+│       │   ├── kabj/                 ← App de campo
+│       │   │   ├── DashboardPage.tsx
+│       │   │   ├── ActividadPage.tsx
+│       │   │   ├── FichaPage.tsx
+│       │   │   └── HistorialPage.tsx
+│       │   ├── supervisor/           ← Panel supervisor
+│       │   └── admin/                ← Panel admin
+│       ├── components/kabj/          ← Navbar, HelpButton
+│       ├── context/AuthContext.tsx   ← Auth global
+│       ├── services/api.ts           ← Axios + JWT
+│       ├── types/                    ← TypeScript interfaces
+│       └── data/actividades.ts       ← Catálogo SEDAPAL
+│
+└── database/
+    └── bootstrap.sql         ← Schema inicial (auto-generado por JPA)
 ```
 
 ---
 
 ## Stack tecnológico
 
-**Frontend**
-- React 18 + TypeScript + Vite
-- Tailwind CSS 3
-- MapLibre GL (mapas)
-- Zustand (estado global)
-- React Hook Form
-- Axios (HTTP)
-- idb (IndexedDB / modo offline)
-- vite-plugin-pwa (Service Worker)
-
-**Backend**
-- Java 21 + Spring Boot 3.3
-- Spring Data JPA + Spring Security
-- Apache POI (Excel)
-- JWT (autenticación)
-
-**Base de datos**
-- PostgreSQL 15+ con PostGIS
-- 27 tablas — esquema v3
-
----
-
-## Roles del sistema
-
-| Rol | Acceso |
+| Capa | Tecnología |
 |---|---|
-| **Supervisor** | Carga Excel, valida OT, asigna capataces, genera reportes |
-| **Capataz** | Ejecuta OT en campo, llena formularios, trabaja offline |
-| **Administrador** | Gestión de usuarios, roles, cuadrillas y configuración |
+| Frontend | React 19 + TypeScript + Vite + Tailwind CSS |
+| PWA | vite-plugin-pwa + Service Worker |
+| Mapas | Leaflet + React-Leaflet v5 |
+| Estado | React Context (auth) + React hooks |
+| Backend | Java 21 + Spring Boot 3.5 |
+| Seguridad | Spring Security + JWT (jjwt 0.12) |
+| Base de datos | MySQL 8.0 + Spring Data JPA |
+| Excel | Apache POI 5.3 |
 
 ---
 
 ## Problemas frecuentes
 
-**`java` no se reconoce**
-→ Instala Java 21 desde adoptium.net y reinicia la terminal.
+**`bash: start.sh: Permission denied`**
+```bash
+chmod +x start.sh stop.sh setup.sh
+bash start.sh
+```
 
-**`Connection refused` al correr el backend**
-→ PostgreSQL no está corriendo. Inicia el servicio desde pgAdmin o Servicios de Windows.
+**`Connection refused` al iniciar el backend**
+→ MySQL no está corriendo. Inicia el servicio MySQL.
 
-**`password authentication failed`**
-→ Revisa el password en `application.properties`.
-
-**`Schema-validation: missing table`**
-→ No ejecutaste el SQL v3. Hazlo desde pgAdmin sobre la BD `sistema_ot`.
+**`npm install` falla con peer deps**
+```bash
+npm install --legacy-peer-deps
+```
 
 **Puerto 8080 ocupado**
-→ Cambia `server.port=8081` en `application.properties`.
+→ Edita `backend/sistema-ot/src/main/resources/application.properties`:
+```properties
+server.port=8081
+```
+Y actualiza `frontend/.env`:
+```
+VITE_API_URL=http://localhost:8081
+```
+
+**`java` no se reconoce en Git Bash**
+→ Agrega Java al PATH en Git Bash:
+```bash
+export JAVA_HOME="/c/Program Files/Eclipse Adoptium/jdk-21.x.x"
+export PATH="$JAVA_HOME/bin:$PATH"
+```
 
 ---
 
-## Contacto del proyecto
+## Contacto
 
-Proyecto académico — Consultores & Constructores K.A.B.J. S.A.C.
+Proyecto — Consultores & Constructores K.A.B.J. S.A.C.  
+SEDAPAL · Mantenimiento de Redes · Lima, Perú

@@ -1,3 +1,78 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* ── Variables KABJ ────────────────────────────────────────────── */
+:root {
+  --color-primary:       #CC1111;
+  --color-primary-hover: #AA0E0E;
+  --color-navbar:        #1A2535;
+  --color-body:          #EEF1F5;
+  --color-border:        #E5E7EB;
+  --radius-md:           12px;
+  --radius-lg:           16px;
+}
+
+/* ── Reset base ────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+  background-color: var(--color-body);
+  color: #111827;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Login cross-pattern ───────────────────────────────────────── */
+.bg-login-pattern {
+  background-color: #1E2D40;
+  background-image: url("data:image/svg+xml,%3Csvg width='32' height='32' viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%232D3F52'%3E%3Crect x='14' y='10' width='4' height='12'/%3E%3Crect x='10' y='14' width='12' height='4'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 32px 32px;
+}
+
+/* ── Shimmer skeleton ──────────────────────────────────────────── */
+.skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 800px 100%;
+  animation: shimmer 1.2s infinite linear;
+  border-radius: 8px;
+}
+
+/* ── Stagger animation helpers ─────────────────────────────────── */
+.stagger-1 { animation-delay: 0ms; }
+.stagger-2 { animation-delay: 80ms; }
+.stagger-3 { animation-delay: 160ms; }
+.stagger-4 { animation-delay: 240ms; }
+.stagger-5 { animation-delay: 320ms; }
+.stagger-6 { animation-delay: 400ms; }
+
+/* ── Scrollbar fino ────────────────────────────────────────────── */
+::-webkit-scrollbar       { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 99px; }
+
+/* ── Focus ring KABJ ───────────────────────────────────────────── */
+.input-kabj:focus {
+  outline: none;
+  border-color: #CC1111;
+  box-shadow: 0 0 0 3px rgba(204, 17, 17, 0.12);
+}
+
+/* ── Timeline vertical line ────────────────────────────────────── */
+.timeline-line {
+  position: absolute;
+  left: 19px;
+  top: 48px;
+  bottom: 0;
+  width: 2px;
+  background: #22C55E;
+}
+
+/* ── Transitions globales ──────────────────────────────────────── */
+button, a, [role="button"] {
+  transition: all 150ms ease;
+}
+button:active { transform: scale(0.98); }

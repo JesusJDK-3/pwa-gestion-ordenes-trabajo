@@ -1,0 +1,66 @@
+import axios from 'axios'
+
+const api = axios.create({ baseURL: import.meta.env.VITE_API_URL || '/api' })
+
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem('token')
+  if (token) config.headers.Authorization = `Bearer ${token}`
+  return config
+})
+
+api.interceptors.response.use(
+  (res) => res,
+  (err) => {
+    if (err.response?.status === 401) {
+      localStorage.clear()
+      window.location.href = '/login'
+    }
+    return Promise.reject(err)
+  },
+)
+
+export const authService = {
+  login:  (email: string, password: string) => api.post('/auth/login', { email, password }),
+  me:     () => api.get('/auth/me'),
+}
+
+export const ordenService = {
+  cargarExcel: (file: File) => {
+    const form = new FormData()
+    form.append('file', file)
+    return api.post('/ordenes/carga-excel', form, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    })
+  },
+  listar:  () => api.get('/ordenes'),
+  detalle: (id: number) => api.get(`/ordenes/${id}`),
+}
+
+export const puntoService = {
+  misPuntos:    () => api.get('/puntos/mis-puntos'),
+  todos:        (params?: Record<string, unknown>) => api.get('/puntos/todos', { params }),
+  asignar:      (id: number, capatazId: number) => api.put(`/puntos/${id}/asignar`, { capatazId }),
+  cambiarEstado:(id: number, estado: string) => api.put(`/puntos/${id}/estado`, { estado }),
+  seguimiento:  () => api.get('/puntos/seguimiento'),
+}
+
+export const registroService = {
+  crear:    (data: object) => api.post('/registros', data),
+  sync:     (registros: object[]) => api.post('/registros/sync', registros),
+  porPunto: (puntoId: number) => api.get(`/registros/punto/${puntoId}`),
+}
+
+export const alertaService = {
+  listar:      () => api.get('/alertas'),
+  marcarLeida: (id: number) => api.put(`/alertas/${id}/leer`),
+}
+
+export const reporteService = {
+  diario:        (fecha: string) => api.get('/reportes/diario', { params: { fecha } }),
+  mensual:       (mes: number, anio: number) => api.get('/reportes/mensual', { params: { mes, anio } }),
+  exportarExcel: (fecha: string) =>
+    api.get('/reportes/exportar-excel', { params: { fecha }, responseType: 'blob' }),
+  auditoria:     () => api.get('/reportes/auditoria'),
+}
+
+export default api

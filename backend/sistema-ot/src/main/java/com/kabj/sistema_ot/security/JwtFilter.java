@@ -11,6 +11,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -31,17 +32,26 @@ public class JwtFilter extends OncePerRequestFilter {
 
         if (header != null && header.startsWith("Bearer ")) {
             String token = header.substring(7);
+
             if (jwtUtil.validateToken(token)) {
                 String username = jwtUtil.extractUsername(token);
                 String rol = jwtUtil.extractRol(token);
 
-                var auth = new UsernamePasswordAuthenticationToken(
-                        username, null,
-                        List.of(new SimpleGrantedAuthority("ROLE_" + rol.toUpperCase()))
-                );
-                SecurityContextHolder.getContext().setAuthentication(auth);
+                // Verificar que el usuario sigue activo en la base de datos
+                boolean isActive = usuarioRepository.findByUsername(username)
+                        .map(u -> Boolean.TRUE.equals(u.getActivo()))
+                        .orElse(false);
+
+                if (isActive) {
+                    var auth = new UsernamePasswordAuthenticationToken(
+                            username, null,
+                            List.of(new SimpleGrantedAuthority("ROLE_" + rol.toUpperCase()))
+                    );
+                    SecurityContextHolder.getContext().setAuthentication(auth);
+                }
             }
         }
+
         chain.doFilter(request, response);
     }
 }
