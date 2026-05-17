@@ -56,9 +56,10 @@ export default function Layout() {
   const { user, logout } = useAuth()
   const navigate = useNavigate()
 
-  const rol       = (user?.rol ?? 'capataz') as Rol
+  const rawRol    = user?.rol?.toLowerCase() as Rol | undefined
+  const rol       = (rawRol && ROL_BADGE[rawRol] ? rawRol : 'capataz') as Rol
   const navItems  = NAV_BY_ROL[rol] ?? []
-  const badge     = ROL_BADGE[rol]
+  const badge     = ROL_BADGE[rol] ?? ROL_BADGE['capataz']
 
   const handleLogout = () => {
     logout()

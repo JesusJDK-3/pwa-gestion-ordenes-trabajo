@@ -12,10 +12,21 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | null>(null)
 
+const VALID_ROLES: Rol[] = ['supervisor', 'capataz', 'admin']
+
 function getStoredUser(): User | null {
   try {
     const raw = localStorage.getItem('user')
-    return raw ? (JSON.parse(raw) as User) : null
+    if (!raw) return null
+    const u = JSON.parse(raw) as User
+    // Normalizar rol a minúsculas y validar
+    const rol = u.rol?.toLowerCase() as Rol
+    if (!VALID_ROLES.includes(rol)) {
+      localStorage.removeItem('user')
+      localStorage.removeItem('token')
+      return null
+    }
+    return { ...u, rol }
   } catch {
     return null
   }
@@ -27,9 +38,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const login = useCallback(async (email: string, password: string): Promise<User> => {
     const { data } = await authService.login(email, password)
-    const { token: tk, rol, nombre, userId } = data as {
-      token: string; rol: Rol; nombre: string; userId: number; email: string
+    const { token: tk, rol: rawRol, nombre, userId } = data as {
+      token: string; rol: string; nombre: string; userId: number; email: string
     }
+    const rol = rawRol?.toLowerCase() as Rol
     const me: User = { id: userId, nombre, email, rol }
     localStorage.setItem('token', tk)
     localStorage.setItem('user',  JSON.stringify(me))
