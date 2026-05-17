@@ -8,6 +8,7 @@ set -e
 
 ROOT="$(cd "$(dirname "$0")" && pwd)"
 FRONTEND="$ROOT/frontend"
+APP_PROPS="$ROOT/backend/sistema-ot/src/main/resources/application.properties"
 
 YELLOW='\033[1;33m'
 GREEN='\033[0;32m'
@@ -29,7 +30,7 @@ if ! command -v java &>/dev/null; then
   exit 1
 fi
 JAVA_VER=$(java -version 2>&1 | grep -oP '(?<=version ")[\d]+' | head -1)
-if [ "$JAVA_VER" -lt 21 ] 2>/dev/null; then
+if [ "${JAVA_VER:-0}" -lt 21 ] 2>/dev/null; then
   echo -e "${RED}✗ Se requiere Java 21+. Tienes Java $JAVA_VER${NC}"
   exit 1
 fi
@@ -43,50 +44,73 @@ if ! command -v node &>/dev/null; then
 fi
 echo -e "${GREEN}  ✓ Node $(node --version)${NC}"
 
-# ── 3. Verificar MySQL ───────────────────────────────────────
-echo -e "${YELLOW}[3/5] Verificando MySQL...${NC}"
-MYSQL_CMD=""
-for p in "mysql" "/usr/bin/mysql" "C:/Program Files/MySQL/MySQL Server 8.0/bin/mysql"; do
-  if command -v "$p" &>/dev/null; then
-    MYSQL_CMD="$p"
-    break
+# ── 3. Verificar psql (cliente PostgreSQL) ───────────────────
+echo -e "${YELLOW}[3/5] Verificando PostgreSQL...${NC}"
+
+PG_CLI=""
+for cmd in psql \
+           "C:/Program Files/PostgreSQL/17/bin/psql" \
+           "C:/Program Files/PostgreSQL/16/bin/psql" \
+           "C:/Program Files/PostgreSQL/15/bin/psql" \
+           "C:/Program Files/PostgreSQL/14/bin/psql" \
+           "/usr/bin/psql" \
+           "/usr/local/bin/psql"; do
+  if command -v "$cmd" &>/dev/null 2>&1; then
+    PG_CLI="$cmd"; break
   fi
 done
 
-if [ -z "$MYSQL_CMD" ]; then
-  echo -e "${RED}✗ MySQL no encontrado en PATH.${NC}"
-  echo "  Agrega el directorio bin de MySQL al PATH, por ejemplo:"
-  echo '  export PATH="$PATH:/c/Program Files/MySQL/MySQL Server 8.0/bin"'
-  echo "  Luego vuelve a ejecutar este script."
+if [ -z "$PG_CLI" ]; then
+  echo -e "${RED}✗ psql (cliente PostgreSQL) no encontrado.${NC}"
+  echo ""
+  echo "  Instala PostgreSQL desde: https://www.postgresql.org/download/"
+  echo "  Y agrega su carpeta bin al PATH. Ejemplo Windows:"
+  echo '    export PATH="$PATH:/c/Program Files/PostgreSQL/17/bin"'
+  echo ""
+  echo "  O ejecuta start.sh y crea la BD manualmente."
   exit 1
 fi
-echo -e "${GREEN}  ✓ MySQL encontrado${NC}"
+echo -e "${GREEN}  ✓ psql encontrado: $PG_CLI${NC}"
 
 # ── 4. Configurar base de datos ──────────────────────────────
-echo -e "${YELLOW}[4/5] Configurando base de datos...${NC}"
+echo -e "${YELLOW}[4/5] Configurando base de datos PostgreSQL...${NC}"
 echo ""
-echo -e "  ${CYAN}Ingresa los datos de conexión MySQL:${NC}"
-read -rp "  Usuario MySQL [root]: " DB_USER
-DB_USER="${DB_USER:-root}"
-read -rsp "  Contraseña MySQL: " DB_PASS
-echo ""
+echo -e "  ${CYAN}Ingresa los datos de conexión PostgreSQL:${NC}"
+read -rp "  Host [localhost]: "    DB_HOST;  DB_HOST="${DB_HOST:-localhost}"
+read -rp "  Puerto [5432]: "       DB_PORT;  DB_PORT="${DB_PORT:-5432}"
+read -rp "  Usuario [postgres]: "  DB_USER;  DB_USER="${DB_USER:-postgres}"
+read -rsp "  Contraseña: "         DB_PASS;  echo ""
 
 # Test conexión
-if ! "$MYSQL_CMD" -u"$DB_USER" -p"$DB_PASS" -e "SELECT 1;" &>/dev/null; then
-  echo -e "${RED}  ✗ No se pudo conectar a MySQL. Verifica usuario y contraseña.${NC}"
+if ! PGPASSWORD="$DB_PASS" "$PG_CLI" -U "$DB_USER" -h "$DB_HOST" -p "$DB_PORT" \
+     -c "SELECT 1;" >/dev/null 2>&1; then
+  echo -e "${RED}  ✗ No se pudo conectar a PostgreSQL. Verifica usuario y contraseña.${NC}"
   exit 1
 fi
+echo -e "${GREEN}  ✓ Conexión exitosa${NC}"
 
-# Crear base de datos
-"$MYSQL_CMD" -u"$DB_USER" -p"$DB_PASS" \
-  -e "CREATE DATABASE IF NOT EXISTS sistema_ot CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;" &>/dev/null
-echo -e "${GREEN}  ✓ Base de datos 'sistema_ot' lista${NC}"
+# Crear base de datos si no existe
+DB_EXISTS=$(PGPASSWORD="$DB_PASS" "$PG_CLI" -U "$DB_USER" -h "$DB_HOST" -p "$DB_PORT" \
+  -tAc "SELECT 1 FROM pg_database WHERE datname='sistema_ot';" 2>/dev/null || echo "")
 
-# Escribir application.properties local
-APP_PROPS="$ROOT/backend/sistema-ot/src/main/resources/application.properties"
-sed -i "s|MYSQL_USER:[^}]*|MYSQL_USER:$DB_USER|g"   "$APP_PROPS" 2>/dev/null || true
-sed -i "s|MYSQL_PASSWORD:[^}]*|MYSQL_PASSWORD:$DB_PASS|g" "$APP_PROPS" 2>/dev/null || true
-echo -e "${GREEN}  ✓ Configuración de BD guardada${NC}"
+if [ "$DB_EXISTS" != "1" ]; then
+  PGPASSWORD="$DB_PASS" "$PG_CLI" -U "$DB_USER" -h "$DB_HOST" -p "$DB_PORT" \
+    -c "CREATE DATABASE sistema_ot;" >/dev/null 2>&1
+  echo -e "${GREEN}  ✓ Base de datos 'sistema_ot' creada${NC}"
+else
+  echo -e "${GREEN}  ✓ Base de datos 'sistema_ot' ya existe${NC}"
+fi
+
+# Guardar credenciales en application.properties
+sed -i "s|PG_USER:[^}]*|PG_USER:$DB_USER|g"     "$APP_PROPS" 2>/dev/null || true
+sed -i "s|PG_PASSWORD:[^}]*|PG_PASSWORD:$DB_PASS|g" "$APP_PROPS" 2>/dev/null || true
+
+# Actualizar host/puerto si cambiaron del default
+if [ "$DB_HOST" != "localhost" ] || [ "$DB_PORT" != "5432" ]; then
+  sed -i "s|jdbc:postgresql://[^/]*/|jdbc:postgresql://$DB_HOST:$DB_PORT/|g" "$APP_PROPS" 2>/dev/null || true
+fi
+
+echo -e "${GREEN}  ✓ Configuración de BD guardada en application.properties${NC}"
 
 # ── 5. Instalar dependencias frontend ───────────────────────
 echo -e "${YELLOW}[5/5] Instalando dependencias frontend...${NC}"
@@ -94,9 +118,9 @@ cd "$FRONTEND"
 npm install --legacy-peer-deps --silent
 echo -e "${GREEN}  ✓ Dependencias npm instaladas${NC}"
 
-# .env
 if [ ! -f "$FRONTEND/.env" ]; then
   echo "VITE_API_URL=http://localhost:8080" > "$FRONTEND/.env"
+  echo -e "${GREEN}  ✓ frontend/.env creado${NC}"
 fi
 
 # ── Resumen ──────────────────────────────────────────────────

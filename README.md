@@ -10,12 +10,14 @@
 # 1. Primera vez en una PC nueva — configuración automática
 bash setup.sh
 
-# 2. Iniciar el sistema completo (backend + frontend)
+# 2. Iniciar el sistema completo (PostgreSQL + backend + frontend)
 bash start.sh
 
 # 3. Detener todo
 bash stop.sh
 ```
+
+> `start.sh` inicia PostgreSQL automáticamente si está instalado como servicio de Windows.
 
 ---
 
@@ -25,10 +27,10 @@ bash stop.sh
 |---|---|---|
 | **Java** (Temurin) | 21 LTS | https://adoptium.net |
 | **Node.js** | 18+ | https://nodejs.org |
-| **MySQL** | 8.0 | https://dev.mysql.com/downloads |
+| **PostgreSQL** | 14+ | https://www.postgresql.org/download/ |
 | **Git Bash** | cualquier | https://gitforwindows.org |
 
-> **MySQL Workbench** (opcional, para visualizar la BD): https://dev.mysql.com/downloads/workbench/
+> **pgAdmin** (opcional, para visualizar la BD): se instala junto con PostgreSQL.
 
 ---
 
@@ -41,27 +43,33 @@ git clone https://github.com/TU_USUARIO/pwa-gestion-ordenes-trabajo.git
 cd pwa-gestion-ordenes-trabajo
 ```
 
-### 2. Configurar MySQL
+### 2. Configurar PostgreSQL
 
-En MySQL Workbench o en Git Bash:
+En psql, pgAdmin o Git Bash:
 
 ```bash
-# Conectar a MySQL (reemplaza con tu contraseña)
-mysql -u root -p
+# Conectar a PostgreSQL
+psql -U postgres
 
-# Dentro de MySQL:
-CREATE DATABASE IF NOT EXISTS sistema_ot CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-exit
+# Dentro de psql:
+CREATE DATABASE sistema_ot;
+\q
 ```
 
 ### 3. Configurar el backend
 
-Edita `backend/sistema-ot/src/main/resources/application.properties`:
+Edita `backend/sistema-ot/src/main/resources/application.properties` si tu usuario o contraseña de PostgreSQL son diferentes al valor por defecto:
 
 ```properties
-# Cambia solo si tu usuario/contraseña de MySQL son diferentes
-spring.datasource.username=${MYSQL_USER:root}
-spring.datasource.password=${MYSQL_PASSWORD:TU_PASSWORD_AQUI}
+# Cambia solo si es necesario
+spring.datasource.username=${PG_USER:postgres}
+spring.datasource.password=${PG_PASSWORD:admin1234}
+```
+
+O pásalos como variables de entorno al ejecutar:
+
+```bash
+PG_PASSWORD=mi_contraseña bash start.sh
 ```
 
 ### 4. Instalar dependencias frontend
@@ -86,7 +94,7 @@ bash start.sh
 |---|---|
 | **Frontend PWA** | http://localhost:5173 |
 | **Backend API** | http://localhost:8080 |
-| **API Docs** (manual) | http://localhost:8080/api/auth/me |
+| **Health check** | http://localhost:8080/api/auth/me |
 
 ---
 
@@ -133,8 +141,8 @@ Login → /admin (Panel: actividades, reportes, auditoría)
 
 ```
 pwa-gestion-ordenes-trabajo/
-├── start.sh                  ← Iniciar sistema completo (Git Bash)
-├── stop.sh                   ← Detener sistema
+├── start.sh                  ← Inicia PostgreSQL + backend + frontend
+├── stop.sh                   ← Detiene todo
 ├── setup.sh                  ← Configuración inicial (primera vez)
 │
 ├── backend/
@@ -165,7 +173,7 @@ pwa-gestion-ordenes-trabajo/
 │       └── data/actividades.ts       ← Catálogo SEDAPAL
 │
 └── database/
-    └── bootstrap.sql         ← Schema inicial (auto-generado por JPA)
+    └── bootstrap.sql         ← Schema PostgreSQL (referencia)
 ```
 
 ---
@@ -180,7 +188,7 @@ pwa-gestion-ordenes-trabajo/
 | Estado | React Context (auth) + React hooks |
 | Backend | Java 21 + Spring Boot 3.5 |
 | Seguridad | Spring Security + JWT (jjwt 0.12) |
-| Base de datos | MySQL 8.0 + Spring Data JPA |
+| Base de datos | **PostgreSQL 14+** + Spring Data JPA |
 | Excel | Apache POI 5.3 |
 
 ---
@@ -193,16 +201,38 @@ chmod +x start.sh stop.sh setup.sh
 bash start.sh
 ```
 
-**`Connection refused` al iniciar el backend**
-→ MySQL no está corriendo. Inicia el servicio MySQL.
+**`PostgreSQL no responde en localhost:5432`**
+```bash
+# Windows — ajusta el número de versión (14, 15, 16, 17…)
+net start postgresql-x64-17
+
+# Linux
+sudo systemctl start postgresql
+
+# O pasa la versión instalada a start.sh:
+PG_PORT=5433 bash start.sh
+```
+
+**`Connection refused` al iniciar el backend**  
+→ La base de datos `sistema_ot` no existe. Créala:
+```bash
+psql -U postgres -c "CREATE DATABASE sistema_ot;"
+```
+
+**Contraseña de PostgreSQL distinta al default**
+```bash
+PG_PASSWORD=mi_contraseña bash start.sh
+# O ejecuta setup.sh para guardarla permanentemente
+bash setup.sh
+```
 
 **`npm install` falla con peer deps**
 ```bash
 npm install --legacy-peer-deps
 ```
 
-**Puerto 8080 ocupado**
-→ Edita `backend/sistema-ot/src/main/resources/application.properties`:
+**Puerto 8080 ocupado**  
+Edita `backend/sistema-ot/src/main/resources/application.properties`:
 ```properties
 server.port=8081
 ```
@@ -212,7 +242,6 @@ VITE_API_URL=http://localhost:8081
 ```
 
 **`java` no se reconoce en Git Bash**
-→ Agrega Java al PATH en Git Bash:
 ```bash
 export JAVA_HOME="/c/Program Files/Eclipse Adoptium/jdk-21.x.x"
 export PATH="$JAVA_HOME/bin:$PATH"

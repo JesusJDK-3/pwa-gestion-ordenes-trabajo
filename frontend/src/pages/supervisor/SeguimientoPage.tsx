@@ -1,6 +1,7 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { puntoService } from '../../services/api'
 import type { ApiResponse, SeguimientoCapataz } from '../../types'
+import { Radio, RefreshCw, CheckCircle2, Clock3, AlertCircle } from 'lucide-react'
 
 export default function SeguimientoPage() {
   const [data,    setData]    = useState<SeguimientoCapataz[]>([])
@@ -19,56 +20,99 @@ export default function SeguimientoPage() {
     return () => { if (intervalRef.current) clearInterval(intervalRef.current) }
   }, [fetchData])
 
-  if (loading) return <div className="text-center py-12 text-gray-500">Cargando…</div>
+  if (loading) return <PageSkeleton />
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h2 className="text-xl font-bold text-gray-800">Seguimiento en tiempo real</h2>
-        <span className="text-xs text-gray-400">Auto-refresh cada 30 s</span>
+
+      {/* Page title */}
+      <div className="flex items-start justify-between">
+        <div>
+          <h1 className="text-[22px] font-bold text-gray-900">Seguimiento en tiempo real</h1>
+          <p className="text-sm text-gray-500 mt-0.5">Estado actual de cada capataz en campo</p>
+        </div>
+        <div className="flex items-center gap-1.5 text-xs text-gray-400 bg-white rounded-xl px-3 py-2 shadow-card border border-gray-100">
+          <RefreshCw size={12} className="animate-spin-slow" />
+          Auto-refresh 30 s
+        </div>
       </div>
 
       {/* Cards por capataz */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {data.length === 0 ? (
-          <p className="text-gray-400 text-sm col-span-3 text-center py-8">Sin datos de seguimiento.</p>
-        ) : data.map(cap => {
-          const pct = cap.total > 0 ? Math.round((cap.completados / cap.total) * 100) : 0
-          return (
-            <div key={cap.capatazId} className="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
-              <p className="font-semibold text-gray-800 truncate">{cap.nombre}</p>
+      {data.length === 0 ? (
+        <div className="bg-white rounded-2xl shadow-card p-12 text-center text-gray-400">
+          <Radio size={32} className="mx-auto mb-3 opacity-30" />
+          <p className="text-sm">Sin datos de seguimiento activos.</p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {data.map(cap => {
+            const pct = cap.total > 0 ? Math.round((cap.completados / cap.total) * 100) : 0
+            return (
+              <div key={cap.capatazId} className="bg-white rounded-2xl shadow-card p-5">
 
-              {/* Barra de progreso */}
-              <div className="mt-3 mb-3">
-                <div className="flex justify-between text-xs text-gray-500 mb-1">
-                  <span>{cap.completados}/{cap.total} completados</span>
-                  <span>{pct}%</span>
+                {/* Header */}
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-9 h-9 bg-[#CC1111]/10 rounded-full flex items-center justify-center flex-shrink-0">
+                    <span className="text-[#CC1111] font-bold text-[11px]">
+                      {cap.nombre.split(' ').map((n: string) => n[0]).slice(0, 2).join('')}
+                    </span>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-800 text-sm leading-tight">{cap.nombre}</p>
+                    <p className="text-xs text-gray-400">{cap.completados}/{cap.total} completados</p>
+                  </div>
+                  <div className="ml-auto text-right">
+                    <span className="text-2xl font-bold text-gray-800">{pct}</span>
+                    <span className="text-sm text-gray-400">%</span>
+                  </div>
                 </div>
-                <div className="w-full bg-gray-100 rounded-full h-2">
+
+                {/* Progress bar */}
+                <div className="w-full bg-gray-100 rounded-full h-2 mb-4">
                   <div
-                    className="bg-[#1D9E75] h-2 rounded-full transition-all duration-500"
-                    style={{ width: `${pct}%` }}
+                    className="h-2 rounded-full transition-all duration-700"
+                    style={{
+                      width: `${pct}%`,
+                      background: pct >= 80 ? '#22C55E' : pct >= 40 ? '#CC1111' : '#F59E0B'
+                    }}
                   />
                 </div>
-              </div>
 
-              <div className="grid grid-cols-3 gap-2 text-center text-xs">
-                <div className="bg-gray-50 rounded-lg p-2">
-                  <p className="text-lg font-bold text-gray-700">{cap.pendientes}</p>
-                  <p className="text-gray-400">Pend.</p>
-                </div>
-                <div className="bg-orange-50 rounded-lg p-2">
-                  <p className="text-lg font-bold text-orange-600">{cap.enProgreso}</p>
-                  <p className="text-orange-400">En prog.</p>
-                </div>
-                <div className="bg-emerald-50 rounded-lg p-2">
-                  <p className="text-lg font-bold text-emerald-600">{cap.completados}</p>
-                  <p className="text-emerald-400">Comp.</p>
+                {/* Stats grid */}
+                <div className="grid grid-cols-3 gap-2">
+                  <StatChip icon={<Clock3 size={13} className="text-gray-400" />}  value={cap.pendientes}  label="Pend."  bg="bg-gray-50"    text="text-gray-700" />
+                  <StatChip icon={<AlertCircle size={13} className="text-orange-500" />} value={cap.enProgreso}  label="Prog."  bg="bg-orange-50"  text="text-orange-700" />
+                  <StatChip icon={<CheckCircle2 size={13} className="text-emerald-500" />} value={cap.completados} label="Comp."  bg="bg-emerald-50" text="text-emerald-700" />
                 </div>
               </div>
-            </div>
-          )
-        })}
+            )
+          })}
+        </div>
+      )}
+    </div>
+  )
+}
+
+function StatChip({ icon, value, label, bg, text }: {
+  icon: React.ReactNode; value: number; label: string; bg: string; text: string
+}) {
+  return (
+    <div className={`${bg} rounded-xl p-2.5 text-center`}>
+      <div className="flex items-center justify-center mb-1">{icon}</div>
+      <p className={`text-lg font-bold ${text}`}>{value}</p>
+      <p className="text-[11px] text-gray-400">{label}</p>
+    </div>
+  )
+}
+
+function PageSkeleton() {
+  return (
+    <div className="space-y-6 animate-pulse">
+      <div className="h-8 w-64 bg-gray-200 rounded-lg" />
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {[...Array(3)].map((_, i) => (
+          <div key={i} className="h-44 bg-gray-200 rounded-2xl" />
+        ))}
       </div>
     </div>
   )
