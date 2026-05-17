@@ -9,8 +9,8 @@ interface Props {
 }
 
 function getRolHome(rol: Rol): string {
-  if (rol === 'SUPERVISOR') return '/supervisor'
-  if (rol === 'CAPATAZ') return '/dashboard'
+  if (rol === 'supervisor') return '/supervisor'
+  if (rol === 'capataz') return '/dashboard'
   return '/admin'
 }
 

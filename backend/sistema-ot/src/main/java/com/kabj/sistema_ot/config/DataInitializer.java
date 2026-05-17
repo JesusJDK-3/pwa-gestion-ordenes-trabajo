@@ -1,8 +1,6 @@
 package com.kabj.sistema_ot.config;
 
 import com.kabj.sistema_ot.entity.*;
-import com.kabj.sistema_ot.entity.enums.EstadoOrden;
-import com.kabj.sistema_ot.entity.enums.EstadoPunto;
 import com.kabj.sistema_ot.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,12 +10,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.List;
 
 /**
- * Inserta roles, usuarios de prueba y datos iniciales de OT al primer arranque.
+ * Inserta datos iniciales del sistema al primer arranque.
+ * Roles: supervisor | capataz | admin
  * Credenciales de prueba: supervisor@ot.com / password123
  */
 @Slf4j
@@ -28,23 +25,22 @@ public class DataInitializer implements ApplicationRunner {
     private final RolRepository rolRepository;
     private final UsuarioRepository usuarioRepository;
     private final PasswordEncoder passwordEncoder;
-    private final OrdenTrabajoRepository ordenRepo;
-    private final PuntoTrabajoRepository puntoRepo;
+    private final RrhhTrabajadorRepository trabajadorRepository;
+    private final RrhhCapatazRepository capatazRepository;
 
     @Override
     @Transactional
     public void run(ApplicationArguments args) {
         seedRoles();
         seedUsuarios();
-        seedOrdenesYPuntos();
     }
 
     private void seedRoles() {
         if (rolRepository.count() > 0) return;
         List.of(
-                buildRol("SUPERVISOR",    "Supervisor",    "Gestiona y valida órdenes de trabajo"),
-                buildRol("CAPATAZ",       "Capataz",       "Ejecuta órdenes de trabajo en campo"),
-                buildRol("ADMINISTRADOR", "Administrador", "Administración del sistema")
+                buildRol("supervisor", "Supervisor",    "Carga OT desde Excel y supervisa el avance del equipo de campo"),
+                buildRol("capataz",    "Capataz",       "Registra actividades en campo y llena formularios por punto"),
+                buildRol("admin",      "Administrador", "Acceso total: reportes, auditoría y gestión del sistema")
         ).forEach(rolRepository::save);
         log.info("Roles creados.");
     }
@@ -53,49 +49,32 @@ public class DataInitializer implements ApplicationRunner {
         if (usuarioRepository.count() > 0) return;
         String hash = passwordEncoder.encode("password123");
 
-        Rol supervisor    = rolRepository.findByCodigo("SUPERVISOR").orElseThrow();
-        Rol capataz       = rolRepository.findByCodigo("CAPATAZ").orElseThrow();
-        Rol administrador = rolRepository.findByCodigo("ADMINISTRADOR").orElseThrow();
+        Rol supervisor = rolRepository.findByCodigo("supervisor").orElseThrow();
+        Rol capataz    = rolRepository.findByCodigo("capataz").orElseThrow();
+        Rol admin      = rolRepository.findByCodigo("admin").orElseThrow();
 
-        List.of(
-                buildUsuario("supervisor",  "supervisor@ot.com",  hash, "Carlos",   "Mendoza",  supervisor),
-                buildUsuario("capataz1",    "capataz1@ot.com",    hash, "Juan",     "Quispe",   capataz),
-                buildUsuario("capataz2",    "capataz2@ot.com",    hash, "Pedro",    "Flores",   capataz),
-                buildUsuario("admin",       "admin@ot.com",       hash, "Admin",    "Sistema",  administrador)
-        ).forEach(usuarioRepository::save);
+        Usuario uSupervisor = buildUsuario("supervisor", "supervisor@ot.com", hash, "Carlos",  "Mendoza", supervisor);
+        Usuario uCapataz1   = buildUsuario("capataz1",   "capataz1@ot.com",   hash, "Juan",    "Quispe",  capataz);
+        Usuario uCapataz2   = buildUsuario("capataz2",   "capataz2@ot.com",   hash, "Pedro",   "Flores",  capataz);
+        Usuario uAdmin      = buildUsuario("admin",      "admin@ot.com",      hash, "Admin",   "Sistema", admin);
+
+        usuarioRepository.saveAll(List.of(uSupervisor, uCapataz1, uCapataz2, uAdmin));
         log.warn("Usuarios de prueba creados. Password para todos: password123 — cámbialo en producción.");
-    }
 
-    private void seedOrdenesYPuntos() {
-        if (ordenRepo.count() > 0) return;
-        Usuario supervisor = usuarioRepository.findByEmail("supervisor@ot.com").orElseThrow();
-        Usuario cap1       = usuarioRepository.findByEmail("capataz1@ot.com").orElseThrow();
-        Usuario cap2       = usuarioRepository.findByEmail("capataz2@ot.com").orElseThrow();
+        // Create trabajadores and capataces for field users
+        if (trabajadorRepository.count() == 0) {
+            RrhhTrabajador t1 = buildTrabajador("12345678", "Juan",  "Quispe",  "Capataz de Campo");
+            RrhhTrabajador t2 = buildTrabajador("87654321", "Pedro", "Flores",  "Capataz de Campo");
+            trabajadorRepository.saveAll(List.of(t1, t2));
 
-        OrdenTrabajo ot1 = new OrdenTrabajo();
-        ot1.setCodigoOt("OT-2026-001");
-        ot1.setDescripcion("Mantenimiento red agua potable - Zona Norte Lima");
-        ot1.setFechaCarga(LocalDate.of(2026, 5, 15));
-        ot1.setSupervisor(supervisor);
-        ot1.setEstado(EstadoOrden.ACTIVA);
-        ordenRepo.save(ot1);
+            // Re-fetch saved users
+            Usuario cap1 = usuarioRepository.findByEmail("capataz1@ot.com").orElseThrow();
+            Usuario cap2 = usuarioRepository.findByEmail("capataz2@ot.com").orElseThrow();
 
-        OrdenTrabajo ot2 = new OrdenTrabajo();
-        ot2.setCodigoOt("OT-2026-002");
-        ot2.setDescripcion("Reparación alcantarillado - San Juan de Lurigancho");
-        ot2.setFechaCarga(LocalDate.of(2026, 5, 15));
-        ot2.setSupervisor(supervisor);
-        ot2.setEstado(EstadoOrden.ACTIVA);
-        ordenRepo.save(ot2);
-
-        List.of(
-                buildPunto(ot1, -12.0464, -77.0428, "Revisión válvula principal",    "Jr. Huallaga 450, Lima",       EstadoPunto.PENDIENTE,   cap1),
-                buildPunto(ot1, -12.0531, -77.0282, "Cambio de tubería tramo A",     "Av. Abancay 320, Lima",        EstadoPunto.EN_PROGRESO, cap1),
-                buildPunto(ot1, -12.0612, -77.0369, "Inspección medidor sector 3",   "Jr. Camaná 890, Lima",         EstadoPunto.PENDIENTE,   cap2),
-                buildPunto(ot2, -11.9875, -77.0025, "Limpieza buzón BZ-12",          "Av. Próceres 1200, SJL",       EstadoPunto.PENDIENTE,   cap1),
-                buildPunto(ot2, -11.9932, -77.0148, "Reparación colector principal", "Jr. Las Flores 560, SJL",      EstadoPunto.COMPLETADO,  cap2)
-        ).forEach(puntoRepo::save);
-        log.info("Datos de prueba de OT creados.");
+            capatazRepository.save(buildCapataz(cap1, t1, "CAP-001"));
+            capatazRepository.save(buildCapataz(cap2, t2, "CAP-002"));
+            log.info("Trabajadores y capataces creados.");
+        }
     }
 
     private Rol buildRol(String codigo, String nombre, String descripcion) {
@@ -120,17 +99,22 @@ public class DataInitializer implements ApplicationRunner {
         return u;
     }
 
-    private PuntoTrabajo buildPunto(OrdenTrabajo orden, double lat, double lon,
-                                     String descripcion, String direccion,
-                                     EstadoPunto estado, Usuario capataz) {
-        PuntoTrabajo p = new PuntoTrabajo();
-        p.setOrden(orden);
-        p.setLatitud(BigDecimal.valueOf(lat));
-        p.setLongitud(BigDecimal.valueOf(lon));
-        p.setDescripcion(descripcion);
-        p.setDireccion(direccion);
-        p.setEstado(estado);
-        p.setCapataz(capataz);
-        return p;
+    private RrhhTrabajador buildTrabajador(String dni, String nombres, String apellidos, String cargo) {
+        RrhhTrabajador t = new RrhhTrabajador();
+        t.setDni(dni);
+        t.setNombres(nombres);
+        t.setApellidos(apellidos);
+        t.setCargo(cargo);
+        t.setActivo(true);
+        return t;
+    }
+
+    private RrhhCapataz buildCapataz(Usuario usuario, RrhhTrabajador trabajador, String codigo) {
+        RrhhCapataz c = new RrhhCapataz();
+        c.setUsuario(usuario);
+        c.setTrabajador(trabajador);
+        c.setCodigoCapataz(codigo);
+        c.setActivo(true);
+        return c;
     }
 }

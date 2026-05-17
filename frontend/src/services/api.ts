@@ -50,6 +50,10 @@ export const registroService = {
   porPunto: (puntoId: number) => api.get(`/registros/punto/${puntoId}`),
 }
 
+export const usuarioService = {
+  listar: () => api.get('/usuarios'),
+}
+
 export const alertaService = {
   listar:      () => api.get('/alertas'),
   marcarLeida: (id: number) => api.put(`/alertas/${id}/leer`),

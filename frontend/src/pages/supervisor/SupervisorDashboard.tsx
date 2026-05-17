@@ -1,33 +1,35 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { alertaService, ordenService } from '../../services/api'
-import type { Alerta, OrdenTrabajo } from '../../types'
+import type { OrdenTrabajo } from '../../types'
 import { BarChart3, MapPin, CheckCircle2, AlertTriangle, Upload } from 'lucide-react'
 
 export default function SupervisorDashboard() {
   const [ordenes, setOrdenes] = useState<OrdenTrabajo[]>([])
-  const [alertas, setAlertas] = useState<Alerta[]>([])
+  const [alertas, setAlertas] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     Promise.all([ordenService.listar(), alertaService.listar()])
       .then(([oRes, aRes]) => {
-        setOrdenes((oRes.data as { data: OrdenTrabajo[] }).data ?? [])
-        setAlertas((aRes.data as { data: Alerta[] }).data ?? [])
+        const oData = (oRes.data as any)
+        setOrdenes(Array.isArray(oData) ? oData : (oData?.data ?? []))
+        const aData = (aRes.data as any)
+        setAlertas(Array.isArray(aData) ? aData : (aData?.data ?? []))
       })
       .finally(() => setLoading(false))
   }, [])
 
-  const totalPuntos = ordenes.reduce((s, o) => s + (o.puntos?.length ?? 0), 0)
-  const completados = ordenes.reduce((s, o) => s + (o.puntos?.filter(p => p.estado === 'COMPLETADO').length ?? 0), 0)
+  const activas    = ordenes.filter(o => !['COMPLETADA','ANULADA'].includes(o.estadoCodigo ?? ''))
+  const completadas = ordenes.filter(o => o.estadoCodigo === 'COMPLETADA')
 
   if (loading) return <PageSkeleton />
 
   const kpis = [
-    { label: 'Órdenes activas',  value: ordenes.filter(o => o.estado === 'ACTIVA').length, icon: BarChart3,     bg: 'bg-blue-50',    icon_color: 'text-blue-600',    value_color: 'text-blue-700' },
-    { label: 'Total puntos',     value: totalPuntos,                                        icon: MapPin,        bg: 'bg-gray-50',    icon_color: 'text-gray-500',    value_color: 'text-gray-700' },
-    { label: 'Completados',      value: completados,                                        icon: CheckCircle2,  bg: 'bg-emerald-50', icon_color: 'text-emerald-600', value_color: 'text-emerald-700' },
-    { label: 'Alertas',          value: alertas.length,                                     icon: AlertTriangle, bg: 'bg-red-50',     icon_color: 'text-[#CC1111]',   value_color: 'text-[#CC1111]' },
+    { label: 'OTs activas',    value: activas.length,     icon: BarChart3,     bg: 'bg-blue-50',    icon_color: 'text-blue-600',    value_color: 'text-blue-700' },
+    { label: 'Total OTs',      value: ordenes.length,     icon: MapPin,        bg: 'bg-gray-50',    icon_color: 'text-gray-500',    value_color: 'text-gray-700' },
+    { label: 'Completadas',    value: completadas.length, icon: CheckCircle2,  bg: 'bg-emerald-50', icon_color: 'text-emerald-600', value_color: 'text-emerald-700' },
+    { label: 'Alertas',        value: alertas.length,     icon: AlertTriangle, bg: 'bg-red-50',     icon_color: 'text-[#CC1111]',   value_color: 'text-[#CC1111]' },
   ]
 
   return (
@@ -71,7 +73,7 @@ export default function SupervisorDashboard() {
           <table className="w-full text-sm">
             <thead>
               <tr className="bg-gray-50 text-gray-500 text-xs uppercase tracking-wide">
-                {['Código', 'Descripción', 'Fecha', 'Estado', 'Puntos'].map(h => (
+                {['SGIO', 'Subactividad', 'Capataz', 'Estado', 'Fecha'].map(h => (
                   <th key={h} className="px-5 py-3 text-left font-semibold">{h}</th>
                 ))}
               </tr>
@@ -85,16 +87,21 @@ export default function SupervisorDashboard() {
                   </td>
                 </tr>
               ) : ordenes.map(o => (
-                <tr key={o.id} className="hover:bg-gray-50/60 transition-colors">
-                  <td className="px-5 py-3.5 font-mono font-semibold text-[#CC1111] text-[13px]">{o.codigoOt}</td>
-                  <td className="px-5 py-3.5 text-gray-700 max-w-xs truncate">{o.descripcion}</td>
-                  <td className="px-5 py-3.5 text-gray-500 text-[13px]">{o.fechaCarga}</td>
+                <tr key={o.idOt} className="hover:bg-gray-50/60 transition-colors">
+                  <td className="px-5 py-3.5 font-mono font-semibold text-[#CC1111] text-[13px]">{o.sgio}</td>
+                  <td className="px-5 py-3.5 text-gray-700 max-w-xs truncate">{o.subactividad ?? '—'}</td>
+                  <td className="px-5 py-3.5 text-gray-600 text-[13px]">{o.capatazNombre ?? '—'}</td>
                   <td className="px-5 py-3.5">
                     <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${
-                      o.estado === 'ACTIVA' ? 'bg-emerald-100 text-emerald-700' : 'bg-gray-100 text-gray-600'
-                    }`}>{o.estado}</span>
+                      o.estadoCodigo === 'COMPLETADA' ? 'bg-emerald-100 text-emerald-700'
+                      : o.estadoCodigo === 'EN_PROGRESO' ? 'bg-orange-100 text-orange-700'
+                      : o.estadoCodigo === 'ANULADA' ? 'bg-red-100 text-red-700'
+                      : 'bg-gray-100 text-gray-600'
+                    }`}>{o.estado ?? o.estadoCodigo}</span>
                   </td>
-                  <td className="px-5 py-3.5 text-gray-600 font-medium">{o.puntos?.length ?? '—'}</td>
+                  <td className="px-5 py-3.5 text-gray-500 text-[13px]">
+                    {o.fechaProgramada ?? o.createdAt?.slice(0,10) ?? '—'}
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -110,10 +117,10 @@ export default function SupervisorDashboard() {
             <h3 className="font-semibold text-red-800">Alertas pendientes ({alertas.length})</h3>
           </div>
           <ul className="space-y-2">
-            {alertas.slice(0, 5).map(a => (
-              <li key={a.id} className="flex items-start gap-2 text-sm text-red-700">
+            {alertas.slice(0, 5).map((a, i) => (
+              <li key={i} className="flex items-start gap-2 text-sm text-red-700">
                 <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-[#CC1111] flex-shrink-0" />
-                {a.mensaje}
+                {a.mensaje ?? JSON.stringify(a)}
               </li>
             ))}
           </ul>

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { ordenService, puntoService } from '../../services/api'
-import type { OrdenTrabajo, PuntoTrabajo, User } from '../../types'
+import type { OrdenTrabajo, User } from '../../types'
 import api from '../../services/api'
 import type { ApiResponse } from '../../types'
 import { Filter, Loader2 } from 'lucide-react'
@@ -9,7 +9,7 @@ export default function AsignarPuntos() {
   const [ordenes,   setOrdenes]   = useState<OrdenTrabajo[]>([])
   const [capataces, setCapataces] = useState<User[]>([])
   const [ordenId,   setOrdenId]   = useState<number | null>(null)
-  const [puntos,    setPuntos]    = useState<PuntoTrabajo[]>([])
+  const [puntos,    setPuntos]    = useState<OrdenTrabajo[]>([])
   const [saving,    setSaving]    = useState<Record<number, boolean>>({})
   const [filtro,    setFiltro]    = useState('')
 
@@ -17,27 +17,29 @@ export default function AsignarPuntos() {
     ordenService.listar().then(r => setOrdenes((r.data as ApiResponse<OrdenTrabajo[]>).data ?? []))
     api.get<ApiResponse<User[]>>('/usuarios').then(r => {
       const todos = r.data.data ?? []
-      setCapataces(todos.filter(u => u.rol === 'CAPATAZ'))
+      setCapataces(todos.filter(u => u.rol === 'capataz'))
     })
   }, [])
 
   useEffect(() => {
     if (!ordenId) return
-    puntoService.todos({ ordenId }).then(r =>
-      setPuntos((r.data as ApiResponse<PuntoTrabajo[]>).data ?? []))
+    puntoService.todos({ ordenId }).then(r => {
+      const data = (r.data as any)
+      setPuntos(Array.isArray(data) ? data : (data?.data ?? []))
+    })
   }, [ordenId])
 
   const handleAsignar = async (puntoId: number, capatazId: number) => {
     setSaving(s => ({ ...s, [puntoId]: true }))
     try {
       await puntoService.asignar(puntoId, capatazId)
-      setPuntos(prev => prev.map(p => p.id === puntoId ? { ...p, capatazId } : p))
+      setPuntos(prev => prev.map(p => p.idOt === puntoId ? { ...p, capatazId } : p))
     } finally {
       setSaving(s => ({ ...s, [puntoId]: false }))
     }
   }
 
-  const puntosFiltrados = filtro ? puntos.filter(p => p.estado === filtro) : puntos
+  const puntosFiltrados = filtro ? puntos.filter(p => p.estadoCodigo === filtro) : puntos
 
   const selectClass = 'border border-gray-200 rounded-xl px-3 py-2.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#CC1111]/20 focus:border-[#CC1111] transition-all'
 
@@ -60,7 +62,7 @@ export default function AsignarPuntos() {
         >
           <option value="">Seleccionar orden de trabajo…</option>
           {ordenes.map(o => (
-            <option key={o.id} value={o.id}>{o.codigoOt} — {o.descripcion}</option>
+            <option key={o.idOt} value={o.idOt}>{o.sgio} — {o.subactividad ?? o.direccion ?? ''}</option>
           ))}
         </select>
 
@@ -70,7 +72,7 @@ export default function AsignarPuntos() {
           className={selectClass}
         >
           <option value="">Todos los estados</option>
-          {['PENDIENTE', 'EN_PROGRESO', 'COMPLETADO', 'OBSERVADO'].map(s => (
+          {['PENDIENTE', 'EN_PROGRESO', 'COMPLETADA', 'OBSERVADA', 'ANULADA'].map(s => (
             <option key={s} value={s}>{s}</option>
           ))}
         </select>
@@ -109,17 +111,17 @@ export default function AsignarPuntos() {
                     </td>
                   </tr>
                 ) : puntosFiltrados.map(p => (
-                  <tr key={p.id} className="hover:bg-gray-50/60 transition-colors">
-                    <td className="px-5 py-3.5 font-medium text-gray-800">{p.descripcion}</td>
-                    <td className="px-5 py-3.5 text-gray-500 max-w-xs truncate">{p.direccion}</td>
-                    <td className="px-5 py-3.5"><EstadoBadge estado={p.estado} /></td>
+                  <tr key={p.idOt} className="hover:bg-gray-50/60 transition-colors">
+                    <td className="px-5 py-3.5 font-medium text-gray-800 font-mono">{p.sgio}</td>
+                    <td className="px-5 py-3.5 text-gray-500 max-w-xs truncate">{p.direccion ?? p.subactividad ?? '—'}</td>
+                    <td className="px-5 py-3.5"><EstadoBadge estado={p.estadoCodigo ?? 'PENDIENTE'} /></td>
                     <td className="px-5 py-3.5 text-gray-600 text-[13px]">{p.capatazNombre ?? <span className="text-gray-300">—</span>}</td>
                     <td className="px-5 py-3.5">
                       <div className="flex items-center gap-2">
                         <select
                           defaultValue={p.capatazId ?? ''}
-                          onChange={e => handleAsignar(p.id, Number(e.target.value))}
-                          disabled={saving[p.id]}
+                          onChange={e => handleAsignar(p.idOt!, Number(e.target.value))}
+                          disabled={saving[p.idOt!]}
                           className="border border-gray-200 rounded-lg px-2 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-[#CC1111]/20 focus:border-[#CC1111] bg-white transition-all disabled:opacity-60"
                         >
                           <option value="">Sin asignar</option>
@@ -127,7 +129,7 @@ export default function AsignarPuntos() {
                             <option key={c.id} value={c.id}>{c.nombre}</option>
                           ))}
                         </select>
-                        {saving[p.id] && <Loader2 size={14} className="animate-spin text-[#CC1111]" />}
+                        {saving[p.idOt!] && <Loader2 size={14} className="animate-spin text-[#CC1111]" />}
                       </div>
                     </td>
                   </tr>

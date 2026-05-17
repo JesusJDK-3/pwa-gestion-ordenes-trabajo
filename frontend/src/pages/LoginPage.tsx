@@ -19,8 +19,8 @@ export default function LoginPage() {
     setLoading(true)
     try {
       const user = await login(email, password)
-      if (user.rol === 'CAPATAZ')         navigate('/dashboard')
-      else if (user.rol === 'SUPERVISOR') navigate('/supervisor')
+      if (user.rol === 'capataz')         navigate('/dashboard')
+      else if (user.rol === 'supervisor') navigate('/supervisor')
       else                                navigate('/admin')
     } catch {
       setError('Credenciales incorrectas. Verifica tu usuario y contraseña.')

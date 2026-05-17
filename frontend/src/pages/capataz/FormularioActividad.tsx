@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { puntoService, registroService } from '../../services/api'
 import { offlineDB } from '../../services/offlineDB'
 import { useOfflineSync } from '../../hooks/useOfflineSync'
-import type { ApiResponse, PuntoTrabajo } from '../../types'
+import type { OrdenTrabajo } from '../../types'
 import { ArrowLeft, WifiOff, CheckCircle2, AlertCircle, Loader2, Save } from 'lucide-react'
 
 const TIPOS = ['Inspección', 'Mantenimiento', 'Reparación', 'Instalación', 'Completado', 'Observado', 'Otro']
@@ -13,7 +13,7 @@ export default function FormularioActividad() {
   const navigate     = useNavigate()
   const { isOnline, updatePendingCount } = useOfflineSync()
 
-  const [punto,         setPunto]   = useState<PuntoTrabajo | null>(null)
+  const [punto,         setPunto]   = useState<OrdenTrabajo | null>(null)
   const [tipoActividad, setTipo]    = useState('Inspección')
   const [observaciones, setObs]     = useState('')
   const [fecha,         setFecha]   = useState(new Date().toISOString().slice(0, 10))
@@ -23,14 +23,15 @@ export default function FormularioActividad() {
 
   useEffect(() => {
     if (!puntoId) return
-    puntoService.todos({ ordenId: undefined })
+    puntoService.misPuntos()
       .then(r => {
-        const todos = (r.data as ApiResponse<PuntoTrabajo[]>).data ?? []
-        const found = todos.find(p => p.id === Number(puntoId))
+        const data = (r.data as any)
+        const todos: OrdenTrabajo[] = Array.isArray(data) ? data : (data?.data ?? [])
+        const found = todos.find(p => p.idOt === Number(puntoId))
         setPunto(found ?? null)
       })
       .catch(() => {
-        setPunto({ id: Number(puntoId), descripcion: `Punto #${puntoId}`, direccion: '', latitud: 0, longitud: 0, estado: 'EN_PROGRESO', ordenId: null, codigoOt: null })
+        setPunto({ idOt: Number(puntoId), sgio: `OT #${puntoId}`, estadoCodigo: 'EN_PROGRESO', estado: 'En Progreso' })
       })
   }, [puntoId])
 
@@ -94,10 +95,11 @@ export default function FormularioActividad() {
       {/* Punto info */}
       {punto && (
         <div className="bg-white rounded-2xl shadow-card p-4 border-l-4 border-[#CC1111]">
-          <p className="font-semibold text-gray-800">{punto.descripcion}</p>
+          <p className="font-semibold text-gray-800 font-mono">{punto.sgio}</p>
           {punto.direccion && <p className="text-sm text-gray-500 mt-0.5">{punto.direccion}</p>}
+          {punto.subactividad && <p className="text-xs text-gray-400 mt-0.5">{punto.subactividad}</p>}
           <span className="inline-block mt-2 text-xs bg-gray-100 text-gray-600 px-2.5 py-1 rounded-full">
-            Estado: {punto.estado}
+            Estado: {punto.estado ?? punto.estadoCodigo}
           </span>
         </div>
       )}

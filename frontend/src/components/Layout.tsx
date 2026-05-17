@@ -11,25 +11,25 @@ import type { Rol } from '../types'
 interface NavItem { to: string; label: string; icon: LucideIcon }
 
 const NAV_BY_ROL: Record<Rol, NavItem[]> = {
-  SUPERVISOR: [
+  supervisor: [
     { to: '/supervisor',             label: 'Dashboard',      icon: LayoutDashboard },
     { to: '/supervisor/cargar-ot',   label: 'Cargar OT',      icon: Upload },
     { to: '/supervisor/asignar',     label: 'Asignar Puntos', icon: MapPin },
     { to: '/supervisor/seguimiento', label: 'Seguimiento',    icon: Radio },
   ],
-  CAPATAZ: [
+  capataz: [
     { to: '/capataz',      label: 'Dashboard', icon: Home },
     { to: '/capataz/mapa', label: 'Mapa',      icon: Map },
   ],
-  ADMINISTRADOR: [
+  admin: [
     { to: '/admin', label: 'Panel Admin', icon: Shield },
   ],
 }
 
 const ROL_BADGE: Record<Rol, { bg: string; text: string; label: string }> = {
-  SUPERVISOR:    { bg: 'bg-blue-500/20',   text: 'text-blue-300',   label: 'Supervisor' },
-  CAPATAZ:       { bg: 'bg-orange-500/20', text: 'text-orange-300', label: 'Capataz' },
-  ADMINISTRADOR: { bg: 'bg-purple-500/20', text: 'text-purple-300', label: 'Administrador' },
+  supervisor: { bg: 'bg-blue-500/20',   text: 'text-blue-300',   label: 'Supervisor' },
+  capataz:    { bg: 'bg-orange-500/20', text: 'text-orange-300', label: 'Capataz' },
+  admin:      { bg: 'bg-purple-500/20', text: 'text-purple-300', label: 'Administrador' },
 }
 
 function getInitials(nombre = '') {
@@ -56,7 +56,7 @@ export default function Layout() {
   const { user, logout } = useAuth()
   const navigate = useNavigate()
 
-  const rol       = (user?.rol ?? 'CAPATAZ') as Rol
+  const rol       = (user?.rol ?? 'capataz') as Rol
   const navItems  = NAV_BY_ROL[rol] ?? []
   const badge     = ROL_BADGE[rol]
 
