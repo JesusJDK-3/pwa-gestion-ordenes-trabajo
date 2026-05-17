@@ -1,73 +1,98 @@
-# React + TypeScript + Vite
+# KABJ GIS — Frontend (React + TypeScript + Vite)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Interfaz PWA del Sistema de Operaciones de Campo.  
+Forma parte del monorepo `pwa-gestion-ordenes-trabajo`.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Desarrollo local
 
-## React Compiler
+```bash
+# Desde la raíz del proyecto — inicia todo:
+bash start.sh
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+# O solo el frontend (requiere el backend corriendo):
+cd frontend
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+La app queda disponible en **http://localhost:5173**.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+---
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Variables de entorno
+
+Crea un archivo `frontend/.env` (el script `start.sh` lo genera automáticamente):
+
+```env
+VITE_API_URL=http://localhost:8080
+```
+
+---
+
+## Scripts disponibles
+
+| Comando | Descripción |
+|---|---|
+| `npm run dev` | Servidor de desarrollo con HMR |
+| `npm run build` | Build de producción en `dist/` |
+| `npm run preview` | Vista previa del build |
+| `npm run lint` | Revisión de código con ESLint |
+
+---
+
+## Stack
+
+- **React 19** + **TypeScript**
+- **Vite** — bundler y dev server
+- **Tailwind CSS** — estilos utilitarios
+- **Lucide React** — íconos
+- **Leaflet / React-Leaflet** — mapas GIS
+- **Axios** — cliente HTTP con interceptores JWT
+- **vite-plugin-pwa** — soporte PWA + Service Worker
+
+---
+
+## Estructura `src/`
+
+```
+src/
+├── App.tsx                  ← Router principal
+├── main.tsx                 ← Entry point
+├── index.css                ← Estilos globales + Tailwind
+├── pages/
+│   ├── LoginPage.tsx
+│   ├── kabj/                ← App de campo (Capataz)
+│   │   ├── DashboardPage.tsx
+│   │   ├── ActividadPage.tsx
+│   │   ├── FichaPage.tsx
+│   │   └── HistorialPage.tsx
+│   ├── supervisor/          ← Panel Supervisor
+│   │   ├── SupervisorDashboard.tsx
+│   │   ├── CargarOT.tsx
+│   │   ├── AsignarPuntos.tsx
+│   │   └── SeguimientoPage.tsx
+│   ├── capataz/             ← Vistas legacy con sidebar
+│   │   ├── CapatazDashboard.tsx
+│   │   ├── MapaPuntos.tsx
+│   │   └── FormularioActividad.tsx
+│   └── admin/
+│       └── AdminDashboard.tsx
+├── components/
+│   ├── Layout.tsx           ← Sidebar + header (Supervisor/Admin)
+│   ├── PrivateRoute.tsx     ← Guard por rol
+│   ├── OfflineBadge.tsx     ← Indicador de conexión
+│   └── kabj/
+│       ├── Navbar.tsx       ← Barra superior (App de campo)
+│       └── HelpButton.tsx
+├── context/
+│   └── AuthContext.tsx      ← Auth global (token JWT)
+├── services/
+│   ├── api.ts               ← Axios + endpoints
+│   └── offlineDB.ts         ← IndexedDB para modo offline
+├── hooks/
+│   └── useOfflineSync.ts    ← Sincronización offline
+├── types/                   ← Interfaces TypeScript
+└── data/
+    └── actividades.ts       ← Catálogo de actividades SEDAPAL
 ```
