@@ -8,6 +8,7 @@ import com.kabj.sistema_ot.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -20,6 +21,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/reportes")
 @RequiredArgsConstructor
+@PreAuthorize("hasAnyRole('ADMIN','SUPERVISOR')")
 public class ReporteController {
 
     private final OpOrdenTrabajoRepository ordenRepo;
@@ -100,7 +102,13 @@ public class ReporteController {
 
         var todas = ordenRepo.findByActivoTrueOrderByCreatedAtDesc();
 
-        var compMes = ordenRepo.findByMesAnioFin(m, a);
+        // Filtro en Java para compatibilidad PostgreSQL (EXTRACT en JPQL no es portable)
+        var compMes = todas.stream()
+                .filter(o -> o.getFechaFin() != null
+                        && o.getFechaFin().getMonthValue() == m
+                        && o.getFechaFin().getYear() == a
+                        && "COMPLETADA".equals(codigo(o)))
+                .toList();
         var creadMes = todas.stream()
                 .filter(o -> o.getCreatedAt() != null
                         && !o.getCreatedAt().toLocalDate().isBefore(inicio)
