@@ -2,6 +2,16 @@ import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom'
 import { AuthProvider } from './context/AuthContext'
 import PrivateRoute from './components/PrivateRoute'
 import Layout from './components/Layout'
+import { useAuth } from './context/AuthContext'
+
+// Redirige al home del rol si autenticado, o a /login si no lo está
+function SmartRedirect() {
+  const { isAuthenticated, user } = useAuth()
+  if (!isAuthenticated || !user) return <Navigate to="/login" replace />
+  if (user.rol === 'capataz')    return <Navigate to="/dashboard"  replace />
+  if (user.rol === 'supervisor') return <Navigate to="/supervisor" replace />
+  return <Navigate to="/admin" replace />
+}
 
 // ── Existing supervisor / admin pages ─────────────────────────
 import LoginPage          from './pages/LoginPage'
@@ -11,7 +21,8 @@ import AsignarPuntos      from './pages/supervisor/AsignarPuntos'
 import SeguimientoPage    from './pages/supervisor/SeguimientoPage'
 import AdminDashboard     from './pages/admin/AdminDashboard'
 
-// ── Capataz legacy map/form ────────────────────────────────────
+// ── Capataz pages ─────────────────────────────────────────────
+import CapatazDashboard   from './pages/capataz/CapatazDashboard'
 import MapaPuntos         from './pages/capataz/MapaPuntos'
 import FormularioActividad from './pages/capataz/FormularioActividad'
 
@@ -67,7 +78,7 @@ const router = createBrowserRouter([
       </PrivateRoute>
     ),
     children: [
-      { index: true, element: <Navigate to="/login" replace /> },
+      { index: true, element: <SmartRedirect /> },
 
       // Supervisor
       {
@@ -87,7 +98,11 @@ const router = createBrowserRouter([
         element: <PrivateRoute roles={['supervisor', 'admin']}><SeguimientoPage /></PrivateRoute>,
       },
 
-      // Capataz legacy map/form (still accessible from ficha CTA)
+      // Capataz routes (sidebar Layout)
+      {
+        path: 'capataz',
+        element: <PrivateRoute roles={['capataz']}><CapatazDashboard /></PrivateRoute>,
+      },
       {
         path: 'capataz/mapa',
         element: <PrivateRoute roles={['capataz']}><MapaPuntos /></PrivateRoute>,
@@ -105,7 +120,7 @@ const router = createBrowserRouter([
     ],
   },
 
-  { path: '*', element: <Navigate to="/login" replace /> },
+  { path: '*', element: <SmartRedirect /> },
 ])
 
 export default function App() {

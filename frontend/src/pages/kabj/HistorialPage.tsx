@@ -1,281 +1,182 @@
 import React, { useEffect, useState } from 'react'
-import { CheckCircle, Clock, Zap, MapPin, Medal } from 'lucide-react'
-import { ACTIVIDADES, RESUMEN_DIARIO } from '../../data/actividades'
-import type { OrdenTrabajo } from '../../types/kabj'
+import { CheckCircle, Clock, MapPin, RefreshCw, Loader2, AlertCircle } from 'lucide-react'
+import { puntoExtraService } from '../../services/api'
+import type { OrdenTrabajo } from '../../types'
 import Navbar from '../../components/kabj/Navbar'
 import HelpButton from '../../components/kabj/HelpButton'
 
-/* ── KPI counter hook ─────────────────────────────────────────── */
-function useCounter(target: number, duration = 800) {
+function useCounter(target: number, duration = 700) {
   const [val, setVal] = useState(0)
   useEffect(() => {
-    if (target === 0) return
-    const steps = 50
-    const inc    = target / steps
-    let cur      = 0
-    const t      = setInterval(() => {
+    if (target === 0) { setVal(0); return }
+    const steps = 40
+    const inc = target / steps
+    let cur = 0
+    const t = setInterval(() => {
       cur += inc
       if (cur >= target) { setVal(target); clearInterval(t) }
-      else               { setVal(Math.round(cur)) }
+      else { setVal(Math.round(cur)) }
     }, duration / steps)
     return () => clearInterval(t)
   }, [target, duration])
   return val
 }
 
-/* ── Helper ───────────────────────────────────────────────────── */
-function getSubNombre(subId: string): string {
-  for (const act of ACTIVIDADES) {
-    const sub = act.subactividades.find(s => s.id === subId)
-    if (sub) return sub.nombre
-  }
-  return subId
+const BADGE: Record<string, string> = {
+  COMPLETADA:  'bg-emerald-100 text-emerald-700',
+  OBSERVADA:   'bg-yellow-100 text-yellow-700',
+  EN_PROGRESO: 'bg-orange-100 text-orange-700',
+  PENDIENTE:   'bg-gray-100 text-gray-600',
+  ANULADA:     'bg-red-100 text-red-600',
 }
 
-function formatDate(dateStr: string) {
-  const d = new Date(dateStr + 'T00:00:00')
-  return d.toLocaleDateString('es-PE', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
-}
-
-/* ── KPI Card ─────────────────────────────────────────────────── */
-function KpiCard({
-  label, value, unit, icon, iconBg, badge, delay,
-}: {
-  label: string
-  value: number
-  unit: string
-  icon: React.ReactNode
-  iconBg: string
-  badge?: string
-  delay: string
+function KpiCard({ label, value, unit, icon, bg }: {
+  label: string; value: number; unit: string; icon: React.ReactNode; bg: string
 }) {
   const anim = useCounter(value)
   return (
-    <div className={`bg-white rounded-2xl shadow-card p-4 animate-fade-in-up ${delay}`}>
-      <div className="flex items-start justify-between mb-3">
-        <div className={`w-10 h-10 rounded-xl ${iconBg} flex items-center justify-center`}>
-          {icon}
-        </div>
-        {badge && (
-          <span className="text-[12px] bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full font-medium">
-            {badge}
-          </span>
-        )}
-      </div>
-      <p className="text-[12px] text-gray-400 mb-0.5">{label}</p>
+    <div className="bg-white rounded-2xl shadow-card p-4 animate-fade-in-up">
+      <div className={`w-9 h-9 rounded-xl ${bg} flex items-center justify-center mb-3`}>{icon}</div>
+      <p className="text-[11px] text-gray-400 mb-0.5">{label}</p>
       <div className="flex items-end gap-1">
-        <span className="text-[24px] font-bold text-gray-900 leading-none">{anim}</span>
-        <span className="text-[13px] text-gray-400 mb-0.5">{unit}</span>
+        <span className="text-[22px] font-bold text-gray-900 leading-none">{anim}</span>
+        <span className="text-[12px] text-gray-400 mb-0.5">{unit}</span>
       </div>
     </div>
   )
 }
 
-/* ── Timeline item ────────────────────────────────────────────── */
-function TimelineItem({ orden, index }: { orden: OrdenTrabajo; index: number }) {
-  const stagger = `stagger-${Math.min(index + 1, 6)}`
-  return (
-    <div className={`relative flex gap-4 animate-fade-in-up ${stagger}`}>
-      {/* Dot */}
-      <div className="flex-shrink-0 relative z-10">
-        <div className="w-10 h-10 rounded-full bg-[#22C55E] flex items-center justify-center shadow-sm">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" className="animate-check-draw">
-            <path
-              d="M3 8l4 4 6-7"
-              stroke="white"
-              strokeWidth="2.2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeDasharray="30"
-              strokeDashoffset="0"
-            />
-          </svg>
-        </div>
-      </div>
+export default function HistorialPage() {
+  const [completadas, setCompletadas] = useState<OrdenTrabajo[]>([])
+  const [loading,     setLoading]     = useState(true)
+  const [error,       setError]       = useState('')
 
-      {/* Card */}
-      <div className="flex-1 bg-white rounded-xl shadow-card px-5 py-4 mb-4">
-        <div className="flex items-center justify-between flex-wrap gap-2 mb-1.5">
-          <div className="flex items-center gap-2 flex-wrap">
-            <span className="text-[#CC1111] font-semibold text-[13px]">{orden.id}</span>
-            <span className="bg-green-100 text-green-700 text-[12px] px-2.5 py-0.5 rounded-full font-medium">
-              Completada
-            </span>
-          </div>
-          <div className="flex items-center gap-1 text-[12px] text-gray-400">
-            <Clock size={12} />
-            {orden.tiempoReal} min
-          </div>
-        </div>
+  const cargar = () => {
+    setLoading(true)
+    setError('')
+    puntoExtraService.misCompletadas()
+      .then(r => {
+        const d = r.data as any
+        setCompletadas(Array.isArray(d) ? d : (d?.data ?? []))
+      })
+      .catch(() => setError('No se pudo cargar el historial. Verifica tu conexión.'))
+      .finally(() => setLoading(false))
+  }
 
-        <p className="font-semibold text-[14px] text-gray-800 mb-2 leading-snug">
-          {getSubNombre(orden.subactividadId)}
-        </p>
+  useEffect(() => { cargar() }, [])
 
-        <div className="grid grid-cols-3 gap-1 text-[12px] text-gray-400">
-          <div>
-            <p className="font-medium text-gray-500">Dirección</p>
-            <p className="truncate">{orden.direccion}</p>
-          </div>
-          <div>
-            <p className="font-medium text-gray-500">Horario</p>
-            <p>{orden.horarioInicio} – {orden.horarioFin}</p>
-          </div>
-          <div>
-            <p className="font-medium text-gray-500">Sector</p>
-            <p>{orden.sector}</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  )
-}
-
-/* ── Sector summary ───────────────────────────────────────────── */
-function SectorSummary({ ordenes }: { ordenes: OrdenTrabajo[] }) {
-  const bySector: Record<string, { count: number; minutos: number }> = {}
-  ordenes.forEach(o => {
-    if (!bySector[o.sector]) bySector[o.sector] = { count: 0, minutos: 0 }
-    bySector[o.sector].count++
-    bySector[o.sector].minutos += o.tiempoReal ?? 0
+  const hoy = completadas.filter(o => {
+    if (!o.fechaFin) return false
+    return o.fechaFin.slice(0, 10) === new Date().toISOString().slice(0, 10)
   })
 
   return (
-    <div className="bg-white rounded-2xl shadow-card overflow-hidden animate-fade-in-up stagger-4">
-      <div className="px-5 py-4 border-b border-gray-50">
-        <h2 className="font-semibold text-[15px] text-gray-800">Resumen por Sector</h2>
-      </div>
-      <table className="w-full">
-        <thead>
-          <tr className="text-[12px] text-gray-500 uppercase tracking-wide">
-            <th className="px-5 py-3 text-left font-semibold">Sector</th>
-            <th className="px-5 py-3 text-center font-semibold">OTs</th>
-            <th className="px-5 py-3 text-right font-semibold">Tiempo total</th>
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-gray-50">
-          {Object.entries(bySector).map(([sector, data]) => (
-            <tr key={sector} className="hover:bg-gray-50 transition-colors">
-              <td className="px-5 py-3 text-[14px] text-gray-700">{sector}</td>
-              <td className="px-5 py-3 text-[14px] text-gray-700 text-center font-medium">{data.count}</td>
-              <td className="px-5 py-3 text-[14px] text-gray-500 text-right">{data.minutos} min</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  )
-}
-
-/* ── Main ─────────────────────────────────────────────────────── */
-export default function HistorialPage() {
-  const r = RESUMEN_DIARIO
-  const eficiencia  = useCounter(r.eficiencia)
-  const puntualidad = useCounter(r.puntualidad)
-  const calidad     = useCounter(r.calidad)
-
-  return (
     <div className="min-h-screen bg-[#EEF1F5] flex flex-col">
-      <Navbar
-        showBack
-        title="Historial Diario"
-        subtitle={formatDate(r.fecha)}
-        showActions={false}
-      />
+      <Navbar showBack title="Historial de OTs" subtitle="Órdenes completadas" showActions={false} />
 
       <main className="flex-1 px-5 py-6 space-y-5">
 
-        {/* ── KPI grid ────────────────────────────────────────── */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        {/* KPIs */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
           <KpiCard
-            label="OTs Completadas"
-            value={r.otCompletadas}
+            label="Total completadas"
+            value={completadas.length}
             unit="OT"
-            icon={<CheckCircle size={18} className="text-white" />}
-            iconBg="bg-green-500"
-            badge="Hoy"
-            delay="stagger-1"
+            icon={<CheckCircle size={16} className="text-white" />}
+            bg="bg-emerald-500"
           />
           <KpiCard
-            label="Tiempo Promedio"
-            value={r.tiempoPromedio}
-            unit="min"
-            icon={<Clock size={18} className="text-white" />}
-            iconBg="bg-blue-500"
-            badge="Hoy"
-            delay="stagger-2"
+            label="Completadas hoy"
+            value={hoy.length}
+            unit="OT"
+            icon={<Clock size={16} className="text-white" />}
+            bg="bg-blue-500"
           />
           <KpiCard
-            label="Tiempo Total"
-            value={r.tiempoTotal}
-            unit="min"
-            icon={<Zap size={18} className="text-white" />}
-            iconBg="bg-purple-500"
-            badge="Hoy"
-            delay="stagger-3"
-          />
-          <KpiCard
-            label="Km recorridos"
-            value={Math.round(r.distanciaTotal)}
-            unit="km"
-            icon={<MapPin size={18} className="text-white" />}
-            iconBg="bg-orange-500"
-            badge="Hoy"
-            delay="stagger-4"
+            label="Con observaciones"
+            value={completadas.filter(o => o.observacion).length}
+            unit="OT"
+            icon={<MapPin size={16} className="text-white" />}
+            bg="bg-purple-500"
           />
         </div>
 
-        {/* ── Rendimiento banner ─────────────────────────────── */}
-        <div className="bg-[#CC1111] rounded-2xl px-6 py-5 text-white animate-banner-in">
-          <div className="flex items-start gap-4">
-            <div className="w-12 h-12 rounded-xl bg-white/15 flex items-center justify-center flex-shrink-0">
-              <Medal size={24} className="text-white" />
-            </div>
-            <div className="flex-1">
-              <p className="font-bold text-[16px] leading-tight">Rendimiento del Día</p>
-              <p className="text-[13px] mt-0.5" style={{ opacity: 0.85 }}>Excelente desempeño operativo</p>
-            </div>
+        {/* Header con refresh */}
+        <div className="flex items-center justify-between">
+          <h2 className="font-semibold text-[15px] text-gray-800">
+            Órdenes completadas ({completadas.length})
+          </h2>
+          <button
+            onClick={cargar}
+            disabled={loading}
+            className="flex items-center gap-1.5 text-xs text-gray-500 border border-gray-200 bg-white px-3 py-1.5 rounded-xl hover:border-gray-300 transition-all disabled:opacity-50"
+          >
+            {loading ? <Loader2 size={12} className="animate-spin" /> : <RefreshCw size={12} />}
+            Actualizar
+          </button>
+        </div>
+
+        {/* Error */}
+        {error && (
+          <div className="bg-red-50 border border-red-100 rounded-xl px-4 py-3 flex items-center gap-2 text-sm text-red-700">
+            <AlertCircle size={15} />
+            {error}
           </div>
-          <div className="grid grid-cols-3 gap-4 mt-5">
-            {[
-              { label: 'Eficiencia',  value: eficiencia },
-              { label: 'Puntualidad', value: puntualidad },
-              { label: 'Calidad',     value: calidad },
-            ].map(({ label, value }) => (
-              <div key={label} className="text-center">
-                <p className="text-[12px] font-medium" style={{ opacity: 0.75 }}>{label}</p>
-                <p className="text-[28px] font-bold leading-tight">{value}%</p>
+        )}
+
+        {/* Lista */}
+        {loading ? (
+          <div className="flex items-center justify-center py-16 gap-3 text-gray-400 text-sm">
+            <Loader2 size={20} className="animate-spin text-[#CC1111]" />
+            Cargando historial…
+          </div>
+        ) : completadas.length === 0 ? (
+          <div className="bg-white rounded-2xl shadow-card p-12 text-center text-gray-400">
+            <CheckCircle size={32} className="mx-auto mb-3 opacity-20" />
+            <p className="text-sm">Aún no tienes órdenes completadas.</p>
+          </div>
+        ) : (
+          <div className="space-y-3">
+            {completadas.map((ot, i) => (
+              <div key={ot.idOt} className="bg-white rounded-2xl shadow-card p-4 animate-fade-in-up" style={{ animationDelay: `${i * 40}ms` }}>
+                <div className="flex items-start justify-between gap-3">
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-1 flex-wrap">
+                      <span className="font-bold text-gray-800 font-mono text-[14px]">{ot.sgio}</span>
+                      <span className={`text-[11px] px-2 py-0.5 rounded-full font-semibold ${BADGE[ot.estadoCodigo ?? 'COMPLETADA']}`}>
+                        {ot.estadoCodigo ?? 'COMPLETADA'}
+                      </span>
+                    </div>
+                    {ot.subactividad && (
+                      <p className="text-[12px] text-gray-500 mb-1">{ot.subactividad}</p>
+                    )}
+                    {ot.direccion && (
+                      <p className="text-[12px] text-gray-400 flex items-center gap-1">
+                        <MapPin size={11} />
+                        {ot.direccion}
+                      </p>
+                    )}
+                    {ot.observacion && (
+                      <p className="text-[12px] text-gray-500 mt-2 bg-gray-50 rounded-lg px-2.5 py-2 leading-relaxed line-clamp-3">
+                        {ot.observacion}
+                      </p>
+                    )}
+                  </div>
+                  <div className="flex-shrink-0 text-right">
+                    {ot.fechaFin && (
+                      <p className="text-[11px] text-gray-400">
+                        {new Date(ot.fechaFin).toLocaleDateString('es-PE', { day: '2-digit', month: 'short' })}
+                      </p>
+                    )}
+                    <div className="w-8 h-8 bg-emerald-50 rounded-full flex items-center justify-center mt-1 ml-auto">
+                      <CheckCircle size={16} className="text-emerald-500" />
+                    </div>
+                  </div>
+                </div>
               </div>
             ))}
           </div>
-        </div>
-
-        {/* ── Timeline ────────────────────────────────────────── */}
-        <div className="animate-fade-in-up stagger-3">
-          <div className="flex items-center gap-2 mb-4">
-            <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-              <path d="M3 15L9 3l6 12" stroke="#CC1111" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              <path d="M5.5 11h7" stroke="#CC1111" strokeWidth="2" strokeLinecap="round"/>
-            </svg>
-            <h2 className="font-semibold text-[15px] text-gray-800">
-              Órdenes Completadas ({r.ordenes.length})
-            </h2>
-          </div>
-
-          <div className="relative">
-            {/* Vertical line */}
-            <div
-              className="absolute left-[19px] top-[40px] w-0.5 bg-green-400"
-              style={{ height: `calc(100% - 80px)` }}
-            />
-            {r.ordenes.map((o, i) => (
-              <TimelineItem key={o.id} orden={o} index={i} />
-            ))}
-          </div>
-        </div>
-
-        {/* ── Sector summary ───────────────────────────────────── */}
-        <SectorSummary ordenes={r.ordenes} />
+        )}
       </main>
 
       <HelpButton />

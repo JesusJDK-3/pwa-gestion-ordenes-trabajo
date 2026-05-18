@@ -60,6 +60,12 @@ public class OrdenTrabajoController {
         return ResponseEntity.ok(ordenService.misPuntos(auth.getName()));
     }
 
+    /** Historial de OTs completadas del capataz (HU18) */
+    @GetMapping("/puntos/mis-completadas")
+    public ResponseEntity<List<OrdenTrabajoResponse>> misCompletadas(Authentication auth) {
+        return ResponseEntity.ok(ordenService.misCompletadas(auth.getName()));
+    }
+
     @GetMapping("/puntos/seguimiento")
     public ResponseEntity<List<Map<String, Object>>> seguimiento() {
         return ResponseEntity.ok(ordenService.seguimiento());
@@ -79,15 +85,23 @@ public class OrdenTrabajoController {
             return ResponseEntity.badRequest()
                     .body(new ApiResponse<>(false, "capatazId requerido", null));
         }
-        var ot = ordenRepo.findById(id);
-        var cap = capatazRepository.findById(capatazId);
-        if (ot.isEmpty() || cap.isEmpty()) {
+        var otOpt = ordenRepo.findById(id);
+        var cap   = capatazRepository.findById(capatazId);
+        if (otOpt.isEmpty() || cap.isEmpty()) {
             return ResponseEntity.badRequest()
                     .body(new ApiResponse<>(false, "OT o capataz no encontrado", null));
         }
-        ot.get().setCapataz(cap.get());
-        ot.get().setUpdatedAt(LocalDateTime.now());
-        ordenRepo.save(ot.get());
+        var ot = otOpt.get();
+        // Una OT finalizada (COMPLETADA o ANULADA) no se puede reasignar
+        String estadoActual = ot.getEstadoOt() != null ? ot.getEstadoOt().getCodigo() : "PENDIENTE";
+        if ("COMPLETADA".equals(estadoActual) || "ANULADA".equals(estadoActual)) {
+            return ResponseEntity.badRequest()
+                    .body(new ApiResponse<>(false,
+                            "No se puede asignar un capataz a una OT " + estadoActual, null));
+        }
+        ot.setCapataz(cap.get());
+        ot.setUpdatedAt(LocalDateTime.now());
+        ordenRepo.save(ot);
         return ResponseEntity.ok(new ApiResponse<>(true, "Capataz asignado", Map.of("ok", true)));
     }
 
@@ -95,20 +109,34 @@ public class OrdenTrabajoController {
     public ResponseEntity<ApiResponse<Map<String, Object>>> cambiarEstado(
             @PathVariable Long id,
             @RequestBody Map<String, Object> body) {
-        String estado = body.get("estado") != null ? body.get("estado").toString() : null;
-        if (estado == null) {
+        String nuevoEstado = body.get("estado") != null ? body.get("estado").toString() : null;
+        if (nuevoEstado == null) {
             return ResponseEntity.badRequest()
                     .body(new ApiResponse<>(false, "estado requerido", null));
         }
-        var ot  = ordenRepo.findById(id);
-        var est = estadoRepo.findByCodigo(estado);
-        if (ot.isEmpty() || est.isEmpty()) {
+        var otOpt = ordenRepo.findById(id);
+        var estOpt = estadoRepo.findByCodigo(nuevoEstado);
+        if (otOpt.isEmpty() || estOpt.isEmpty()) {
             return ResponseEntity.badRequest()
                     .body(new ApiResponse<>(false, "OT o estado no encontrado", null));
         }
-        ot.get().setEstadoOt(est.get());
-        ot.get().setUpdatedAt(LocalDateTime.now());
-        ordenRepo.save(ot.get());
-        return ResponseEntity.ok(new ApiResponse<>(true, "Estado actualizado", Map.of("ok", true)));
+        var ot  = otOpt.get();
+        var est = estOpt.get();
+        // Una OT ya finalizada no puede cambiar de estado
+        String estadoActual = ot.getEstadoOt() != null ? ot.getEstadoOt().getCodigo() : "PENDIENTE";
+        if ("ANULADA".equals(estadoActual)) {
+            return ResponseEntity.badRequest()
+                    .body(new ApiResponse<>(false, "Una OT anulada no puede cambiar de estado", null));
+        }
+        ot.setEstadoOt(est);
+        ot.setUpdatedAt(LocalDateTime.now());
+        // Registrar fechas según el estado final
+        if (est.getEsFinal() != null && est.getEsFinal()) {
+            ot.setFechaFin(LocalDateTime.now());
+            ot.setVisibleEnMapa(false);
+        }
+        ordenRepo.save(ot);
+        return ResponseEntity.ok(new ApiResponse<>(true, "Estado actualizado a " + nuevoEstado,
+                Map.of("estadoAnterior", estadoActual, "estadoActual", nuevoEstado)));
     }
 }

@@ -64,7 +64,9 @@ export default function MapaPuntos() {
       .finally(() => setLoading(false))
   }, [])
 
-  const conUbicacion = puntos.filter(p => p.latitud && p.longitud)
+  // HU13: solo puntos operativos (el backend ya filtra, pero por seguridad excluimos finales)
+  const operativos   = puntos.filter(p => !['COMPLETADA','ANULADA'].includes(p.estadoCodigo ?? ''))
+  const conUbicacion = operativos.filter(p => p.latitud && p.longitud)
 
   if (loading) return (
     <div className="space-y-4 animate-pulse">
@@ -80,17 +82,22 @@ export default function MapaPuntos() {
       <div className="flex items-start justify-between flex-wrap gap-3">
         <div>
           <h1 className="text-[22px] font-bold text-gray-900">Mapa de mis OTs</h1>
-          <p className="text-sm text-gray-500 mt-0.5">{conUbicacion.length} con ubicación de {puntos.length} total</p>
+          <p className="text-sm text-gray-500 mt-0.5">
+            {conUbicacion.length} punto{conUbicacion.length !== 1 ? 's' : ''} operativo{conUbicacion.length !== 1 ? 's' : ''} en mapa
+            {puntos.length > operativos.length && (
+              <span className="ml-1.5 text-emerald-600 font-medium">· {puntos.length - operativos.length} completado(s) retirado(s)</span>
+            )}
+          </p>
         </div>
 
-        {/* Leyenda */}
+        {/* Leyenda — solo estados operativos */}
         <div className="flex flex-wrap gap-2">
-          {(Object.entries(ESTADO_COLORS) as [EstadoOt, string][]).map(([estado, color]) => (
+          {(['PENDIENTE','EN_PROGRESO','OBSERVADA'] as EstadoOt[]).map(estado => (
             <span
               key={estado}
               className="flex items-center gap-1.5 text-xs bg-white rounded-xl px-3 py-1.5 shadow-card border border-gray-100 font-medium text-gray-600"
             >
-              <span className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ background: color }} />
+              <span className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ background: ESTADO_COLORS[estado] }} />
               {ESTADO_LABELS[estado]}
             </span>
           ))}

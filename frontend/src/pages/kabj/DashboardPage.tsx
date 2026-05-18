@@ -1,6 +1,6 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
-import { ChevronRight } from 'lucide-react'
+import { ChevronRight, ClipboardList } from 'lucide-react'
 import { ACTIVIDADES } from '../../data/actividades'
 import type { Actividad } from '../../types/kabj'
 import Navbar from '../../components/kabj/Navbar'
@@ -83,18 +83,34 @@ function ActivityCard({ actividad, index }: { actividad: Actividad; index: numbe
 }
 
 export default function DashboardPage() {
+  const navigate = useNavigate()
   return (
     <div className="min-h-screen bg-[#EEF1F5] flex flex-col">
       <Navbar />
 
       <main className="flex-1 px-5 py-6">
         {/* Header */}
-        <div className="mb-6 animate-fade-in-up">
-          <h1 className="text-[22px] font-bold text-gray-900">Seleccione Actividad</h1>
-          <p className="text-[14px] text-gray-500 mt-1">Escoja el tipo de operación que va a realizar hoy</p>
+        <div className="mb-5 animate-fade-in-up">
+          <h1 className="text-[22px] font-bold text-gray-900">Guías de Procedimiento</h1>
+          <p className="text-[14px] text-gray-500 mt-1">Consulta los pasos técnicos antes de iniciar tu operación</p>
         </div>
 
-        {/* Grid */}
+        {/* Acceso rápido a OTs reales */}
+        <button
+          onClick={() => navigate('/capataz')}
+          className="w-full mb-5 bg-[#1A2535] hover:bg-[#243347] text-white rounded-2xl px-5 py-4 flex items-center gap-3 transition-colors shadow-card animate-fade-in-up"
+        >
+          <div className="w-9 h-9 bg-white/10 rounded-xl flex items-center justify-center flex-shrink-0">
+            <ClipboardList size={18} />
+          </div>
+          <div className="text-left">
+            <p className="font-semibold text-[14px]">Mis Órdenes de Trabajo</p>
+            <p className="text-[12px] text-white/60">Ver y gestionar OTs asignadas</p>
+          </div>
+          <ChevronRight size={16} className="ml-auto opacity-50" />
+        </button>
+
+        {/* Grid de actividades */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {ACTIVIDADES.map((act, i) => (
             <ActivityCard key={act.id} actividad={act} index={i} />

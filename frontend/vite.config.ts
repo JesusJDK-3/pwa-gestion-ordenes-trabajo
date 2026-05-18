@@ -35,6 +35,9 @@ export default defineConfig({
       },
     }),
   ],
+  optimizeDeps: {
+    include: ['xlsx'],
+  },
   server: {
     proxy: {
       '/api': {

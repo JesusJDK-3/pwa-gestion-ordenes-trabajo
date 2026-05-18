@@ -35,7 +35,18 @@ public class OrdenTrabajoService {
                 .orElseThrow(() -> new AuthException("Usuario no encontrado"));
         RrhhCapataz capataz = capatazRepository.findByUsuario(usuario)
                 .orElseThrow(() -> new RuntimeException("No existe registro de capataz para este usuario"));
-        return ordenRepo.findByCapatazAndActivoTrueOrderByFechaProgramadaAsc(capataz)
+        // Solo OTs operativas (no completadas/anuladas) — HU13
+        return ordenRepo.findByCapatazActivasVisibles(capataz)
+                .stream().map(OrdenTrabajoResponse::from).toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<OrdenTrabajoResponse> misCompletadas(String username) {
+        Usuario usuario = usuarioRepository.findByUsername(username)
+                .orElseThrow(() -> new AuthException("Usuario no encontrado"));
+        RrhhCapataz capataz = capatazRepository.findByUsuario(usuario)
+                .orElseThrow(() -> new RuntimeException("No existe registro de capataz para este usuario"));
+        return ordenRepo.findCompletadasByCapataz(capataz)
                 .stream().map(OrdenTrabajoResponse::from).toList();
     }
 

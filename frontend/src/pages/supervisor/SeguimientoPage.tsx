@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { puntoService } from '../../services/api'
 import type { EstadoOt } from '../../types'
-import { Radio, RefreshCw, CheckCircle2, Clock3, AlertCircle } from 'lucide-react'
+import { Radio, RefreshCw, CheckCircle2, Clock3, AlertCircle, Eye } from 'lucide-react'
 
 interface OtResumen {
   idOt: number
@@ -17,20 +17,24 @@ interface CapatazResumen {
   completados: number
   pendientes: number
   enProgreso: number
+  observadas: number
 }
 
 function agruparPorCapataz(ots: OtResumen[]): CapatazResumen[] {
   const mapa: Record<string, CapatazResumen> = {}
   for (const ot of ots) {
     if (!mapa[ot.capataz]) {
-      mapa[ot.capataz] = { nombre: ot.capataz, total: 0, completados: 0, pendientes: 0, enProgreso: 0 }
+      mapa[ot.capataz] = { nombre: ot.capataz, total: 0, completados: 0, pendientes: 0, enProgreso: 0, observadas: 0 }
     }
+    // Sólo contar OTs activas (no anuladas)
+    if (ot.estado === 'ANULADA') continue
     mapa[ot.capataz].total++
-    if (ot.estado === 'COMPLETADA') mapa[ot.capataz].completados++
+    if      (ot.estado === 'COMPLETADA')  mapa[ot.capataz].completados++
     else if (ot.estado === 'EN_PROGRESO') mapa[ot.capataz].enProgreso++
-    else mapa[ot.capataz].pendientes++
+    else if (ot.estado === 'OBSERVADA')   mapa[ot.capataz].observadas++
+    else                                  mapa[ot.capataz].pendientes++
   }
-  return Object.values(mapa)
+  return Object.values(mapa).filter(c => c.total > 0)
 }
 
 export default function SeguimientoPage() {
@@ -113,9 +117,10 @@ export default function SeguimientoPage() {
                 </div>
 
                 {/* Stats grid */}
-                <div className="grid grid-cols-3 gap-2">
+                <div className="grid grid-cols-4 gap-2">
                   <StatChip icon={<Clock3 size={13} className="text-gray-400" />}          value={cap.pendientes}  label="Pend."  bg="bg-gray-50"    text="text-gray-700" />
                   <StatChip icon={<AlertCircle size={13} className="text-orange-500" />}   value={cap.enProgreso}  label="Prog."  bg="bg-orange-50"  text="text-orange-700" />
+                  <StatChip icon={<Eye size={13} className="text-yellow-500" />}            value={cap.observadas}  label="Obs."   bg="bg-yellow-50"  text="text-yellow-700" />
                   <StatChip icon={<CheckCircle2 size={13} className="text-emerald-500" />} value={cap.completados} label="Comp."  bg="bg-emerald-50" text="text-emerald-700" />
                 </div>
               </div>
