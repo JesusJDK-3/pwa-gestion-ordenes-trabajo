@@ -1,0 +1,166 @@
+5:48:20 p. m. [vite] (client) [console.error] Error handled by React Router default ErrorBoundary: Layout@http://localhost:5173/src/components/Layout.tsx?t=1779056152930:255:74
+react_stack_bottom_frame@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:12868:12
+renderWithHooks@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:4213:37
+updateFunctionComponent@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:5569:16
+beginWork@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:6140:20
+runWithFiberInDEV@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:851:123
+performUnitOfWork@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:8429:92
+workLoopSync@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:8325:54
+renderRootSync@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:8309:6
+performWorkOnRoot@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:7957:181
+performWorkOnRootViaSchedulerTask@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:9059:21
+performWorkUntilDeadline@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:36:46
+
+5:48:20 p. m. [vite] (client) [console.error] Error handled by React Router default ErrorBoundary: Layout@http://localhost:5173/src/components/Layout.tsx?t=1779056152930:255:74
+react_stack_bottom_frame@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:12868:12
+renderWithHooks@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:4213:37
+updateFunctionComponent@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:5569:16
+beginWork@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:6140:20
+runWithFiberInDEV@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:851:123
+performUnitOfWork@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:8429:92
+workLoopSync@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:8325:54
+renderRootSync@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:8309:6
+performWorkOnRoot@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:7957:181
+performWorkOnRootViaSchedulerTask@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:9059:21
+performWorkUntilDeadline@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:36:46
+
+5:48:20 p. m. [vite] (client) [console.error] Error handled by React Router default ErrorBoundary: Layout@http://localhost:5173/src/components/Layout.tsx?t=1779056152930:255:74
+react_stack_bottom_frame@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:12868:12
+renderWithHooks@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:4213:37
+updateFunctionComponent@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:5569:16
+beginWork@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:6140:20
+runWithFiberInDEV@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:851:123
+performUnitOfWork@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:8429:92
+workLoopSync@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:8325:54
+renderRootSync@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:8309:6
+performWorkOnRoot@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:7994:27
+performWorkOnRootViaSchedulerTask@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:9059:21
+performWorkUntilDeadline@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:36:46
+
+5:48:20 p. m. [vite] (client) [console.error] Error handled by React Router default ErrorBoundary: Layout@http://localhost:5173/src/components/Layout.tsx?t=1779056152930:255:74
+react_stack_bottom_frame@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:12868:12
+renderWithHooks@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:4213:37
+updateFunctionComponent@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:5569:16
+beginWork@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:6140:20
+runWithFiberInDEV@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:851:123
+performUnitOfWork@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:8429:92
+workLoopSync@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:8325:54
+renderRootSync@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:8309:6
+performWorkOnRoot@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:7994:27
+performWorkOnRootViaSchedulerTask@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:9059:21
+performWorkUntilDeadline@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:36:46
+
+5:48:20 p. m. [vite] (client) [console.error] Layout@http://localhost:5173/src/components/Layout.tsx?t=1779056152930:255:74
+react_stack_bottom_frame@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:12868:12
+renderWithHooks@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:4213:37
+updateFunctionComponent@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:5569:16
+beginWork@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:6140:20
+runWithFiberInDEV@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:851:123
+performUnitOfWork@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:8429:92
+workLoopSync@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:8325:54
+renderRootSync@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:8309:6
+performWorkOnRoot@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:7994:27
+performWorkOnRootViaSchedulerTask@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:9059:21
+performWorkUntilDeadline@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:36:46
+
+
+The above error occurred in the <Layout> component.
+
+React will try to recreate this component tree from scratch using the error boundary you provided, RenderErrorBoundary.
+
+5:48:20 p. m. [vite] (client) [console.error] React Router caught the following error during render Layout@http://localhost:5173/src/components/Layout.tsx?t=1779056152930:255:74
+react_stack_bottom_frame@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:12868:12
+renderWithHooks@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:4213:37
+updateFunctionComponent@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:5569:16
+beginWork@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:6140:20
+runWithFiberInDEV@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:851:123
+performUnitOfWork@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:8429:92
+workLoopSync@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:8325:54
+renderRootSync@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:8309:6
+performWorkOnRoot@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:7994:27
+performWorkOnRootViaSchedulerTask@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:9059:21
+performWorkUntilDeadline@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:36:46
+
+6:13:59 p. m. [vite] (client) [console.error] Error handled by React Router default ErrorBoundary: AdminDashboard@http://localhost:5173/src/pages/admin/AdminDashboard.tsx?t=1779056152930:187:29
+react_stack_bottom_frame@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:12868:12
+renderWithHooks@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:4213:37
+updateFunctionComponent@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:5569:16
+beginWork@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:6140:20
+runWithFiberInDEV@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:851:123
+performUnitOfWork@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:8429:92
+workLoopSync@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:8325:54
+renderRootSync@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:8309:6
+performWorkOnRoot@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:7957:181
+performWorkOnRootViaSchedulerTask@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:9059:21
+performWorkUntilDeadline@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:36:46
+
+6:13:59 p. m. [vite] (client) [console.error] Error handled by React Router default ErrorBoundary: AdminDashboard@http://localhost:5173/src/pages/admin/AdminDashboard.tsx?t=1779056152930:187:29
+react_stack_bottom_frame@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:12868:12
+renderWithHooks@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:4213:37
+updateFunctionComponent@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:5569:16
+beginWork@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:6140:20
+runWithFiberInDEV@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:851:123
+performUnitOfWork@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:8429:92
+workLoopSync@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:8325:54
+renderRootSync@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:8309:6
+performWorkOnRoot@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:7957:181
+performWorkOnRootViaSchedulerTask@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:9059:21
+performWorkUntilDeadline@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:36:46
+
+6:13:59 p. m. [vite] (client) [console.error] Error handled by React Router default ErrorBoundary: AdminDashboard@http://localhost:5173/src/pages/admin/AdminDashboard.tsx?t=1779056152930:187:29
+react_stack_bottom_frame@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:12868:12
+renderWithHooks@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:4213:37
+updateFunctionComponent@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:5569:16
+beginWork@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:6140:20
+runWithFiberInDEV@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:851:123
+performUnitOfWork@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:8429:92
+workLoopSync@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:8325:54
+renderRootSync@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:8309:6
+performWorkOnRoot@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:7994:27
+performWorkOnRootViaSchedulerTask@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:9059:21
+performWorkUntilDeadline@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:36:46
+
+6:13:59 p. m. [vite] (client) [console.error] Error handled by React Router default ErrorBoundary: AdminDashboard@http://localhost:5173/src/pages/admin/AdminDashboard.tsx?t=1779056152930:187:29
+react_stack_bottom_frame@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:12868:12
+renderWithHooks@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:4213:37
+updateFunctionComponent@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:5569:16
+beginWork@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:6140:20
+runWithFiberInDEV@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:851:123
+performUnitOfWork@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:8429:92
+workLoopSync@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:8325:54
+renderRootSync@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:8309:6
+performWorkOnRoot@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:7994:27
+performWorkOnRootViaSchedulerTask@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:9059:21
+performWorkUntilDeadline@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:36:46
+
+6:13:59 p. m. [vite] (client) [console.error] AdminDashboard@http://localhost:5173/src/pages/admin/AdminDashboard.tsx?t=1779056152930:187:29
+react_stack_bottom_frame@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:12868:12
+renderWithHooks@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:4213:37
+updateFunctionComponent@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:5569:16
+beginWork@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:6140:20
+runWithFiberInDEV@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:851:123
+performUnitOfWork@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:8429:92
+workLoopSync@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:8325:54
+renderRootSync@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:8309:6
+performWorkOnRoot@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:7994:27
+performWorkOnRootViaSchedulerTask@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:9059:21
+performWorkUntilDeadline@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:36:46
+
+
+The above error occurred in the <AdminDashboard> component.
+
+React will try to recreate this component tree from scratch using the error boundary you provided, RenderErrorBoundary.
+
+6:13:59 p. m. [vite] (client) [console.error] React Router caught the following error during render AdminDashboard@http://localhost:5173/src/pages/admin/AdminDashboard.tsx?t=1779056152930:187:29
+react_stack_bottom_frame@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:12868:12
+renderWithHooks@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:4213:37
+updateFunctionComponent@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:5569:16
+beginWork@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:6140:20
+runWithFiberInDEV@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:851:123
+performUnitOfWork@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:8429:92
+workLoopSync@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:8325:54
+renderRootSync@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:8309:6
+performWorkOnRoot@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:7994:27
+performWorkOnRootViaSchedulerTask@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:9059:21
+performWorkUntilDeadline@http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=edba044b:36:46
+
