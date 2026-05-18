@@ -3,7 +3,7 @@ import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet'
 import L from 'leaflet'
 import { useNavigate } from 'react-router-dom'
 import { puntoService } from '../../services/api'
-import type { ApiResponse, EstadoPunto, PuntoTrabajo } from '../../types'
+import type { OrdenTrabajo, EstadoOt } from '../../types'
 import { ArrowRight } from 'lucide-react'
 
 delete (L.Icon.Default.prototype as unknown as Record<string, unknown>)._getIconUrl
@@ -13,34 +13,37 @@ L.Icon.Default.mergeOptions({
   shadowUrl:     'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
 })
 
-const ESTADO_COLORS: Record<EstadoPunto, string> = {
+const ESTADO_COLORS: Record<EstadoOt, string> = {
   PENDIENTE:   '#ef4444',
   EN_PROGRESO: '#f97316',
-  COMPLETADO:  '#22c55e',
-  OBSERVADO:   '#eab308',
+  COMPLETADA:  '#22c55e',
+  OBSERVADA:   '#eab308',
+  ANULADA:     '#6b7280',
 }
 
-const ESTADO_LABELS: Record<EstadoPunto, string> = {
+const ESTADO_LABELS: Record<EstadoOt, string> = {
   PENDIENTE:   'Pendiente',
   EN_PROGRESO: 'En progreso',
-  COMPLETADO:  'Completado',
-  OBSERVADO:   'Observado',
+  COMPLETADA:  'Completada',
+  OBSERVADA:   'Observada',
+  ANULADA:     'Anulada',
 }
 
-function createIcon(estado: EstadoPunto) {
+function createIcon(estado: EstadoOt) {
   return L.divIcon({
-    html: `<div style="width:18px;height:18px;background:${ESTADO_COLORS[estado]};border-radius:50%;border:2.5px solid white;box-shadow:0 2px 6px rgba(0,0,0,.35)"></div>`,
+    html: `<div style="width:18px;height:18px;background:${ESTADO_COLORS[estado] ?? '#ef4444'};border-radius:50%;border:2.5px solid white;box-shadow:0 2px 6px rgba(0,0,0,.35)"></div>`,
     iconSize:   [18, 18],
     iconAnchor: [9, 9],
     className:  '',
   })
 }
 
-function FitBounds({ puntos }: { puntos: PuntoTrabajo[] }) {
+function FitBounds({ puntos }: { puntos: OrdenTrabajo[] }) {
   const map = useMap()
   useEffect(() => {
-    if (puntos.length > 0) {
-      const bounds = L.latLngBounds(puntos.map(p => [p.latitud, p.longitud]))
+    const valid = puntos.filter(p => p.latitud && p.longitud)
+    if (valid.length > 0) {
+      const bounds = L.latLngBounds(valid.map(p => [p.latitud!, p.longitud!]))
       map.fitBounds(bounds, { padding: [40, 40] })
     }
   }, [puntos, map])
@@ -49,14 +52,21 @@ function FitBounds({ puntos }: { puntos: PuntoTrabajo[] }) {
 
 export default function MapaPuntos() {
   const navigate = useNavigate()
-  const [puntos,  setPuntos]  = useState<PuntoTrabajo[]>([])
+  const [puntos,  setPuntos]  = useState<OrdenTrabajo[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     puntoService.misPuntos()
-      .then(r => setPuntos((r.data as ApiResponse<PuntoTrabajo[]>).data ?? []))
+      .then(r => {
+        const data = (r.data as any)
+        setPuntos(Array.isArray(data) ? data : (data?.data ?? []))
+      })
       .finally(() => setLoading(false))
   }, [])
+
+  // HU13: solo puntos operativos (el backend ya filtra, pero por seguridad excluimos finales)
+  const operativos   = puntos.filter(p => !['COMPLETADA','ANULADA'].includes(p.estadoCodigo ?? ''))
+  const conUbicacion = operativos.filter(p => p.latitud && p.longitud)
 
   if (loading) return (
     <div className="space-y-4 animate-pulse">
@@ -71,18 +81,23 @@ export default function MapaPuntos() {
       {/* Header */}
       <div className="flex items-start justify-between flex-wrap gap-3">
         <div>
-          <h1 className="text-[22px] font-bold text-gray-900">Mapa de mis puntos</h1>
-          <p className="text-sm text-gray-500 mt-0.5">{puntos.length} punto{puntos.length !== 1 ? 's' : ''} asignado{puntos.length !== 1 ? 's' : ''}</p>
+          <h1 className="text-[22px] font-bold text-gray-900">Mapa de mis OTs</h1>
+          <p className="text-sm text-gray-500 mt-0.5">
+            {conUbicacion.length} punto{conUbicacion.length !== 1 ? 's' : ''} operativo{conUbicacion.length !== 1 ? 's' : ''} en mapa
+            {puntos.length > operativos.length && (
+              <span className="ml-1.5 text-emerald-600 font-medium">· {puntos.length - operativos.length} completado(s) retirado(s)</span>
+            )}
+          </p>
         </div>
 
-        {/* Leyenda */}
+        {/* Leyenda — solo estados operativos */}
         <div className="flex flex-wrap gap-2">
-          {(Object.entries(ESTADO_COLORS) as [EstadoPunto, string][]).map(([estado, color]) => (
+          {(['PENDIENTE','EN_PROGRESO','OBSERVADA'] as EstadoOt[]).map(estado => (
             <span
               key={estado}
               className="flex items-center gap-1.5 text-xs bg-white rounded-xl px-3 py-1.5 shadow-card border border-gray-100 font-medium text-gray-600"
             >
-              <span className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ background: color }} />
+              <span className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ background: ESTADO_COLORS[estado] }} />
               {ESTADO_LABELS[estado]}
             </span>
           ))}
@@ -96,21 +111,24 @@ export default function MapaPuntos() {
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             attribution='&copy; <a href="https://openstreetmap.org">OpenStreetMap</a>'
           />
-          <FitBounds puntos={puntos} />
-          {puntos.map(p => (
-            <Marker key={p.id} position={[p.latitud, p.longitud]} icon={createIcon(p.estado)}>
+          <FitBounds puntos={conUbicacion} />
+          {conUbicacion.map(p => (
+            <Marker key={p.idOt} position={[p.latitud!, p.longitud!]} icon={createIcon(p.estadoCodigo ?? 'PENDIENTE')}>
               <Popup>
                 <div className="text-sm min-w-[200px] font-sans">
-                  <p className="font-semibold text-gray-800 mb-1">{p.descripcion}</p>
-                  <p className="text-gray-500 text-xs mb-2">{p.direccion}</p>
+                  <p className="font-semibold text-gray-800 mb-1 font-mono">{p.sgio}</p>
+                  <p className="text-gray-500 text-xs mb-2">{p.direccion ?? p.subactividad ?? '—'}</p>
                   <span
                     className="inline-block text-xs px-2.5 py-1 rounded-full font-medium mb-3"
-                    style={{ background: ESTADO_COLORS[p.estado] + '22', color: ESTADO_COLORS[p.estado] }}
+                    style={{
+                      background: (ESTADO_COLORS[p.estadoCodigo ?? 'PENDIENTE'] ?? '#ef4444') + '22',
+                      color: ESTADO_COLORS[p.estadoCodigo ?? 'PENDIENTE'] ?? '#ef4444'
+                    }}
                   >
-                    {ESTADO_LABELS[p.estado]}
+                    {p.estado ?? p.estadoCodigo}
                   </span>
                   <button
-                    onClick={() => navigate(`/capataz/registrar/${p.id}`)}
+                    onClick={() => navigate(`/capataz/registrar/${p.idOt}`)}
                     className="flex items-center justify-center gap-1.5 w-full text-xs bg-[#CC1111] hover:bg-[#AA0E0E] text-white py-2 rounded-lg font-semibold transition-colors"
                   >
                     Registrar actividad

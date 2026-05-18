@@ -182,11 +182,11 @@ export default function FichaPage() {
       {/* ── Sticky CTA ─────────────────────────────────────────── */}
       <div className="shadow-cta-up">
         <button
-          onClick={() => navigate('/capataz/mapa')}
+          onClick={() => navigate('/capataz')}
           className="w-full bg-[#CC1111] hover:bg-[#AA0E0E] active:scale-[0.99] text-white font-bold text-[15px] py-[18px] flex items-center justify-center gap-2"
         >
           <MapPin size={18} />
-          Iniciar Operación en Mapa
+          Ver mis Órdenes Asignadas
         </button>
       </div>
 

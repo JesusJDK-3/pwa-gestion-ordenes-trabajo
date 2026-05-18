@@ -2,6 +2,16 @@ import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom'
 import { AuthProvider } from './context/AuthContext'
 import PrivateRoute from './components/PrivateRoute'
 import Layout from './components/Layout'
+import { useAuth } from './context/AuthContext'
+
+// Redirige al home del rol si autenticado, o a /login si no lo está
+function SmartRedirect() {
+  const { isAuthenticated, user } = useAuth()
+  if (!isAuthenticated || !user) return <Navigate to="/login" replace />
+  if (user.rol === 'capataz')    return <Navigate to="/dashboard"  replace />
+  if (user.rol === 'supervisor') return <Navigate to="/supervisor" replace />
+  return <Navigate to="/admin" replace />
+}
 
 // ── Existing supervisor / admin pages ─────────────────────────
 import LoginPage          from './pages/LoginPage'
@@ -11,7 +21,8 @@ import AsignarPuntos      from './pages/supervisor/AsignarPuntos'
 import SeguimientoPage    from './pages/supervisor/SeguimientoPage'
 import AdminDashboard     from './pages/admin/AdminDashboard'
 
-// ── Capataz legacy map/form ────────────────────────────────────
+// ── Capataz pages ─────────────────────────────────────────────
+import CapatazDashboard   from './pages/capataz/CapatazDashboard'
 import MapaPuntos         from './pages/capataz/MapaPuntos'
 import FormularioActividad from './pages/capataz/FormularioActividad'
 
@@ -28,7 +39,7 @@ const router = createBrowserRouter([
   {
     path: '/dashboard',
     element: (
-      <PrivateRoute roles={['CAPATAZ']}>
+      <PrivateRoute roles={['capataz']}>
         <DashboardPage />
       </PrivateRoute>
     ),
@@ -36,7 +47,7 @@ const router = createBrowserRouter([
   {
     path: '/actividad/:id',
     element: (
-      <PrivateRoute roles={['CAPATAZ']}>
+      <PrivateRoute roles={['capataz']}>
         <ActividadPage />
       </PrivateRoute>
     ),
@@ -44,7 +55,7 @@ const router = createBrowserRouter([
   {
     path: '/ficha/:subId',
     element: (
-      <PrivateRoute roles={['CAPATAZ']}>
+      <PrivateRoute roles={['capataz']}>
         <FichaPage />
       </PrivateRoute>
     ),
@@ -52,7 +63,7 @@ const router = createBrowserRouter([
   {
     path: '/historial',
     element: (
-      <PrivateRoute roles={['CAPATAZ']}>
+      <PrivateRoute roles={['capataz']}>
         <HistorialPage />
       </PrivateRoute>
     ),
@@ -67,45 +78,49 @@ const router = createBrowserRouter([
       </PrivateRoute>
     ),
     children: [
-      { index: true, element: <Navigate to="/login" replace /> },
+      { index: true, element: <SmartRedirect /> },
 
       // Supervisor
       {
         path: 'supervisor',
-        element: <PrivateRoute roles={['SUPERVISOR', 'ADMINISTRADOR']}><SupervisorDashboard /></PrivateRoute>,
+        element: <PrivateRoute roles={['supervisor', 'admin']}><SupervisorDashboard /></PrivateRoute>,
       },
       {
         path: 'supervisor/cargar-ot',
-        element: <PrivateRoute roles={['SUPERVISOR', 'ADMINISTRADOR']}><CargarOT /></PrivateRoute>,
+        element: <PrivateRoute roles={['supervisor', 'admin']}><CargarOT /></PrivateRoute>,
       },
       {
         path: 'supervisor/asignar',
-        element: <PrivateRoute roles={['SUPERVISOR', 'ADMINISTRADOR']}><AsignarPuntos /></PrivateRoute>,
+        element: <PrivateRoute roles={['supervisor', 'admin']}><AsignarPuntos /></PrivateRoute>,
       },
       {
         path: 'supervisor/seguimiento',
-        element: <PrivateRoute roles={['SUPERVISOR', 'ADMINISTRADOR']}><SeguimientoPage /></PrivateRoute>,
+        element: <PrivateRoute roles={['supervisor', 'admin']}><SeguimientoPage /></PrivateRoute>,
       },
 
-      // Capataz legacy map/form (still accessible from ficha CTA)
+      // Capataz routes (sidebar Layout)
+      {
+        path: 'capataz',
+        element: <PrivateRoute roles={['capataz']}><CapatazDashboard /></PrivateRoute>,
+      },
       {
         path: 'capataz/mapa',
-        element: <PrivateRoute roles={['CAPATAZ']}><MapaPuntos /></PrivateRoute>,
+        element: <PrivateRoute roles={['capataz']}><MapaPuntos /></PrivateRoute>,
       },
       {
         path: 'capataz/registrar/:puntoId',
-        element: <PrivateRoute roles={['CAPATAZ']}><FormularioActividad /></PrivateRoute>,
+        element: <PrivateRoute roles={['capataz']}><FormularioActividad /></PrivateRoute>,
       },
 
       // Admin
       {
         path: 'admin',
-        element: <PrivateRoute roles={['ADMINISTRADOR']}><AdminDashboard /></PrivateRoute>,
+        element: <PrivateRoute roles={['admin']}><AdminDashboard /></PrivateRoute>,
       },
     ],
   },
 
-  { path: '*', element: <Navigate to="/login" replace /> },
+  { path: '*', element: <SmartRedirect /> },
 ])
 
 export default function App() {

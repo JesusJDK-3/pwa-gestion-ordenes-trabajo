@@ -1,46 +1,55 @@
 package com.kabj.sistema_ot.controller;
 
-import com.kabj.sistema_ot.dto.UsuarioResponse;
+import com.kabj.sistema_ot.dto.ApiResponse;
 import com.kabj.sistema_ot.entity.Usuario;
+import com.kabj.sistema_ot.repository.RrhhCapatazRepository;
 import com.kabj.sistema_ot.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/usuarios")
 @RequiredArgsConstructor
 public class UsuarioController {
 
-    private final UsuarioRepository usuarioRepository;
+    private final UsuarioRepository    usuarioRepository;
+    private final RrhhCapatazRepository capatazRepository;
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('ADMINISTRADOR', 'SUPERVISOR')")
-    public ResponseEntity<List<UsuarioResponse>> listar() {
-        List<UsuarioResponse> usuarios = usuarioRepository.findAll()
-                .stream()
-                .map(this::toResponse)
-                .toList();
-        return ResponseEntity.ok(usuarios);
-    }
+    public ResponseEntity<ApiResponse<List<Map<String, Object>>>> listar() {
+        List<Map<String, Object>> usuarios = new ArrayList<>();
 
-    private UsuarioResponse toResponse(Usuario u) {
-        return new UsuarioResponse(
-                u.getIdUsuario(),
-                u.getUsername(),
-                u.getEmail(),
-                u.getNombres(),
-                u.getApellidos(),
-                u.getFotoUrl(),
-                u.getActivo(),
-                u.getUltimoLogin(),
-                u.getRol().getCodigo(),
-                u.getRol().getNombre()
-        );
+        for (Usuario u : usuarioRepository.findAll()) {
+            if (!Boolean.TRUE.equals(u.getActivo())) continue;
+
+            Map<String, Object> m = new LinkedHashMap<>();
+            m.put("usuarioId", u.getIdUsuario());
+            m.put("nombre",    u.getNombres() + " " + u.getApellidos());
+            m.put("email",     u.getEmail() != null ? u.getEmail() : "");
+            m.put("rol",       u.getRol().getCodigo());
+
+            // Para capataces, exponer id_capataz (que es el FK en op_orden_trabajo)
+            // así el dropdown del supervisor puede asignar con el ID correcto
+            if ("capataz".equalsIgnoreCase(u.getRol().getCodigo())) {
+                var capOpt = capatazRepository.findByUsuario(u);
+                if (capOpt.isPresent()) {
+                    m.put("id", capOpt.get().getIdCapataz()); // id para asignar
+                } else {
+                    m.put("id", u.getIdUsuario()); // fallback
+                }
+            } else {
+                m.put("id", u.getIdUsuario());
+            }
+
+            usuarios.add(m);
+        }
+
+        return ResponseEntity.ok(new ApiResponse<>(true, null, usuarios));
     }
 }

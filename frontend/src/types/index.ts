@@ -1,6 +1,8 @@
-export type Rol = 'SUPERVISOR' | 'CAPATAZ' | 'ADMINISTRADOR'
-export type EstadoPunto = 'PENDIENTE' | 'EN_PROGRESO' | 'COMPLETADO' | 'OBSERVADO'
-export type EstadoOrden = 'ACTIVA' | 'CERRADA'
+// Roles del nuevo esquema (lowercase)
+export type Rol = 'supervisor' | 'capataz' | 'admin'
+
+// Estados de OT según cat_estado_ot
+export type EstadoOt = 'PENDIENTE' | 'EN_PROGRESO' | 'OBSERVADA' | 'COMPLETADA' | 'ANULADA'
 
 export interface User {
   id: number
@@ -15,69 +17,51 @@ export interface AuthState {
   isAuthenticated: boolean
 }
 
-export interface PuntoTrabajo {
-  id: number
-  ordenId: number | null
-  codigoOt: string | null
-  latitud: number
-  longitud: number
-  descripcion: string
-  direccion: string
-  estado: EstadoPunto
-  capatazId?: number | null
-  capatazNombre?: string | null
-}
-
+// Orden de Trabajo (op_orden_trabajo)
 export interface OrdenTrabajo {
-  id: number
-  codigoOt: string
-  descripcion: string
-  fechaCarga: string
-  estado: EstadoOrden
-  supervisorId: number | null
-  supervisorNombre: string | null
-  puntos: PuntoTrabajo[] | null
+  idOt: number
+  sgio: string
+  estado: string        // nombre del estado
+  estadoCodigo: EstadoOt
+  subactividad?: string
+  tipoPunto?: string
+  nis?: string
+  direccion?: string
+  distrito?: string
+  sector?: string
+  latitud?: number
+  longitud?: number
+  fechaProgramada?: string
+  fechaInicio?: string
+  fechaFin?: string
+  capatazNombre?: string
+  capatazId?: number
+  estadoSincronizacion?: string
+  observacion?: string
+  createdAt?: string
+  // aliases for backwards compatibility with frontend components
+  id?: number
+  descripcion?: string
+  lat?: number
+  lng?: number
 }
 
-export interface RegistroActividad {
-  id: number
-  puntoId: number | null
-  descripcionPunto: string | null
-  capatazId: number | null
-  capatazNombre: string | null
-  tipoActividad: string
-  observaciones: string
-  fechaRegistro: string
-  validado: boolean
-  sincronizado: boolean
-  creadoOffline: boolean
-}
-
-export interface SeguimientoCapataz {
-  capatazId: number
-  nombre: string
-  total: number
-  completados: number
-  pendientes: number
-  enProgreso: number
-}
-
-export interface Alerta {
-  id: number
-  mensaje: string
-  puntoId: number | null
-  descripcionPunto: string | null
-  leida: boolean
-  createdAt: string
+export interface SeguimientoOt {
+  idOt: number
+  sgio: string
+  capataz: string
+  estado: EstadoOt
+  direccion: string
+  latitud?: number
+  longitud?: number
 }
 
 export interface RegistroPendiente {
   id?: number
   puntoId: number
-  tipoActividad: string
+  estado: EstadoOt
   observaciones: string
   fechaRegistro: string
-  datosAdicionales?: string
   creadoOffline: boolean
 }
 

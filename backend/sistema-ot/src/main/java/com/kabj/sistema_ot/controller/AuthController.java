@@ -30,6 +30,9 @@ public class AuthController {
 
     @GetMapping("/me")
     public ResponseEntity<ApiResponse<Map<String, Object>>> me(Authentication auth) {
+        if (auth == null || !auth.isAuthenticated()) {
+            throw new AuthException("No autenticado");
+        }
         Usuario usuario = usuarioRepository.findByUsername(auth.getName())
                 .orElseThrow(() -> new AuthException("Usuario no encontrado"));
         Map<String, Object> data = Map.of(

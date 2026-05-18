@@ -11,13 +11,41 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
   (res) => res,
   (err) => {
-    if (err.response?.status === 401) {
-      localStorage.clear()
-      window.location.href = '/login'
+    const status = err.response?.status
+    const url: string = err.config?.url ?? ''
+    const isAuthEndpoint = url.includes('/auth/login') || url.includes('/auth/me')
+
+    if (status === 401 && !isAuthEndpoint) {
+      // Token expirado o inválido → limpiar sesión y redirigir
+      localStorage.removeItem('token')
+      localStorage.removeItem('user')
+      window.location.replace('/login')
     }
+
+    if (status === 429) {
+      // Rate limit alcanzado en login
+      console.warn('[Security] Rate limit alcanzado:', url)
+    }
+
     return Promise.reject(err)
   },
 )
+
+/** Sanitiza un string para prevenir XSS al mostrar en el DOM */
+export function sanitize(input: string): string {
+  return input
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#x27;')
+    .replace(/\//g, '&#x2F;')
+}
+
+/** Limita la longitud de un input y elimina caracteres peligrosos */
+export function safeInput(val: string, maxLen = 500): string {
+  return val.slice(0, maxLen).trim()
+}
 
 export const authService = {
   login:  (email: string, password: string) => api.post('/auth/login', { email, password }),
@@ -50,9 +78,17 @@ export const registroService = {
   porPunto: (puntoId: number) => api.get(`/registros/punto/${puntoId}`),
 }
 
+export const usuarioService = {
+  listar: () => api.get('/usuarios'),
+}
+
 export const alertaService = {
-  listar:      () => api.get('/alertas'),
+  listar:      () => api.get('/reportes/alertas'),   // HU16: alertas reales
   marcarLeida: (id: number) => api.put(`/alertas/${id}/leer`),
+}
+
+export const puntoExtraService = {
+  misCompletadas: () => api.get('/puntos/mis-completadas'), // HU18: historial capataz
 }
 
 export const reporteService = {

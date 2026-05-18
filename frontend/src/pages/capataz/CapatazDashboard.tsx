@@ -2,23 +2,26 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { puntoService } from '../../services/api'
 import { useOfflineSync } from '../../hooks/useOfflineSync'
-import type { ApiResponse, PuntoTrabajo } from '../../types'
+import type { OrdenTrabajo } from '../../types'
 import { Clock3, CheckCircle2, AlertCircle, Map, WifiOff, ArrowRight } from 'lucide-react'
 
 export default function CapatazDashboard() {
-  const [puntos,  setPuntos]  = useState<PuntoTrabajo[]>([])
+  const [ordenes,  setOrdenes]  = useState<OrdenTrabajo[]>([])
   const [loading, setLoading] = useState(true)
   const { isOnline, pendingCount } = useOfflineSync()
 
   useEffect(() => {
     puntoService.misPuntos()
-      .then(r => setPuntos((r.data as ApiResponse<PuntoTrabajo[]>).data ?? []))
+      .then(r => {
+        const data = (r.data as any)
+        setOrdenes(Array.isArray(data) ? data : (data?.data ?? []))
+      })
       .finally(() => setLoading(false))
   }, [])
 
-  const pendientes  = puntos.filter(p => p.estado === 'PENDIENTE')
-  const enProgreso  = puntos.filter(p => p.estado === 'EN_PROGRESO')
-  const completados = puntos.filter(p => p.estado === 'COMPLETADO')
+  const pendientes  = ordenes.filter(p => p.estadoCodigo === 'PENDIENTE')
+  const enProgreso  = ordenes.filter(p => p.estadoCodigo === 'EN_PROGRESO')
+  const completados = ordenes.filter(p => p.estadoCodigo === 'COMPLETADA')
 
   if (loading) return <PageSkeleton />
 
@@ -34,7 +37,7 @@ export default function CapatazDashboard() {
       {/* Page title */}
       <div>
         <h1 className="text-[22px] font-bold text-gray-900">Mi Panel</h1>
-        <p className="text-sm text-gray-500 mt-0.5">Resumen de tus puntos asignados</p>
+        <p className="text-sm text-gray-500 mt-0.5">Resumen de tus órdenes asignadas</p>
       </div>
 
       {/* Offline alert */}
@@ -73,32 +76,32 @@ export default function CapatazDashboard() {
         <ArrowRight size={18} className="opacity-50 group-hover:opacity-100 transition-opacity" />
       </Link>
 
-      {/* Puntos activos */}
+      {/* Órdenes activas */}
       <div className="bg-white rounded-2xl shadow-card overflow-hidden">
         <div className="px-5 py-4 border-b border-gray-100">
           <h2 className="font-semibold text-gray-800">
-            Puntos activos{' '}
+            Órdenes activas{' '}
             <span className="text-gray-400 font-normal text-sm">({pendientes.length + enProgreso.length})</span>
           </h2>
         </div>
         {[...enProgreso, ...pendientes].length === 0 ? (
           <div className="px-5 py-10 text-center text-gray-400">
             <CheckCircle2 size={32} className="mx-auto mb-2 text-emerald-400" />
-            <p className="text-sm">No tienes puntos activos.</p>
+            <p className="text-sm">No tienes órdenes activas.</p>
           </div>
         ) : (
           <ul className="divide-y divide-gray-50">
             {[...enProgreso, ...pendientes].map(p => (
-              <li key={p.id} className="px-5 py-4 flex items-start justify-between gap-4">
+              <li key={p.idOt} className="px-5 py-4 flex items-start justify-between gap-4">
                 <div>
-                  <p className="text-sm font-semibold text-gray-800">{p.descripcion}</p>
-                  <p className="text-xs text-gray-500 mt-0.5">{p.direccion}</p>
+                  <p className="text-sm font-semibold text-gray-800 font-mono">{p.sgio}</p>
+                  <p className="text-xs text-gray-500 mt-0.5">{p.direccion ?? p.subactividad ?? '—'}</p>
                   <span className={`inline-block mt-2 text-xs px-2.5 py-0.5 rounded-full font-medium ${
-                    p.estado === 'EN_PROGRESO' ? 'bg-orange-100 text-orange-700' : 'bg-gray-100 text-gray-600'
-                  }`}>{p.estado}</span>
+                    p.estadoCodigo === 'EN_PROGRESO' ? 'bg-orange-100 text-orange-700' : 'bg-gray-100 text-gray-600'
+                  }`}>{p.estado ?? p.estadoCodigo}</span>
                 </div>
                 <Link
-                  to={`/capataz/registrar/${p.id}`}
+                  to={`/capataz/registrar/${p.idOt}`}
                   className="flex-shrink-0 flex items-center gap-1.5 text-xs bg-[#CC1111] hover:bg-[#AA0E0E] text-white px-3 py-2 rounded-xl font-semibold transition-colors"
                 >
                   Registrar
