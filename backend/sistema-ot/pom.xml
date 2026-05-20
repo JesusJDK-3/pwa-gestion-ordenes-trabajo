@@ -67,10 +67,28 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
+			<!--
+			  spring-boot-starter-test ya incluye automáticamente:
+			    - JUnit 5 (junit-jupiter)
+			    - Mockito
+			    - AssertJ
+			    - Spring Test / MockMvc
+			  No es necesario agregar esas dependencias por separado.
+			-->
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<!--
+		  H2: base de datos en memoria para pruebas de integración (@SpringBootTest).
+		  Permite correr SistemaOtApplicationTests sin necesitar PostgreSQL.
+		  scope=test: solo se incluye al compilar y ejecutar tests, no en producción.
+		-->
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
 			<scope>test</scope>
 		</dependency>
 
