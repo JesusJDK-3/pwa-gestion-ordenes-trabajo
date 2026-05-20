@@ -15,10 +15,15 @@
 [INFO] Nothing to compile - all classes are up to date.
 [INFO] 
 [INFO] --- resources:3.3.1:testResources (default-testResources) @ sistema-ot ---
-[INFO] skip non existing resourceDirectory C:\Users\MELANY\OneDrive\Escritorio\pwa-gestion-ordenes-trabajo\backend\sistema-ot\src\test\resources
+[INFO] Copying 1 resource from src\test\resources to target\test-classes
 [INFO] 
 [INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ sistema-ot ---
-[INFO] Nothing to compile - all classes are up to date.
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 5 source files with javac [debug parameters release 21] to target\test-classes
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by lombok.permit.Permit
+WARNING: Please consider reporting this to the maintainers of class lombok.permit.Permit
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
 [INFO] 
 [INFO] <<< spring-boot:3.5.14:run (default-cli) < test-compile @ sistema-ot <<<
 [INFO] 
@@ -35,86 +40,117 @@
 
  :: Spring Boot ::               (v3.5.14)
 
-2026-05-17T23:43:56.830-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] c.kabj.sistema_ot.SistemaOtApplication   : Starting SistemaOtApplication using Java 23.0.1 with PID 29464 (C:\Users\MELANY\OneDrive\Escritorio\pwa-gestion-ordenes-trabajo\backend\sistema-ot\target\classes started by MELANY in C:\Users\MELANY\OneDrive\Escritorio\pwa-gestion-ordenes-trabajo\backend\sistema-ot)
-2026-05-17T23:43:56.832-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] c.kabj.sistema_ot.SistemaOtApplication   : No active profile set, falling back to 1 default profile: "default"
-2026-05-17T23:43:56.894-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
-2026-05-17T23:43:56.894-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
-2026-05-17T23:43:57.647-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2026-05-17T23:43:57.732-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 75 ms. Found 10 JPA repository interfaces.
-2026-05-17T23:43:58.438-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
-2026-05-17T23:43:58.453-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
-2026-05-17T23:43:58.454-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.54]
-2026-05-17T23:43:58.500-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
-2026-05-17T23:43:58.501-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1606 ms
-2026-05-17T23:43:58.629-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
-2026-05-17T23:43:58.698-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.49.Final
-2026-05-17T23:43:58.736-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
-2026-05-17T23:43:59.030-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
-2026-05-17T23:43:59.063-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-2026-05-17T23:43:59.371-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@12f2b64
-2026-05-17T23:43:59.372-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
-2026-05-17T23:43:59.410-05:00  WARN 29464 --- [sistema-ot] [  restartedMain] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
-2026-05-17T23:43:59.429-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+2026-05-20T17:32:04.997-05:00  INFO 16228 --- [sistema-ot] [  restartedMain] c.kabj.sistema_ot.SistemaOtApplication   : Starting SistemaOtApplication using Java 25.0.3 with PID 16228 (C:\Users\W11\Documents\GitHub\pwa-gestion-ordenes-trabajo\backend\sistema-ot\target\classes started by W11 in C:\Users\W11\Documents\GitHub\pwa-gestion-ordenes-trabajo\backend\sistema-ot)
+2026-05-20T17:32:04.998-05:00  INFO 16228 --- [sistema-ot] [  restartedMain] c.kabj.sistema_ot.SistemaOtApplication   : No active profile set, falling back to 1 default profile: "default"
+2026-05-20T17:32:05.027-05:00  INFO 16228 --- [sistema-ot] [  restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2026-05-20T17:32:05.027-05:00  INFO 16228 --- [sistema-ot] [  restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2026-05-20T17:32:05.543-05:00  INFO 16228 --- [sistema-ot] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-05-20T17:32:05.607-05:00  INFO 16228 --- [sistema-ot] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 57 ms. Found 12 JPA repository interfaces.
+2026-05-20T17:32:06.075-05:00  INFO 16228 --- [sistema-ot] [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-05-20T17:32:06.086-05:00  INFO 16228 --- [sistema-ot] [  restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-05-20T17:32:06.086-05:00  INFO 16228 --- [sistema-ot] [  restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.54]
+2026-05-20T17:32:06.117-05:00  INFO 16228 --- [sistema-ot] [  restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-05-20T17:32:06.119-05:00  INFO 16228 --- [sistema-ot] [  restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1089 ms
+2026-05-20T17:32:06.220-05:00  INFO 16228 --- [sistema-ot] [  restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-05-20T17:32:06.264-05:00  INFO 16228 --- [sistema-ot] [  restartedMain] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.49.Final
+2026-05-20T17:32:06.286-05:00  INFO 16228 --- [sistema-ot] [  restartedMain] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-05-20T17:32:06.486-05:00  INFO 16228 --- [sistema-ot] [  restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-05-20T17:32:06.508-05:00  INFO 16228 --- [sistema-ot] [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-05-20T17:32:06.643-05:00  INFO 16228 --- [sistema-ot] [  restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@5c2abb63
+2026-05-20T17:32:06.644-05:00  INFO 16228 --- [sistema-ot] [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-05-20T17:32:06.668-05:00  WARN 16228 --- [sistema-ot] [  restartedMain] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-05-20T17:32:06.680-05:00  INFO 16228 --- [sistema-ot] [  restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
 	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
 	Database driver: undefined/unknown
-	Database version: 18.4
+	Database version: 18.3
 	Autocommit mode: undefined/unknown
 	Isolation level: undefined/unknown
 	Minimum pool size: undefined/unknown
 	Maximum pool size: undefined/unknown
-2026-05-17T23:44:00.714-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
-2026-05-17T23:44:00.717-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
-2026-05-17T23:44:01.042-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
-2026-05-17T23:44:02.193-05:00  WARN 29464 --- [sistema-ot] [  restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2026-05-17T23:44:03.395-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
-2026-05-17T23:44:03.452-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
-2026-05-17T23:44:03.462-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] c.kabj.sistema_ot.SistemaOtApplication   : Started SistemaOtApplication in 7.085 seconds (process running for 7.571)
-2026-05-17T23:44:31.813-05:00  INFO 29464 --- [sistema-ot] [nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
-2026-05-17T23:44:31.814-05:00  INFO 29464 --- [sistema-ot] [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
-2026-05-17T23:44:31.815-05:00  INFO 29464 --- [sistema-ot] [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
-2026-05-18T00:03:47.401-05:00  WARN 29464 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 42883
-2026-05-18T00:03:47.405-05:00 ERROR 29464 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: no existe la funci�n month(timestamp without time zone)
-  Hint: Ninguna funci�n coincide en el nombre y tipos de argumentos. Puede ser necesario agregar conversi�n expl�cita de tipos.
-  Position: 599
-2026-05-18T00:03:47.454-05:00  WARN 29464 --- [sistema-ot] [nio-8080-exec-2] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [org.springframework.dao.InvalidDataAccessResourceUsageException: JDBC exception executing SQL [select oot1_0.id_ot,oot1_0.activo,oot1_0.id_capataz,oot1_0.cerrada_at,oot1_0.created_at,oot1_0.direccion,oot1_0.distrito,oot1_0.id_estado_ot,oot1_0.estado_sincronizacion,oot1_0.estado_validacion_fotos,oot1_0.fecha_cierre,oot1_0.fecha_fin,oot1_0.fecha_inicio,oot1_0.fecha_programada,oot1_0.id_fila_importacion,oot1_0.id_jornada,oot1_0.latitud,oot1_0.longitud,oot1_0.id_lote,oot1_0.nis,oot1_0.observacion,oot1_0.id_punto_operativo,oot1_0.sector,oot1_0.sgio,oot1_0.id_subactividad,oot1_0.id_tipo_punto,oot1_0.updated_at,oot1_0.visible_en_mapa from op_orden_trabajo oot1_0 where oot1_0.activo=true and month(oot1_0.fecha_fin)=? and year(oot1_0.fecha_fin)=?] [ERROR: no existe la funci�n month(timestamp without time zone)<EOL>  Hint: Ninguna funci�n coincide en el nombre y tipos de argumentos. Puede ser necesario agregar conversi�n expl�cita de tipos.<EOL>  Position: 599] [n/a]; SQL [n/a]]
-2026-05-18T00:14:50.879-05:00  WARN 29464 --- [sistema-ot] [nio-8080-exec-3] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [com.kabj.sistema_ot.exception.AuthException: No autenticado]
-2026-05-18T00:16:09.818-05:00  WARN 29464 --- [sistema-ot] [nio-8080-exec-5] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [org.springframework.web.bind.MethodArgumentNotValidException: Validation failed for argument [0] in public org.springframework.http.ResponseEntity<com.kabj.sistema_ot.dto.LoginResponse> com.kabj.sistema_ot.controller.AuthController.login(com.kabj.sistema_ot.dto.LoginRequest): [Field error in object 'loginRequest' on field 'password': rejected value [bad]; codes [Size.loginRequest.password,Size.password,Size.java.lang.String,Size]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [loginRequest.password,password]; arguments []; default message [password],100,4]; default message [La contrase�a debe tener entre 4 y 100 caracteres]] ]
-2026-05-18T00:16:09.872-05:00  WARN 29464 --- [sistema-ot] [io-8080-exec-10] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [com.kabj.sistema_ot.exception.AuthException: Credenciales incorrectas]
-2026-05-18T00:16:09.985-05:00  WARN 29464 --- [sistema-ot] [nio-8080-exec-4] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [com.kabj.sistema_ot.exception.AuthException: Credenciales incorrectas]
-2026-05-18T00:16:09.994-05:00  WARN 29464 --- [sistema-ot] [nio-8080-exec-9] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [com.kabj.sistema_ot.exception.AuthException: Credenciales incorrectas]
-2026-05-18T00:16:10.024-05:00  WARN 29464 --- [sistema-ot] [nio-8080-exec-7] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [org.springframework.web.bind.MethodArgumentNotValidException: Validation failed for argument [0] in public org.springframework.http.ResponseEntity<com.kabj.sistema_ot.dto.LoginResponse> com.kabj.sistema_ot.controller.AuthController.login(com.kabj.sistema_ot.dto.LoginRequest): [Field error in object 'loginRequest' on field 'password': rejected value [x]; codes [Size.loginRequest.password,Size.password,Size.java.lang.String,Size]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [loginRequest.password,password]; arguments []; default message [password],100,4]; default message [La contrase�a debe tener entre 4 y 100 caracteres]] ]
-2026-05-18T00:16:10.029-05:00  WARN 29464 --- [sistema-ot] [nio-8080-exec-8] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [org.springframework.web.bind.MethodArgumentNotValidException: Validation failed for argument [0] in public org.springframework.http.ResponseEntity<com.kabj.sistema_ot.dto.LoginResponse> com.kabj.sistema_ot.controller.AuthController.login(com.kabj.sistema_ot.dto.LoginRequest): [Field error in object 'loginRequest' on field 'password': rejected value [x]; codes [Size.loginRequest.password,Size.password,Size.java.lang.String,Size]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [loginRequest.password,password]; arguments []; default message [password],100,4]; default message [La contrase�a debe tener entre 4 y 100 caracteres]] ]
-2026-05-18T00:16:10.034-05:00  WARN 29464 --- [sistema-ot] [nio-8080-exec-1] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [org.springframework.web.bind.MethodArgumentNotValidException: Validation failed for argument [0] in public org.springframework.http.ResponseEntity<com.kabj.sistema_ot.dto.LoginResponse> com.kabj.sistema_ot.controller.AuthController.login(com.kabj.sistema_ot.dto.LoginRequest): [Field error in object 'loginRequest' on field 'password': rejected value [x]; codes [Size.loginRequest.password,Size.password,Size.java.lang.String,Size]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [loginRequest.password,password]; arguments []; default message [password],100,4]; default message [La contrase�a debe tener entre 4 y 100 caracteres]] ]
-2026-05-18T00:16:10.039-05:00  WARN 29464 --- [sistema-ot] [nio-8080-exec-3] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [org.springframework.web.bind.MethodArgumentNotValidException: Validation failed for argument [0] in public org.springframework.http.ResponseEntity<com.kabj.sistema_ot.dto.LoginResponse> com.kabj.sistema_ot.controller.AuthController.login(com.kabj.sistema_ot.dto.LoginRequest): [Field error in object 'loginRequest' on field 'password': rejected value [x]; codes [Size.loginRequest.password,Size.password,Size.java.lang.String,Size]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [loginRequest.password,password]; arguments []; default message [password],100,4]; default message [La contrase�a debe tener entre 4 y 100 caracteres]] ]
-2026-05-18T00:16:10.045-05:00  WARN 29464 --- [sistema-ot] [nio-8080-exec-6] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [org.springframework.web.bind.MethodArgumentNotValidException: Validation failed for argument [0] in public org.springframework.http.ResponseEntity<com.kabj.sistema_ot.dto.LoginResponse> com.kabj.sistema_ot.controller.AuthController.login(com.kabj.sistema_ot.dto.LoginRequest): [Field error in object 'loginRequest' on field 'password': rejected value [x]; codes [Size.loginRequest.password,Size.password,Size.java.lang.String,Size]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [loginRequest.password,password]; arguments []; default message [password],100,4]; default message [La contrase�a debe tener entre 4 y 100 caracteres]] ]
-2026-05-18T00:16:10.051-05:00  WARN 29464 --- [sistema-ot] [nio-8080-exec-5] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [org.springframework.web.bind.MethodArgumentNotValidException: Validation failed for argument [0] in public org.springframework.http.ResponseEntity<com.kabj.sistema_ot.dto.LoginResponse> com.kabj.sistema_ot.controller.AuthController.login(com.kabj.sistema_ot.dto.LoginRequest): [Field error in object 'loginRequest' on field 'password': rejected value [x]; codes [Size.loginRequest.password,Size.password,Size.java.lang.String,Size]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [loginRequest.password,password]; arguments []; default message [password],100,4]; default message [La contrase�a debe tener entre 4 y 100 caracteres]] ]
-2026-05-18T00:16:10.055-05:00  WARN 29464 --- [sistema-ot] [io-8080-exec-10] c.k.s.security.LoginRateLimitFilter      : Rate limit alcanzado para IP: 0:0:0:0:0:0:0:1
-2026-05-18T00:16:10.069-05:00  WARN 29464 --- [sistema-ot] [nio-8080-exec-4] c.k.s.security.LoginRateLimitFilter      : Rate limit alcanzado para IP: 0:0:0:0:0:0:0:1
-2026-05-18T00:16:10.084-05:00  WARN 29464 --- [sistema-ot] [nio-8080-exec-9] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [com.kabj.sistema_ot.exception.AuthException: No autenticado]
-2026-05-18T00:23:06.910-05:00  WARN 29464 --- [sistema-ot] [nio-8080-exec-7] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [com.kabj.sistema_ot.exception.AuthException: Credenciales incorrectas]
-2026-05-18T00:23:07.096-05:00  WARN 29464 --- [sistema-ot] [nio-8080-exec-8] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [com.kabj.sistema_ot.exception.AuthException: Credenciales incorrectas]
-2026-05-18T00:23:07.231-05:00  WARN 29464 --- [sistema-ot] [nio-8080-exec-1] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [com.kabj.sistema_ot.exception.AuthException: Credenciales incorrectas]
-2026-05-18T00:23:07.412-05:00  WARN 29464 --- [sistema-ot] [nio-8080-exec-3] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [com.kabj.sistema_ot.exception.AuthException: Credenciales incorrectas]
-2026-05-18T00:23:07.507-05:00  WARN 29464 --- [sistema-ot] [nio-8080-exec-6] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [com.kabj.sistema_ot.exception.AuthException: Credenciales incorrectas]
-2026-05-18T00:23:07.600-05:00  WARN 29464 --- [sistema-ot] [nio-8080-exec-5] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [com.kabj.sistema_ot.exception.AuthException: Credenciales incorrectas]
-2026-05-18T00:23:07.687-05:00  WARN 29464 --- [sistema-ot] [io-8080-exec-10] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [com.kabj.sistema_ot.exception.AuthException: Credenciales incorrectas]
-2026-05-18T00:23:07.793-05:00  WARN 29464 --- [sistema-ot] [nio-8080-exec-4] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [com.kabj.sistema_ot.exception.AuthException: Credenciales incorrectas]
-2026-05-18T00:24:28.772-05:00  WARN 29464 --- [sistema-ot] [nio-8080-exec-2] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [com.kabj.sistema_ot.exception.AuthException: Credenciales incorrectas]
-2026-05-18T00:28:43.140-05:00  WARN 29464 --- [sistema-ot] [nio-8080-exec-2] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [com.kabj.sistema_ot.exception.AuthException: No autenticado]
-2026-05-18T00:28:43.164-05:00  WARN 29464 --- [sistema-ot] [nio-8080-exec-7] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [com.kabj.sistema_ot.exception.AuthException: No autenticado]
-2026-05-18T00:28:43.604-05:00  WARN 29464 --- [sistema-ot] [nio-8080-exec-3] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 42883
-2026-05-18T00:28:43.604-05:00 ERROR 29464 --- [sistema-ot] [nio-8080-exec-3] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: no existe la funci�n month(timestamp without time zone)
-  Hint: Ninguna funci�n coincide en el nombre y tipos de argumentos. Puede ser necesario agregar conversi�n expl�cita de tipos.
-  Position: 599
-2026-05-18T00:28:43.607-05:00  WARN 29464 --- [sistema-ot] [nio-8080-exec-3] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [org.springframework.dao.InvalidDataAccessResourceUsageException: JDBC exception executing SQL [select oot1_0.id_ot,oot1_0.activo,oot1_0.id_capataz,oot1_0.cerrada_at,oot1_0.created_at,oot1_0.direccion,oot1_0.distrito,oot1_0.id_estado_ot,oot1_0.estado_sincronizacion,oot1_0.estado_validacion_fotos,oot1_0.fecha_cierre,oot1_0.fecha_fin,oot1_0.fecha_inicio,oot1_0.fecha_programada,oot1_0.id_fila_importacion,oot1_0.id_jornada,oot1_0.latitud,oot1_0.longitud,oot1_0.id_lote,oot1_0.nis,oot1_0.observacion,oot1_0.id_punto_operativo,oot1_0.sector,oot1_0.sgio,oot1_0.id_subactividad,oot1_0.id_tipo_punto,oot1_0.updated_at,oot1_0.visible_en_mapa from op_orden_trabajo oot1_0 where oot1_0.activo=true and month(oot1_0.fecha_fin)=? and year(oot1_0.fecha_fin)=?] [ERROR: no existe la funci�n month(timestamp without time zone)<EOL>  Hint: Ninguna funci�n coincide en el nombre y tipos de argumentos. Puede ser necesario agregar conversi�n expl�cita de tipos.<EOL>  Position: 599] [n/a]; SQL [n/a]]
-2026-05-18T00:28:43.642-05:00  WARN 29464 --- [sistema-ot] [io-8080-exec-10] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [com.kabj.sistema_ot.exception.AuthException: No autenticado]
-2026-05-18T00:44:58.464-05:00  WARN 29464 --- [sistema-ot] [l-1:housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=13m28s123ms261�s800ns).
-2026-05-18T00:49:53.994-05:00  INFO 29464 --- [sistema-ot] [   File Watcher] rtingClassPathChangeChangedEventListener : Restarting due to 51 class path changes (0 additions, 3 deletions, 48 modifications)
-2026-05-18T00:49:54.065-05:00  INFO 29464 --- [sistema-ot] [       Thread-5] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
-2026-05-18T00:49:54.109-05:00  INFO 29464 --- [sistema-ot] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
-2026-05-18T00:49:54.168-05:00  INFO 29464 --- [sistema-ot] [       Thread-5] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
-2026-05-18T00:49:54.274-05:00  INFO 29464 --- [sistema-ot] [       Thread-5] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
-2026-05-18T00:49:54.323-05:00  INFO 29464 --- [sistema-ot] [       Thread-5] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2026-05-20T17:32:07.450-05:00  INFO 16228 --- [sistema-ot] [  restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-05-20T17:32:07.642-05:00  WARN 16228 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2026-05-20T17:32:07.642-05:00  WARN 16228 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : no existe la restricción «uk7vch37nnt2xad8l5w4trxfv9i» en la relación «cat_estado_ot», omitiendo
+2026-05-20T17:32:07.644-05:00  WARN 16228 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2026-05-20T17:32:07.644-05:00  WARN 16228 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : no existe la restricción «ukptejohlb6njlmp0f6l6d6k3j9» en la relación «cat_subactividad», omitiendo
+2026-05-20T17:32:07.647-05:00  WARN 16228 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2026-05-20T17:32:07.647-05:00  WARN 16228 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : no existe la restricción «uk1mjaviaesq11takno0vxbg6g0» en la relación «cat_tipo_punto_operativo», omitiendo
+2026-05-20T17:32:07.649-05:00  WARN 16228 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2026-05-20T17:32:07.649-05:00  WARN 16228 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : no existe la restricción «uk7nov7bl8f001qsvdhrqci9t7n» en la relación «gis_hidrante», omitiendo
+2026-05-20T17:32:07.651-05:00  WARN 16228 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2026-05-20T17:32:07.652-05:00  WARN 16228 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : no existe la restricción «ukiywr14vbxx11yfcofd99qn1ag» en la relación «gis_hidrante», omitiendo
+2026-05-20T17:32:07.653-05:00  WARN 16228 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2026-05-20T17:32:07.654-05:00  WARN 16228 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : no existe la restricción «uklwc3vccrh6xrp73ilqb6iawn2» en la relación «gis_vpa», omitiendo
+2026-05-20T17:32:07.655-05:00  WARN 16228 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2026-05-20T17:32:07.655-05:00  WARN 16228 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : no existe la restricción «ukltxk91uvhn8tdc5m01c9xkl2e» en la relación «gis_vpa», omitiendo
+2026-05-20T17:32:07.656-05:00  WARN 16228 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2026-05-20T17:32:07.656-05:00  WARN 16228 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : no existe la restricción «uktoh8vhy27s71b3e1aiorj9dus» en la relación «imp_ot_fila», omitiendo
+2026-05-20T17:32:07.659-05:00  WARN 16228 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2026-05-20T17:32:07.659-05:00  WARN 16228 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : no existe la restricción «ukqcbgd0bp7gf1a4ouyvknf1vhm» en la relación «op_orden_trabajo», omitiendo
+2026-05-20T17:32:07.661-05:00  WARN 16228 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2026-05-20T17:32:07.661-05:00  WARN 16228 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : no existe la restricción «uk3mkg7yhv8xel1bjm6n5mtrjru» en la relación «op_orden_trabajo», omitiendo
+2026-05-20T17:32:07.663-05:00  WARN 16228 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2026-05-20T17:32:07.663-05:00  WARN 16228 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : no existe la restricción «uk1v45e9dyoqxr8h4tg64xa9ri5» en la relación «rrhh_capataz», omitiendo
+2026-05-20T17:32:07.664-05:00  WARN 16228 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2026-05-20T17:32:07.664-05:00  WARN 16228 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : no existe la restricción «ukhqv16k6q89axsaahvxda909gt» en la relación «rrhh_capataz», omitiendo
+2026-05-20T17:32:07.666-05:00  WARN 16228 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2026-05-20T17:32:07.666-05:00  WARN 16228 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : no existe la restricción «uk8obr5nn8ybgutucrarx7ap4qe» en la relación «rrhh_capataz», omitiendo
+2026-05-20T17:32:07.668-05:00  WARN 16228 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2026-05-20T17:32:07.670-05:00  WARN 16228 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : no existe la restricción «ukh6jxdunw727f433xhn9o7pub7» en la relación «rrhh_trabajador», omitiendo
+2026-05-20T17:32:07.671-05:00  WARN 16228 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2026-05-20T17:32:07.671-05:00  WARN 16228 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : no existe la restricción «uk1udhej9d8enfgbepfc93o7jl» en la relación «seg_rol», omitiendo
+2026-05-20T17:32:07.673-05:00  WARN 16228 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2026-05-20T17:32:07.673-05:00  WARN 16228 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : no existe la restricción «uktlx6k8r8b516a23yaef54e9lm» en la relación «seg_usuario», omitiendo
+2026-05-20T17:32:07.676-05:00  WARN 16228 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2026-05-20T17:32:07.676-05:00  WARN 16228 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : no existe la restricción «ukodj60lunc7wlyo1t5rnqxnb9l» en la relación «seg_usuario», omitiendo
+2026-05-20T17:32:07.711-05:00  INFO 16228 --- [sistema-ot] [  restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-05-20T17:32:07.938-05:00  INFO 16228 --- [sistema-ot] [  restartedMain] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-05-20T17:32:08.539-05:00  WARN 16228 --- [sistema-ot] [  restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-05-20T17:32:09.056-05:00  INFO 16228 --- [sistema-ot] [  restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2026-05-20T17:32:09.080-05:00  INFO 16228 --- [sistema-ot] [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2026-05-20T17:32:09.086-05:00  INFO 16228 --- [sistema-ot] [  restartedMain] c.kabj.sistema_ot.SistemaOtApplication   : Started SistemaOtApplication in 4.358 seconds (process running for 4.655)
+2026-05-20T17:32:09.157-05:00  INFO 16228 --- [sistema-ot] [  restartedMain] c.k.sistema_ot.config.DataInitializer    : Roles creados.
+2026-05-20T17:32:09.265-05:00  WARN 16228 --- [sistema-ot] [  restartedMain] c.k.sistema_ot.config.DataInitializer    : Usuarios de prueba creados. Password para todos: password123 — cámbialo en producción.
+2026-05-20T17:32:09.278-05:00  INFO 16228 --- [sistema-ot] [  restartedMain] c.k.sistema_ot.config.DataInitializer    : Trabajadores y capataces creados.
+2026-05-20T17:32:09.287-05:00  INFO 16228 --- [sistema-ot] [  restartedMain] c.k.sistema_ot.config.DataInitializer    : Subactividades sembradas.
+2026-05-20T17:32:14.060-05:00  INFO 16228 --- [sistema-ot] [nio-8080-exec-3] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-05-20T17:32:14.060-05:00  INFO 16228 --- [sistema-ot] [nio-8080-exec-3] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-05-20T17:32:14.061-05:00  INFO 16228 --- [sistema-ot] [nio-8080-exec-3] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2026-05-20T17:35:45.142-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-20T17:35:45.142-05:00 ERROR 16228 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: llave duplicada viola restricción de unicidad «uklwc3vccrh6xrp73ilqb6iawn2»
+  Detail: Ya existe la llave (nis)=(3684441).
+2026-05-20T17:35:45.147-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-4] c.k.s.service.ExcelCargaService          : Error procesando fila VPA 195: could not execute statement [ERROR: llave duplicada viola restricción de unicidad «uklwc3vccrh6xrp73ilqb6iawn2»
+  Detail: Ya existe la llave (nis)=(3684441).] [insert into gis_vpa (created_at,latitud,longitud,nis,updated_at,vca) values (?,?,?,?,?,?)]; SQL [insert into gis_vpa (created_at,latitud,longitud,nis,updated_at,vca) values (?,?,?,?,?,?)]; constraint [null]
+2026-05-20T17:35:45.147-05:00 ERROR 16228 --- [sistema-ot] [nio-8080-exec-4] org.hibernate.AssertionFailure           : HHH000099: an assertion failure occurred (this may indicate a bug in Hibernate, but is more likely due to unsafe use of the session): org.hibernate.AssertionFailure: Entry for instance of 'com.kabj.sistema_ot.entity.GisVpa' has a null identifier (this can happen if the session is flushed after an exception occurs)
+2026-05-20T17:35:53.490-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-3] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-20T17:35:53.490-05:00 ERROR 16228 --- [sistema-ot] [nio-8080-exec-3] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: llave duplicada viola restricción de unicidad «uk7nov7bl8f001qsvdhrqci9t7n»
+  Detail: Ya existe la llave (hia)=(HIA-11484).
+2026-05-20T17:35:53.492-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-3] c.k.s.service.ExcelCargaService          : Error procesando fila Hidrante 2383: could not execute statement [ERROR: llave duplicada viola restricción de unicidad «uk7nov7bl8f001qsvdhrqci9t7n»
+  Detail: Ya existe la llave (hia)=(HIA-11484).] [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; SQL [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; constraint [null]
+2026-05-20T17:35:53.493-05:00 ERROR 16228 --- [sistema-ot] [nio-8080-exec-3] org.hibernate.AssertionFailure           : HHH000099: an assertion failure occurred (this may indicate a bug in Hibernate, but is more likely due to unsafe use of the session): org.hibernate.AssertionFailure: Entry for instance of 'com.kabj.sistema_ot.entity.GisHidrante' has a null identifier (this can happen if the session is flushed after an exception occurs)
+2026-05-20T17:36:20.393-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-5] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-20T17:36:20.393-05:00 ERROR 16228 --- [sistema-ot] [nio-8080-exec-5] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: llave duplicada viola restricción de unicidad «uk7nov7bl8f001qsvdhrqci9t7n»
+  Detail: Ya existe la llave (hia)=(HIA-11484).
+2026-05-20T17:36:20.394-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-5] c.k.s.service.ExcelCargaService          : Error procesando fila Hidrante 2383: could not execute statement [ERROR: llave duplicada viola restricción de unicidad «uk7nov7bl8f001qsvdhrqci9t7n»
+  Detail: Ya existe la llave (hia)=(HIA-11484).] [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; SQL [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; constraint [null]
+2026-05-20T17:36:20.399-05:00 ERROR 16228 --- [sistema-ot] [nio-8080-exec-5] org.hibernate.AssertionFailure           : HHH000099: an assertion failure occurred (this may indicate a bug in Hibernate, but is more likely due to unsafe use of the session): org.hibernate.AssertionFailure: Entry for instance of 'com.kabj.sistema_ot.entity.GisHidrante' has a null identifier (this can happen if the session is flushed after an exception occurs)
+2026-05-20T17:36:25.417-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-7] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-20T17:36:25.417-05:00 ERROR 16228 --- [sistema-ot] [nio-8080-exec-7] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: llave duplicada viola restricción de unicidad «uklwc3vccrh6xrp73ilqb6iawn2»
+  Detail: Ya existe la llave (nis)=(3684441).
+2026-05-20T17:36:25.417-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-7] c.k.s.service.ExcelCargaService          : Error procesando fila VPA 195: could not execute statement [ERROR: llave duplicada viola restricción de unicidad «uklwc3vccrh6xrp73ilqb6iawn2»
+  Detail: Ya existe la llave (nis)=(3684441).] [insert into gis_vpa (created_at,latitud,longitud,nis,updated_at,vca) values (?,?,?,?,?,?)]; SQL [insert into gis_vpa (created_at,latitud,longitud,nis,updated_at,vca) values (?,?,?,?,?,?)]; constraint [null]
+2026-05-20T17:36:25.418-05:00 ERROR 16228 --- [sistema-ot] [nio-8080-exec-7] org.hibernate.AssertionFailure           : HHH000099: an assertion failure occurred (this may indicate a bug in Hibernate, but is more likely due to unsafe use of the session): org.hibernate.AssertionFailure: Entry for instance of 'com.kabj.sistema_ot.entity.GisVpa' has a null identifier (this can happen if the session is flushed after an exception occurs)
+2026-05-20T17:36:51.794-05:00  WARN 16228 --- [sistema-ot] [io-8080-exec-10] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-20T17:36:51.795-05:00 ERROR 16228 --- [sistema-ot] [io-8080-exec-10] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: llave duplicada viola restricción de unicidad «uklwc3vccrh6xrp73ilqb6iawn2»
+  Detail: Ya existe la llave (nis)=(3684441).
+2026-05-20T17:36:51.795-05:00  WARN 16228 --- [sistema-ot] [io-8080-exec-10] c.k.s.service.ExcelCargaService          : Error procesando fila VPA 195: could not execute statement [ERROR: llave duplicada viola restricción de unicidad «uklwc3vccrh6xrp73ilqb6iawn2»
+  Detail: Ya existe la llave (nis)=(3684441).] [insert into gis_vpa (created_at,latitud,longitud,nis,updated_at,vca) values (?,?,?,?,?,?)]; SQL [insert into gis_vpa (created_at,latitud,longitud,nis,updated_at,vca) values (?,?,?,?,?,?)]; constraint [null]
+2026-05-20T17:36:51.795-05:00 ERROR 16228 --- [sistema-ot] [io-8080-exec-10] org.hibernate.AssertionFailure           : HHH000099: an assertion failure occurred (this may indicate a bug in Hibernate, but is more likely due to unsafe use of the session): org.hibernate.AssertionFailure: Entry for instance of 'com.kabj.sistema_ot.entity.GisVpa' has a null identifier (this can happen if the session is flushed after an exception occurs)
+2026-05-20T17:38:42.562-05:00  INFO 16228 --- [sistema-ot] [   File Watcher] rtingClassPathChangeChangedEventListener : Restarting due to 56 class path changes (0 additions, 55 deletions, 1 modification)
+2026-05-20T17:38:42.575-05:00  INFO 16228 --- [sistema-ot] [       Thread-5] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2026-05-20T17:38:42.599-05:00  INFO 16228 --- [sistema-ot] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2026-05-20T17:38:42.621-05:00  INFO 16228 --- [sistema-ot] [       Thread-5] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-05-20T17:38:42.627-05:00  INFO 16228 --- [sistema-ot] [       Thread-5] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2026-05-20T17:38:42.631-05:00  INFO 16228 --- [sistema-ot] [       Thread-5] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
 
   .   ____          _            __ _ _
  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
@@ -125,166 +161,89 @@
 
  :: Spring Boot ::               (v3.5.14)
 
-2026-05-18T00:49:54.975-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] c.kabj.sistema_ot.SistemaOtApplication   : Starting SistemaOtApplication using Java 23.0.1 with PID 29464 (C:\Users\MELANY\OneDrive\Escritorio\pwa-gestion-ordenes-trabajo\backend\sistema-ot\target\classes started by MELANY in C:\Users\MELANY\OneDrive\Escritorio\pwa-gestion-ordenes-trabajo\backend\sistema-ot)
-2026-05-18T00:49:54.975-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] c.kabj.sistema_ot.SistemaOtApplication   : No active profile set, falling back to 1 default profile: "default"
-2026-05-18T00:49:55.584-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2026-05-18T00:49:55.661-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 76 ms. Found 10 JPA repository interfaces.
-2026-05-18T00:49:56.170-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
-2026-05-18T00:49:56.173-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
-2026-05-18T00:49:56.173-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.54]
-2026-05-18T00:49:56.221-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
-2026-05-18T00:49:56.222-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1241 ms
-2026-05-18T00:49:56.238-05:00 ERROR 29464 --- [sistema-ot] [  restartedMain] o.s.b.web.embedded.tomcat.TomcatStarter  : Error starting Tomcat context. Exception: org.springframework.beans.factory.UnsatisfiedDependencyException. Message: Error creating bean with name 'jwtFilter' defined in file [C:\Users\MELANY\OneDrive\Escritorio\pwa-gestion-ordenes-trabajo\backend\sistema-ot\target\classes\com\kabj\sistema_ot\security\JwtFilter.class]: Unsatisfied dependency expressed through constructor parameter 0: Error creating bean with name 'jwtUtil': Injection of autowired dependencies failed
-2026-05-18T00:49:56.251-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] o.apache.catalina.core.StandardService   : Stopping service [Tomcat]
-2026-05-18T00:49:56.255-05:00  WARN 29464 --- [sistema-ot] [  restartedMain] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.context.ApplicationContextException: Unable to start web server
-2026-05-18T00:49:56.281-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] .s.b.a.l.ConditionEvaluationReportLogger : 
-
-Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
-2026-05-18T00:49:56.328-05:00 ERROR 29464 --- [sistema-ot] [  restartedMain] o.s.boot.SpringApplication               : Application run failed
-
-org.springframework.context.ApplicationContextException: Unable to start web server
-	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.onRefresh(ServletWebServerApplicationContext.java:170) ~[spring-boot-3.5.14.jar:3.5.14]
-	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:622) ~[spring-context-6.2.18.jar:6.2.18]
-	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146) ~[spring-boot-3.5.14.jar:3.5.14]
-	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:752) ~[spring-boot-3.5.14.jar:3.5.14]
-	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:439) ~[spring-boot-3.5.14.jar:3.5.14]
-	at org.springframework.boot.SpringApplication.run(SpringApplication.java:318) ~[spring-boot-3.5.14.jar:3.5.14]
-	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1361) ~[spring-boot-3.5.14.jar:3.5.14]
-	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1350) ~[spring-boot-3.5.14.jar:3.5.14]
-	at com.kabj.sistema_ot.SistemaOtApplication.main(SistemaOtApplication.java:10) ~[classes/:na]
-	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103) ~[na:na]
-	at java.base/java.lang.reflect.Method.invoke(Method.java:580) ~[na:na]
-	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:50) ~[spring-boot-devtools-3.5.14.jar:3.5.14]
-Caused by: org.springframework.boot.web.server.WebServerException: Unable to start embedded Tomcat
-	at org.springframework.boot.web.embedded.tomcat.TomcatWebServer.initialize(TomcatWebServer.java:147) ~[spring-boot-3.5.14.jar:3.5.14]
-	at org.springframework.boot.web.embedded.tomcat.TomcatWebServer.<init>(TomcatWebServer.java:107) ~[spring-boot-3.5.14.jar:3.5.14]
-	at org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory.getTomcatWebServer(TomcatServletWebServerFactory.java:517) ~[spring-boot-3.5.14.jar:3.5.14]
-	at org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory.getWebServer(TomcatServletWebServerFactory.java:219) ~[spring-boot-3.5.14.jar:3.5.14]
-	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.createWebServer(ServletWebServerApplicationContext.java:193) ~[spring-boot-3.5.14.jar:3.5.14]
-	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.onRefresh(ServletWebServerApplicationContext.java:167) ~[spring-boot-3.5.14.jar:3.5.14]
-	... 11 common frames omitted
-Caused by: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'jwtFilter' defined in file [C:\Users\MELANY\OneDrive\Escritorio\pwa-gestion-ordenes-trabajo\backend\sistema-ot\target\classes\com\kabj\sistema_ot\security\JwtFilter.class]: Unsatisfied dependency expressed through constructor parameter 0: Error creating bean with name 'jwtUtil': Injection of autowired dependencies failed
-	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:804) ~[spring-beans-6.2.18.jar:6.2.18]
-	at org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:240) ~[spring-beans-6.2.18.jar:6.2.18]
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:1395) ~[spring-beans-6.2.18.jar:6.2.18]
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1232) ~[spring-beans-6.2.18.jar:6.2.18]
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:569) ~[spring-beans-6.2.18.jar:6.2.18]
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529) ~[spring-beans-6.2.18.jar:6.2.18]
-	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339) ~[spring-beans-6.2.18.jar:6.2.18]
-	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373) ~[spring-beans-6.2.18.jar:6.2.18]
-	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337) ~[spring-beans-6.2.18.jar:6.2.18]
-	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:207) ~[spring-beans-6.2.18.jar:6.2.18]
-	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.getOrderedBeansOfType(ServletContextInitializerBeans.java:230) ~[spring-boot-3.5.14.jar:3.5.14]
-	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.addAsRegistrationBean(ServletContextInitializerBeans.java:184) ~[spring-boot-3.5.14.jar:3.5.14]
-	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.addAsRegistrationBean(ServletContextInitializerBeans.java:179) ~[spring-boot-3.5.14.jar:3.5.14]
-	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.addAdaptableBeans(ServletContextInitializerBeans.java:164) ~[spring-boot-3.5.14.jar:3.5.14]
-	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.<init>(ServletContextInitializerBeans.java:96) ~[spring-boot-3.5.14.jar:3.5.14]
-	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.getServletContextInitializerBeans(ServletWebServerApplicationContext.java:271) ~[spring-boot-3.5.14.jar:3.5.14]
-	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.selfInitialize(ServletWebServerApplicationContext.java:245) ~[spring-boot-3.5.14.jar:3.5.14]
-	at org.springframework.boot.web.embedded.tomcat.TomcatStarter.onStartup(TomcatStarter.java:52) ~[spring-boot-3.5.14.jar:3.5.14]
-	at org.apache.catalina.core.StandardContext.startInternal(StandardContext.java:4452) ~[tomcat-embed-core-10.1.54.jar:10.1.54]
-	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:164) ~[tomcat-embed-core-10.1.54.jar:10.1.54]
-	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1201) ~[tomcat-embed-core-10.1.54.jar:10.1.54]
-	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1191) ~[tomcat-embed-core-10.1.54.jar:10.1.54]
-	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317) ~[na:na]
-	at org.apache.tomcat.util.threads.InlineExecutorService.execute(InlineExecutorService.java:81) ~[tomcat-embed-core-10.1.54.jar:10.1.54]
-	at java.base/java.util.concurrent.AbstractExecutorService.submit(AbstractExecutorService.java:148) ~[na:na]
-	at org.apache.catalina.core.ContainerBase.startInternal(ContainerBase.java:747) ~[tomcat-embed-core-10.1.54.jar:10.1.54]
-	at org.apache.catalina.core.StandardHost.startInternal(StandardHost.java:783) ~[tomcat-embed-core-10.1.54.jar:10.1.54]
-	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:164) ~[tomcat-embed-core-10.1.54.jar:10.1.54]
-	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1201) ~[tomcat-embed-core-10.1.54.jar:10.1.54]
-	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1191) ~[tomcat-embed-core-10.1.54.jar:10.1.54]
-	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317) ~[na:na]
-	at org.apache.tomcat.util.threads.InlineExecutorService.execute(InlineExecutorService.java:81) ~[tomcat-embed-core-10.1.54.jar:10.1.54]
-	at java.base/java.util.concurrent.AbstractExecutorService.submit(AbstractExecutorService.java:148) ~[na:na]
-	at org.apache.catalina.core.ContainerBase.startInternal(ContainerBase.java:747) ~[tomcat-embed-core-10.1.54.jar:10.1.54]
-	at org.apache.catalina.core.StandardEngine.startInternal(StandardEngine.java:201) ~[tomcat-embed-core-10.1.54.jar:10.1.54]
-	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:164) ~[tomcat-embed-core-10.1.54.jar:10.1.54]
-	at org.apache.catalina.core.StandardService.startInternal(StandardService.java:410) ~[tomcat-embed-core-10.1.54.jar:10.1.54]
-	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:164) ~[tomcat-embed-core-10.1.54.jar:10.1.54]
-	at org.apache.catalina.core.StandardServer.startInternal(StandardServer.java:868) ~[tomcat-embed-core-10.1.54.jar:10.1.54]
-	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:164) ~[tomcat-embed-core-10.1.54.jar:10.1.54]
-	at org.apache.catalina.startup.Tomcat.start(Tomcat.java:436) ~[tomcat-embed-core-10.1.54.jar:10.1.54]
-	at org.springframework.boot.web.embedded.tomcat.TomcatWebServer.initialize(TomcatWebServer.java:128) ~[spring-boot-3.5.14.jar:3.5.14]
-	... 16 common frames omitted
-Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'jwtUtil': Injection of autowired dependencies failed
-	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessProperties(AutowiredAnnotationBeanPostProcessor.java:515) ~[spring-beans-6.2.18.jar:6.2.18]
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1459) ~[spring-beans-6.2.18.jar:6.2.18]
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:606) ~[spring-beans-6.2.18.jar:6.2.18]
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529) ~[spring-beans-6.2.18.jar:6.2.18]
-	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339) ~[spring-beans-6.2.18.jar:6.2.18]
-	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373) ~[spring-beans-6.2.18.jar:6.2.18]
-	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337) ~[spring-beans-6.2.18.jar:6.2.18]
-	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202) ~[spring-beans-6.2.18.jar:6.2.18]
-	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1708) ~[spring-beans-6.2.18.jar:6.2.18]
-	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1653) ~[spring-beans-6.2.18.jar:6.2.18]
-	at org.springframework.beans.factory.support.ConstructorResolver.resolveAutowiredArgument(ConstructorResolver.java:913) ~[spring-beans-6.2.18.jar:6.2.18]
-	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:791) ~[spring-beans-6.2.18.jar:6.2.18]
-	... 57 common frames omitted
-Caused by: org.springframework.util.PlaceholderResolutionException: Could not resolve placeholder 'jwt.secret' in value "${jwt.secret}"
-	at org.springframework.util.PlaceholderResolutionException.withValue(PlaceholderResolutionException.java:81) ~[spring-core-6.2.18.jar:6.2.18]
-	at org.springframework.util.PlaceholderParser$ParsedValue.resolve(PlaceholderParser.java:298) ~[spring-core-6.2.18.jar:6.2.18]
-	at org.springframework.util.PlaceholderParser.replacePlaceholders(PlaceholderParser.java:131) ~[spring-core-6.2.18.jar:6.2.18]
-	at org.springframework.util.PropertyPlaceholderHelper.replacePlaceholders(PropertyPlaceholderHelper.java:114) ~[spring-core-6.2.18.jar:6.2.18]
-	at org.springframework.core.env.AbstractPropertyResolver.doResolvePlaceholders(AbstractPropertyResolver.java:293) ~[spring-core-6.2.18.jar:6.2.18]
-	at org.springframework.core.env.AbstractPropertyResolver.resolveRequiredPlaceholders(AbstractPropertyResolver.java:264) ~[spring-core-6.2.18.jar:6.2.18]
-	at org.springframework.context.support.PropertySourcesPlaceholderConfigurer.lambda$processProperties$0(PropertySourcesPlaceholderConfigurer.java:186) ~[spring-context-6.2.18.jar:6.2.18]
-	at org.springframework.beans.factory.support.AbstractBeanFactory.resolveEmbeddedValue(AbstractBeanFactory.java:970) ~[spring-beans-6.2.18.jar:6.2.18]
-	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1675) ~[spring-beans-6.2.18.jar:6.2.18]
-	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1653) ~[spring-beans-6.2.18.jar:6.2.18]
-	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.resolveFieldValue(AutowiredAnnotationBeanPostProcessor.java:784) ~[spring-beans-6.2.18.jar:6.2.18]
-	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:767) ~[spring-beans-6.2.18.jar:6.2.18]
-	at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:146) ~[spring-beans-6.2.18.jar:6.2.18]
-	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessProperties(AutowiredAnnotationBeanPostProcessor.java:509) ~[spring-beans-6.2.18.jar:6.2.18]
-	... 68 common frames omitted
-
-
-  .   ____          _            __ _ _
- /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
-( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
- \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
-  '  |____| .__|_| |_|_| |_\__, | / / / /
- =========|_|==============|___/=/_/_/_/
-
- :: Spring Boot ::               (v3.5.14)
-
-2026-05-18T00:49:57.866-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] c.kabj.sistema_ot.SistemaOtApplication   : Starting SistemaOtApplication using Java 23.0.1 with PID 29464 (C:\Users\MELANY\OneDrive\Escritorio\pwa-gestion-ordenes-trabajo\backend\sistema-ot\target\classes started by MELANY in C:\Users\MELANY\OneDrive\Escritorio\pwa-gestion-ordenes-trabajo\backend\sistema-ot)
-2026-05-18T00:49:57.867-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] c.kabj.sistema_ot.SistemaOtApplication   : No active profile set, falling back to 1 default profile: "default"
-2026-05-18T00:49:58.148-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2026-05-18T00:49:58.196-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 46 ms. Found 10 JPA repository interfaces.
-2026-05-18T00:49:58.389-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
-2026-05-18T00:49:58.391-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
-2026-05-18T00:49:58.391-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.54]
-2026-05-18T00:49:58.422-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] o.a.c.c.C.[Tomcat-1].[localhost].[/]     : Initializing Spring embedded WebApplicationContext
-2026-05-18T00:49:58.422-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 553 ms
-2026-05-18T00:49:58.514-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
-2026-05-18T00:49:58.519-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
-2026-05-18T00:49:58.559-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
-2026-05-18T00:49:58.560-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Starting...
-2026-05-18T00:49:58.646-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-2 - Added connection org.postgresql.jdbc.PgConnection@5e526882
-2026-05-18T00:49:58.646-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Start completed.
-2026-05-18T00:49:58.674-05:00  WARN 29464 --- [sistema-ot] [  restartedMain] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
-2026-05-18T00:49:58.675-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+2026-05-20T17:38:42.772-05:00  INFO 16228 --- [sistema-ot] [  restartedMain] c.kabj.sistema_ot.SistemaOtApplication   : Starting SistemaOtApplication using Java 25.0.3 with PID 16228 (C:\Users\W11\Documents\GitHub\pwa-gestion-ordenes-trabajo\backend\sistema-ot\target\classes started by W11 in C:\Users\W11\Documents\GitHub\pwa-gestion-ordenes-trabajo\backend\sistema-ot)
+2026-05-20T17:38:42.772-05:00  INFO 16228 --- [sistema-ot] [  restartedMain] c.kabj.sistema_ot.SistemaOtApplication   : No active profile set, falling back to 1 default profile: "default"
+2026-05-20T17:38:42.991-05:00  INFO 16228 --- [sistema-ot] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-05-20T17:38:42.993-05:00  INFO 16228 --- [sistema-ot] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 1 ms. Found 0 JPA repository interfaces.
+2026-05-20T17:38:43.155-05:00  INFO 16228 --- [sistema-ot] [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-05-20T17:38:43.158-05:00  INFO 16228 --- [sistema-ot] [  restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-05-20T17:38:43.158-05:00  INFO 16228 --- [sistema-ot] [  restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.54]
+2026-05-20T17:38:43.175-05:00  INFO 16228 --- [sistema-ot] [  restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-05-20T17:38:43.175-05:00  INFO 16228 --- [sistema-ot] [  restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 400 ms
+2026-05-20T17:38:43.220-05:00  INFO 16228 --- [sistema-ot] [  restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-05-20T17:38:43.223-05:00  INFO 16228 --- [sistema-ot] [  restartedMain] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-05-20T17:38:43.231-05:00  INFO 16228 --- [sistema-ot] [  restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-05-20T17:38:43.232-05:00  INFO 16228 --- [sistema-ot] [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Starting...
+2026-05-20T17:38:43.279-05:00  INFO 16228 --- [sistema-ot] [  restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-2 - Added connection org.postgresql.jdbc.PgConnection@393b0255
+2026-05-20T17:38:43.279-05:00  INFO 16228 --- [sistema-ot] [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Start completed.
+2026-05-20T17:38:43.286-05:00  WARN 16228 --- [sistema-ot] [  restartedMain] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-05-20T17:38:43.288-05:00  INFO 16228 --- [sistema-ot] [  restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
 	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-2)']
 	Database driver: undefined/unknown
-	Database version: 18.4
+	Database version: 18.3
 	Autocommit mode: undefined/unknown
 	Isolation level: undefined/unknown
 	Minimum pool size: undefined/unknown
 	Maximum pool size: undefined/unknown
-2026-05-18T00:49:59.143-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
-2026-05-18T00:49:59.143-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
-2026-05-18T00:49:59.922-05:00  WARN 29464 --- [sistema-ot] [  restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2026-05-18T00:50:00.648-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
-2026-05-18T00:50:00.669-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
-2026-05-18T00:50:00.673-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] c.kabj.sistema_ot.SistemaOtApplication   : Started SistemaOtApplication in 2.843 seconds (process running for 3964.789)
-2026-05-18T00:50:00.692-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] .ConditionEvaluationDeltaLoggingListener : Condition evaluation unchanged
-2026-05-18T01:01:39.284-05:00  INFO 29464 --- [sistema-ot] [   File Watcher] rtingClassPathChangeChangedEventListener : Restarting due to 1 class path change (0 additions, 1 deletion, 0 modifications)
-2026-05-18T01:01:39.286-05:00  INFO 29464 --- [sistema-ot] [       Thread-7] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
-2026-05-18T01:01:39.294-05:00  INFO 29464 --- [sistema-ot] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
-2026-05-18T01:01:39.299-05:00  INFO 29464 --- [sistema-ot] [       Thread-7] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
-2026-05-18T01:01:39.302-05:00  INFO 29464 --- [sistema-ot] [       Thread-7] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Shutdown initiated...
-2026-05-18T01:01:39.309-05:00  INFO 29464 --- [sistema-ot] [       Thread-7] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Shutdown completed.
+2026-05-20T17:38:43.312-05:00  INFO 16228 --- [sistema-ot] [  restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-05-20T17:38:43.312-05:00  INFO 16228 --- [sistema-ot] [  restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-05-20T17:38:43.349-05:00  WARN 16228 --- [sistema-ot] [  restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-05-20T17:38:43.490-05:00  WARN 16228 --- [sistema-ot] [  restartedMain] .s.s.UserDetailsServiceAutoConfiguration : 
+
+Using generated security password: 0f00f1fc-f28a-467b-8698-f47741974459
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2026-05-20T17:38:43.501-05:00  INFO 16228 --- [sistema-ot] [  restartedMain] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+2026-05-20T17:38:43.557-05:00  INFO 16228 --- [sistema-ot] [  restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2026-05-20T17:38:43.566-05:00  INFO 16228 --- [sistema-ot] [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2026-05-20T17:38:43.571-05:00  INFO 16228 --- [sistema-ot] [  restartedMain] c.kabj.sistema_ot.SistemaOtApplication   : Started SistemaOtApplication in 0.856 seconds (process running for 399.141)
+2026-05-20T17:38:43.576-05:00  INFO 16228 --- [sistema-ot] [  restartedMain] .ConditionEvaluationDeltaLoggingListener : Condition evaluation delta:
+
+
+==========================
+CONDITION EVALUATION DELTA
+==========================
+
+
+Positive matches:
+-----------------
+
+   SpringBootWebSecurityConfiguration.SecurityFilterChainConfiguration matched:
+      - AllNestedConditions 2 matched 0 did not; NestedCondition on DefaultWebSecurityCondition.Beans @ConditionalOnMissingBean (types: org.springframework.security.web.SecurityFilterChain; SearchStrategy: all) did not find any beans; NestedCondition on DefaultWebSecurityCondition.Classes @ConditionalOnClass found required classes 'org.springframework.security.web.SecurityFilterChain', 'org.springframework.security.config.annotation.web.builders.HttpSecurity' (DefaultWebSecurityCondition)
+
+   UserDetailsServiceAutoConfiguration matched:
+      - @ConditionalOnClass found required class 'org.springframework.security.authentication.AuthenticationManager' (OnClassCondition)
+      - found 'session' scope (OnWebApplicationCondition)
+      - AnyNestedCondition 1 matched 2 did not; NestedCondition on UserDetailsServiceAutoConfiguration.MissingAlternativeOrUserPropertiesConfigured.PasswordConfigured @ConditionalOnProperty (spring.security.user.password) did not find property 'spring.security.user.password'; NestedCondition on UserDetailsServiceAutoConfiguration.MissingAlternativeOrUserPropertiesConfigured.NameConfigured @ConditionalOnProperty (spring.security.user.name) did not find property 'spring.security.user.name'; NestedCondition on UserDetailsServiceAutoConfiguration.MissingAlternativeOrUserPropertiesConfigured.MissingAlternative @ConditionalOnMissingClass did not find unwanted classes 'org.springframework.security.oauth2.client.registration.ClientRegistrationRepository', 'org.springframework.security.oauth2.server.resource.introspection.OpaqueTokenIntrospector', 'org.springframework.security.saml2.provider.service.registration.RelyingPartyRegistrationRepository' (UserDetailsServiceAutoConfiguration.MissingAlternativeOrUserPropertiesConfigured)
+      - @ConditionalOnBean (types: org.springframework.security.config.ObjectPostProcessor; SearchStrategy: all) found beans 'objectPostProcessor', 'webAuthorizationManagerPostProcessor', 'filterChainDecoratorPostProcessor', 'authenticationManagerPostProcessor'; @ConditionalOnMissingBean (types: org.springframework.security.authentication.AuthenticationManager,org.springframework.security.authentication.AuthenticationProvider,org.springframework.security.core.userdetails.UserDetailsService,org.springframework.security.authentication.AuthenticationManagerResolver,org.springframework.security.oauth2.jwt.JwtDecoder; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+
+Negative matches:
+-----------------
+
+    None
+
+
+Exclusions:
+-----------
+
+    None
+
+
+Unconditional classes:
+----------------------
+
+    None
+
+
+
+2026-05-20T17:38:45.018-05:00  INFO 16228 --- [sistema-ot] [   File Watcher] rtingClassPathChangeChangedEventListener : Restarting due to 55 class path changes (55 additions, 0 deletions, 0 modifications)
+2026-05-20T17:38:45.022-05:00  INFO 16228 --- [sistema-ot] [       Thread-7] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2026-05-20T17:38:45.026-05:00  INFO 16228 --- [sistema-ot] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2026-05-20T17:38:45.026-05:00  INFO 16228 --- [sistema-ot] [       Thread-7] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-05-20T17:38:45.026-05:00  INFO 16228 --- [sistema-ot] [       Thread-7] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Shutdown initiated...
+2026-05-20T17:38:45.026-05:00  INFO 16228 --- [sistema-ot] [       Thread-7] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Shutdown completed.
 
   .   ____          _            __ _ _
  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
@@ -295,205 +254,344 @@ Caused by: org.springframework.util.PlaceholderResolutionException: Could not re
 
  :: Spring Boot ::               (v3.5.14)
 
-2026-05-18T01:01:39.456-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] c.kabj.sistema_ot.SistemaOtApplication   : Starting SistemaOtApplication using Java 23.0.1 with PID 29464 (C:\Users\MELANY\OneDrive\Escritorio\pwa-gestion-ordenes-trabajo\backend\sistema-ot\target\classes started by MELANY in C:\Users\MELANY\OneDrive\Escritorio\pwa-gestion-ordenes-trabajo\backend\sistema-ot)
-2026-05-18T01:01:39.457-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] c.kabj.sistema_ot.SistemaOtApplication   : No active profile set, falling back to 1 default profile: "default"
-2026-05-18T01:01:40.003-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2026-05-18T01:01:40.066-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 60 ms. Found 10 JPA repository interfaces.
-2026-05-18T01:01:40.480-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
-2026-05-18T01:01:40.485-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
-2026-05-18T01:01:40.485-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.54]
-2026-05-18T01:01:40.535-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] o.a.c.c.C.[Tomcat-1].[localhost].[/]     : Initializing Spring embedded WebApplicationContext
-2026-05-18T01:01:40.535-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1074 ms
-2026-05-18T01:01:40.734-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
-2026-05-18T01:01:40.747-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
-2026-05-18T01:01:40.781-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
-2026-05-18T01:01:40.783-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-3 - Starting...
-2026-05-18T01:01:40.937-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-3 - Added connection org.postgresql.jdbc.PgConnection@6a341912
-2026-05-18T01:01:40.937-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-3 - Start completed.
-2026-05-18T01:01:40.957-05:00  WARN 29464 --- [sistema-ot] [  restartedMain] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
-2026-05-18T01:01:40.959-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+2026-05-20T17:38:45.102-05:00  INFO 16228 --- [sistema-ot] [  restartedMain] c.kabj.sistema_ot.SistemaOtApplication   : Starting SistemaOtApplication using Java 25.0.3 with PID 16228 (C:\Users\W11\Documents\GitHub\pwa-gestion-ordenes-trabajo\backend\sistema-ot\target\classes started by W11 in C:\Users\W11\Documents\GitHub\pwa-gestion-ordenes-trabajo\backend\sistema-ot)
+2026-05-20T17:38:45.102-05:00  INFO 16228 --- [sistema-ot] [  restartedMain] c.kabj.sistema_ot.SistemaOtApplication   : No active profile set, falling back to 1 default profile: "default"
+2026-05-20T17:38:45.242-05:00  INFO 16228 --- [sistema-ot] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-05-20T17:38:45.267-05:00  INFO 16228 --- [sistema-ot] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 27 ms. Found 12 JPA repository interfaces.
+2026-05-20T17:38:45.350-05:00  INFO 16228 --- [sistema-ot] [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-05-20T17:38:45.350-05:00  INFO 16228 --- [sistema-ot] [  restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-05-20T17:38:45.350-05:00  INFO 16228 --- [sistema-ot] [  restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.54]
+2026-05-20T17:38:45.352-05:00  INFO 16228 --- [sistema-ot] [  restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-05-20T17:38:45.352-05:00  INFO 16228 --- [sistema-ot] [  restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 250 ms
+2026-05-20T17:38:45.392-05:00  INFO 16228 --- [sistema-ot] [  restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-05-20T17:38:45.392-05:00  INFO 16228 --- [sistema-ot] [  restartedMain] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-05-20T17:38:45.392-05:00  INFO 16228 --- [sistema-ot] [  restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-05-20T17:38:45.392-05:00  INFO 16228 --- [sistema-ot] [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-3 - Starting...
+2026-05-20T17:38:45.427-05:00  INFO 16228 --- [sistema-ot] [  restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-3 - Added connection org.postgresql.jdbc.PgConnection@4feb2a92
+2026-05-20T17:38:45.427-05:00  INFO 16228 --- [sistema-ot] [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-3 - Start completed.
+2026-05-20T17:38:45.434-05:00  WARN 16228 --- [sistema-ot] [  restartedMain] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-05-20T17:38:45.434-05:00  INFO 16228 --- [sistema-ot] [  restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
 	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-3)']
 	Database driver: undefined/unknown
-	Database version: 18.4
+	Database version: 18.3
 	Autocommit mode: undefined/unknown
 	Isolation level: undefined/unknown
 	Minimum pool size: undefined/unknown
 	Maximum pool size: undefined/unknown
-2026-05-18T01:01:41.713-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
-2026-05-18T01:01:41.714-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
-2026-05-18T01:01:42.524-05:00  WARN 29464 --- [sistema-ot] [  restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2026-05-18T01:01:43.319-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
-2026-05-18T01:01:43.352-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
-2026-05-18T01:01:43.358-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] c.kabj.sistema_ot.SistemaOtApplication   : Started SistemaOtApplication in 3.955 seconds (process running for 4667.474)
-2026-05-18T01:01:43.384-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] .ConditionEvaluationDeltaLoggingListener : Condition evaluation unchanged
-2026-05-18T01:01:47.953-05:00  INFO 29464 --- [sistema-ot] [   File Watcher] rtingClassPathChangeChangedEventListener : Restarting due to 22 class path changes (0 additions, 22 deletions, 0 modifications)
-2026-05-18T01:01:47.992-05:00  INFO 29464 --- [sistema-ot] [      Thread-14] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
-2026-05-18T01:01:48.060-05:00  INFO 29464 --- [sistema-ot] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
-2026-05-18T01:01:48.066-05:00  INFO 29464 --- [sistema-ot] [      Thread-14] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
-2026-05-18T01:01:48.068-05:00  INFO 29464 --- [sistema-ot] [      Thread-14] com.zaxxer.hikari.HikariDataSource       : HikariPool-3 - Shutdown initiated...
-2026-05-18T01:01:48.085-05:00  INFO 29464 --- [sistema-ot] [      Thread-14] com.zaxxer.hikari.HikariDataSource       : HikariPool-3 - Shutdown completed.
+2026-05-20T17:38:45.672-05:00  INFO 16228 --- [sistema-ot] [  restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-05-20T17:38:45.802-05:00  INFO 16228 --- [sistema-ot] [  restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-05-20T17:38:46.084-05:00  WARN 16228 --- [sistema-ot] [  restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-05-20T17:38:46.284-05:00  INFO 16228 --- [sistema-ot] [  restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2026-05-20T17:38:46.292-05:00  INFO 16228 --- [sistema-ot] [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2026-05-20T17:38:46.292-05:00  INFO 16228 --- [sistema-ot] [  restartedMain] c.kabj.sistema_ot.SistemaOtApplication   : Started SistemaOtApplication in 1.208 seconds (process running for 401.868)
+2026-05-20T17:38:46.302-05:00  INFO 16228 --- [sistema-ot] [  restartedMain] .ConditionEvaluationDeltaLoggingListener : Condition evaluation delta:
 
-  .   ____          _            __ _ _
- /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
-( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
- \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
-  '  |____| .__|_| |_|_| |_\__, | / / / /
- =========|_|==============|___/=/_/_/_/
 
- :: Spring Boot ::               (v3.5.14)
+==========================
+CONDITION EVALUATION DELTA
+==========================
 
-2026-05-18T01:01:48.301-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] c.kabj.sistema_ot.SistemaOtApplication   : Starting SistemaOtApplication using Java 23.0.1 with PID 29464 (C:\Users\MELANY\OneDrive\Escritorio\pwa-gestion-ordenes-trabajo\backend\sistema-ot\target\classes started by MELANY in C:\Users\MELANY\OneDrive\Escritorio\pwa-gestion-ordenes-trabajo\backend\sistema-ot)
-2026-05-18T01:01:48.302-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] c.kabj.sistema_ot.SistemaOtApplication   : No active profile set, falling back to 1 default profile: "default"
-2026-05-18T01:01:49.104-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2026-05-18T01:01:49.183-05:00  WARN 29464 --- [sistema-ot] [  restartedMain] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: java.lang.NoClassDefFoundError: com/kabj/sistema_ot/entity/Usuario
-2026-05-18T01:01:49.206-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] .s.b.a.l.ConditionEvaluationReportLogger : 
 
-Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
-2026-05-18T01:01:49.228-05:00 ERROR 29464 --- [sistema-ot] [  restartedMain] o.s.boot.SpringApplication               : Application run failed
+Positive matches:
+-----------------
 
-java.lang.NoClassDefFoundError: com/kabj/sistema_ot/entity/Usuario
-	at java.base/java.lang.Class.getDeclaredMethods0(Native Method) ~[na:na]
-	at java.base/java.lang.Class.privateGetDeclaredMethods(Class.java:3650) ~[na:na]
-	at java.base/java.lang.Class.privateGetPublicMethods(Class.java:3675) ~[na:na]
-	at java.base/java.lang.Class.getMethods(Class.java:2244) ~[na:na]
-	at org.springframework.data.util.ReactiveWrappers.usesReactiveType(ReactiveWrappers.java:141) ~[spring-data-commons-3.5.11.jar:3.5.11]
-	at org.springframework.data.repository.core.support.AbstractRepositoryMetadata.isReactiveRepository(AbstractRepositoryMetadata.java:135) ~[spring-data-commons-3.5.11.jar:3.5.11]
-	at org.springframework.data.repository.config.RepositoryConfigurationExtensionSupport.useRepositoryConfiguration(RepositoryConfigurationExtensionSupport.java:344) ~[spring-data-commons-3.5.11.jar:3.5.11]
-	at org.springframework.data.repository.config.RepositoryConfigurationExtensionSupport.getRepositoryConfigurations(RepositoryConfigurationExtensionSupport.java:98) ~[spring-data-commons-3.5.11.jar:3.5.11]
-	at org.springframework.data.repository.config.RepositoryConfigurationDelegate.registerRepositoriesIn(RepositoryConfigurationDelegate.java:170) ~[spring-data-commons-3.5.11.jar:3.5.11]
-	at org.springframework.boot.autoconfigure.data.AbstractRepositoryConfigurationSourceSupport.registerBeanDefinitions(AbstractRepositoryConfigurationSourceSupport.java:62) ~[spring-boot-autoconfigure-3.5.14.jar:3.5.14]
-	at org.springframework.context.annotation.ConfigurationClassBeanDefinitionReader.lambda$loadBeanDefinitionsFromRegistrars$1(ConfigurationClassBeanDefinitionReader.java:409) ~[spring-context-6.2.18.jar:6.2.18]
-	at java.base/java.util.LinkedHashMap.forEach(LinkedHashMap.java:987) ~[na:na]
-	at org.springframework.context.annotation.ConfigurationClassBeanDefinitionReader.loadBeanDefinitionsFromRegistrars(ConfigurationClassBeanDefinitionReader.java:408) ~[spring-context-6.2.18.jar:6.2.18]
-	at org.springframework.context.annotation.ConfigurationClassBeanDefinitionReader.loadBeanDefinitionsForConfigurationClass(ConfigurationClassBeanDefinitionReader.java:148) ~[spring-context-6.2.18.jar:6.2.18]
-	at org.springframework.context.annotation.ConfigurationClassBeanDefinitionReader.loadBeanDefinitions(ConfigurationClassBeanDefinitionReader.java:120) ~[spring-context-6.2.18.jar:6.2.18]
-	at org.springframework.context.annotation.ConfigurationClassPostProcessor.processConfigBeanDefinitions(ConfigurationClassPostProcessor.java:430) ~[spring-context-6.2.18.jar:6.2.18]
-	at org.springframework.context.annotation.ConfigurationClassPostProcessor.postProcessBeanDefinitionRegistry(ConfigurationClassPostProcessor.java:290) ~[spring-context-6.2.18.jar:6.2.18]
-	at org.springframework.context.support.PostProcessorRegistrationDelegate.invokeBeanDefinitionRegistryPostProcessors(PostProcessorRegistrationDelegate.java:349) ~[spring-context-6.2.18.jar:6.2.18]
-	at org.springframework.context.support.PostProcessorRegistrationDelegate.invokeBeanFactoryPostProcessors(PostProcessorRegistrationDelegate.java:118) ~[spring-context-6.2.18.jar:6.2.18]
-	at org.springframework.context.support.AbstractApplicationContext.invokeBeanFactoryPostProcessors(AbstractApplicationContext.java:792) ~[spring-context-6.2.18.jar:6.2.18]
-	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:610) ~[spring-context-6.2.18.jar:6.2.18]
-	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146) ~[spring-boot-3.5.14.jar:3.5.14]
-	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:752) ~[spring-boot-3.5.14.jar:3.5.14]
-	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:439) ~[spring-boot-3.5.14.jar:3.5.14]
-	at org.springframework.boot.SpringApplication.run(SpringApplication.java:318) ~[spring-boot-3.5.14.jar:3.5.14]
-	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1361) ~[spring-boot-3.5.14.jar:3.5.14]
-	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1350) ~[spring-boot-3.5.14.jar:3.5.14]
-	at com.kabj.sistema_ot.SistemaOtApplication.main(SistemaOtApplication.java:10) ~[classes/:na]
-	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103) ~[na:na]
-	at java.base/java.lang.reflect.Method.invoke(Method.java:580) ~[na:na]
-	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:50) ~[spring-boot-devtools-3.5.14.jar:3.5.14]
-Caused by: java.lang.ClassNotFoundException: com.kabj.sistema_ot.entity.Usuario
-	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClass(BuiltinClassLoader.java:641) ~[na:na]
-	at java.base/jdk.internal.loader.ClassLoaders$AppClassLoader.loadClass(ClassLoaders.java:188) ~[na:na]
-	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:528) ~[na:na]
-	at java.base/java.lang.Class.forName0(Native Method) ~[na:na]
-	at java.base/java.lang.Class.forName(Class.java:578) ~[na:na]
-	at java.base/java.lang.Class.forName(Class.java:557) ~[na:na]
-	at org.springframework.boot.devtools.restart.classloader.RestartClassLoader.loadClass(RestartClassLoader.java:121) ~[spring-boot-devtools-3.5.14.jar:3.5.14]
-	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:528) ~[na:na]
-	... 31 common frames omitted
+    None
 
-Exception in thread "restartedMain" java.lang.reflect.InvocationTargetException
-	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:118)
-	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
-	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:50)
-Caused by: java.lang.IllegalStateException: java.lang.NoClassDefFoundError: com/kabj/sistema_ot/entity/Usuario
-	at org.springframework.boot.SpringApplication.handleRunFailure(SpringApplication.java:823)
-	at org.springframework.boot.SpringApplication.run(SpringApplication.java:328)
-	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1361)
-	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1350)
-	at com.kabj.sistema_ot.SistemaOtApplication.main(SistemaOtApplication.java:10)
-	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
-	... 2 more
-Caused by: java.lang.NoClassDefFoundError: com/kabj/sistema_ot/entity/Usuario
-	at java.base/java.lang.Class.getDeclaredMethods0(Native Method)
-	at java.base/java.lang.Class.privateGetDeclaredMethods(Class.java:3650)
-	at java.base/java.lang.Class.privateGetPublicMethods(Class.java:3675)
-	at java.base/java.lang.Class.getMethods(Class.java:2244)
-	at org.springframework.data.util.ReactiveWrappers.usesReactiveType(ReactiveWrappers.java:141)
-	at org.springframework.data.repository.core.support.AbstractRepositoryMetadata.isReactiveRepository(AbstractRepositoryMetadata.java:135)
-	at org.springframework.data.repository.config.RepositoryConfigurationExtensionSupport.useRepositoryConfiguration(RepositoryConfigurationExtensionSupport.java:344)
-	at org.springframework.data.repository.config.RepositoryConfigurationExtensionSupport.getRepositoryConfigurations(RepositoryConfigurationExtensionSupport.java:98)
-	at org.springframework.data.repository.config.RepositoryConfigurationDelegate.registerRepositoriesIn(RepositoryConfigurationDelegate.java:170)
-	at org.springframework.boot.autoconfigure.data.AbstractRepositoryConfigurationSourceSupport.registerBeanDefinitions(AbstractRepositoryConfigurationSourceSupport.java:62)
-	at org.springframework.context.annotation.ConfigurationClassBeanDefinitionReader.lambda$loadBeanDefinitionsFromRegistrars$1(ConfigurationClassBeanDefinitionReader.java:409)
-	at java.base/java.util.LinkedHashMap.forEach(LinkedHashMap.java:987)
-	at org.springframework.context.annotation.ConfigurationClassBeanDefinitionReader.loadBeanDefinitionsFromRegistrars(ConfigurationClassBeanDefinitionReader.java:408)
-	at org.springframework.context.annotation.ConfigurationClassBeanDefinitionReader.loadBeanDefinitionsForConfigurationClass(ConfigurationClassBeanDefinitionReader.java:148)
-	at org.springframework.context.annotation.ConfigurationClassBeanDefinitionReader.loadBeanDefinitions(ConfigurationClassBeanDefinitionReader.java:120)
-	at org.springframework.context.annotation.ConfigurationClassPostProcessor.processConfigBeanDefinitions(ConfigurationClassPostProcessor.java:430)
-	at org.springframework.context.annotation.ConfigurationClassPostProcessor.postProcessBeanDefinitionRegistry(ConfigurationClassPostProcessor.java:290)
-	at org.springframework.context.support.PostProcessorRegistrationDelegate.invokeBeanDefinitionRegistryPostProcessors(PostProcessorRegistrationDelegate.java:349)
-	at org.springframework.context.support.PostProcessorRegistrationDelegate.invokeBeanFactoryPostProcessors(PostProcessorRegistrationDelegate.java:118)
-	at org.springframework.context.support.AbstractApplicationContext.invokeBeanFactoryPostProcessors(AbstractApplicationContext.java:792)
-	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:610)
-	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146)
-	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:752)
-	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:439)
-	at org.springframework.boot.SpringApplication.run(SpringApplication.java:318)
-	... 6 more
-Caused by: java.lang.ClassNotFoundException: com.kabj.sistema_ot.entity.Usuario
-	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClass(BuiltinClassLoader.java:641)
-	at java.base/jdk.internal.loader.ClassLoaders$AppClassLoader.loadClass(ClassLoaders.java:188)
-	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:528)
-	at java.base/java.lang.Class.forName0(Native Method)
-	at java.base/java.lang.Class.forName(Class.java:578)
-	at java.base/java.lang.Class.forName(Class.java:557)
-	at org.springframework.boot.devtools.restart.classloader.RestartClassLoader.loadClass(RestartClassLoader.java:121)
-	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:528)
-	... 31 more
 
-  .   ____          _            __ _ _
- /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
-( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
- \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
-  '  |____| .__|_| |_|_| |_\__, | / / / /
- =========|_|==============|___/=/_/_/_/
+Negative matches:
+-----------------
 
- :: Spring Boot ::               (v3.5.14)
+   SpringBootWebSecurityConfiguration.SecurityFilterChainConfiguration:
+      Did not match:
+         - AllNestedConditions 1 matched 1 did not; NestedCondition on DefaultWebSecurityCondition.Beans @ConditionalOnMissingBean (types: org.springframework.security.web.SecurityFilterChain; SearchStrategy: all) found beans of type 'org.springframework.security.web.SecurityFilterChain' filterChain; NestedCondition on DefaultWebSecurityCondition.Classes @ConditionalOnClass found required classes 'org.springframework.security.web.SecurityFilterChain', 'org.springframework.security.config.annotation.web.builders.HttpSecurity' (DefaultWebSecurityCondition)
 
-2026-05-18T01:01:56.675-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] c.kabj.sistema_ot.SistemaOtApplication   : Starting SistemaOtApplication using Java 23.0.1 with PID 29464 (C:\Users\MELANY\OneDrive\Escritorio\pwa-gestion-ordenes-trabajo\backend\sistema-ot\target\classes started by MELANY in C:\Users\MELANY\OneDrive\Escritorio\pwa-gestion-ordenes-trabajo\backend\sistema-ot)
-2026-05-18T01:01:56.676-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] c.kabj.sistema_ot.SistemaOtApplication   : No active profile set, falling back to 1 default profile: "default"
-2026-05-18T01:01:57.143-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2026-05-18T01:01:57.210-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 64 ms. Found 10 JPA repository interfaces.
-2026-05-18T01:01:57.480-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
-2026-05-18T01:01:57.483-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
-2026-05-18T01:01:57.484-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.54]
-2026-05-18T01:01:57.513-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] o.a.c.c.C.[Tomcat-1].[localhost].[/]     : Initializing Spring embedded WebApplicationContext
-2026-05-18T01:01:57.513-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 836 ms
-2026-05-18T01:01:57.602-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
-2026-05-18T01:01:57.607-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
-2026-05-18T01:01:57.621-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
-2026-05-18T01:01:57.622-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-4 - Starting...
-2026-05-18T01:01:57.722-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-4 - Added connection org.postgresql.jdbc.PgConnection@55c8d04e
-2026-05-18T01:01:57.722-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-4 - Start completed.
-2026-05-18T01:01:57.740-05:00  WARN 29464 --- [sistema-ot] [  restartedMain] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
-2026-05-18T01:01:57.742-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
-	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-4)']
-	Database driver: undefined/unknown
-	Database version: 18.4
-	Autocommit mode: undefined/unknown
-	Isolation level: undefined/unknown
-	Minimum pool size: undefined/unknown
-	Maximum pool size: undefined/unknown
-2026-05-18T01:01:58.302-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
-2026-05-18T01:01:58.302-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
-2026-05-18T01:01:59.129-05:00  WARN 29464 --- [sistema-ot] [  restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2026-05-18T01:01:59.707-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
-2026-05-18T01:01:59.730-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
-2026-05-18T01:01:59.737-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] c.kabj.sistema_ot.SistemaOtApplication   : Started SistemaOtApplication in 3.104 seconds (process running for 4683.852)
-2026-05-18T01:01:59.756-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] .ConditionEvaluationDeltaLoggingListener : Condition evaluation unchanged
-[INFO] ------------------------------------------------------------------------
-[INFO] BUILD FAILURE
-[INFO] ------------------------------------------------------------------------
-[INFO] Total time:  01:18 h
-[INFO] Finished at: 2026-05-18T01:02:12-05:00
-[INFO] ------------------------------------------------------------------------
-[ERROR] Failed to execute goal org.springframework.boot:spring-boot-maven-plugin:3.5.14:run (default-cli) on project sistema-ot: Process terminated with exit code: -1 -> [Help 1]
-[ERROR] 
-[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
-[ERROR] Re-run Maven using the -X switch to enable full debug logging.
-[ERROR] 
-[ERROR] For more information about the errors and possible solutions, please read the following articles:
-[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoExecutionException
+   UserDetailsServiceAutoConfiguration:
+      Did not match:
+         - @ConditionalOnMissingBean (types: org.springframework.security.authentication.AuthenticationManager,org.springframework.security.authentication.AuthenticationProvider,org.springframework.security.core.userdetails.UserDetailsService,org.springframework.security.authentication.AuthenticationManagerResolver,org.springframework.security.oauth2.jwt.JwtDecoder; SearchStrategy: all) found beans of type 'org.springframework.security.authentication.AuthenticationManager' authenticationManager (OnBeanCondition)
+      Matched:
+         - @ConditionalOnClass found required class 'org.springframework.security.authentication.AuthenticationManager' (OnClassCondition)
+         - found 'session' scope (OnWebApplicationCondition)
+         - AnyNestedCondition 1 matched 2 did not; NestedCondition on UserDetailsServiceAutoConfiguration.MissingAlternativeOrUserPropertiesConfigured.PasswordConfigured @ConditionalOnProperty (spring.security.user.password) did not find property 'spring.security.user.password'; NestedCondition on UserDetailsServiceAutoConfiguration.MissingAlternativeOrUserPropertiesConfigured.NameConfigured @ConditionalOnProperty (spring.security.user.name) did not find property 'spring.security.user.name'; NestedCondition on UserDetailsServiceAutoConfiguration.MissingAlternativeOrUserPropertiesConfigured.MissingAlternative @ConditionalOnMissingClass did not find unwanted classes 'org.springframework.security.oauth2.client.registration.ClientRegistrationRepository', 'org.springframework.security.oauth2.server.resource.introspection.OpaqueTokenIntrospector', 'org.springframework.security.saml2.provider.service.registration.RelyingPartyRegistrationRepository' (UserDetailsServiceAutoConfiguration.MissingAlternativeOrUserPropertiesConfigured)
+
+
+Exclusions:
+-----------
+
+    None
+
+
+Unconditional classes:
+----------------------
+
+    None
+
+
+
+2026-05-20T17:39:01.809-05:00  INFO 16228 --- [sistema-ot] [nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-05-20T17:39:01.809-05:00  INFO 16228 --- [sistema-ot] [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-05-20T17:39:01.810-05:00  INFO 16228 --- [sistema-ot] [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2026-05-20T17:39:02.009-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-20T17:39:02.009-05:00 ERROR 16228 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uklwc3vccrh6xrp73ilqb6iawn2"
+  Detail: Key (nis)=(3684441) already exists.
+2026-05-20T17:39:02.010-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-1] c.k.s.service.ExcelCargaService          : Error procesando fila VPA 195: could not execute statement [ERROR: duplicate key value violates unique constraint "uklwc3vccrh6xrp73ilqb6iawn2"
+  Detail: Key (nis)=(3684441) already exists.] [insert into gis_vpa (created_at,latitud,longitud,nis,updated_at,vca) values (?,?,?,?,?,?)]; SQL [insert into gis_vpa (created_at,latitud,longitud,nis,updated_at,vca) values (?,?,?,?,?,?)]; constraint [uklwc3vccrh6xrp73ilqb6iawn2]
+2026-05-20T17:39:15.609-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-20T17:39:15.610-05:00 ERROR 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(HIA-11484) already exists.
+2026-05-20T17:39:15.612-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] c.k.s.service.ExcelCargaService          : Error procesando fila Hidrante 2383: could not execute statement [ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(HIA-11484) already exists.] [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; SQL [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; constraint [uk7nov7bl8f001qsvdhrqci9t7n]
+2026-05-20T17:39:15.714-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-20T17:39:15.714-05:00 ERROR 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(TRASLADO) already exists.
+2026-05-20T17:39:15.714-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] c.k.s.service.ExcelCargaService          : Error procesando fila Hidrante 2478: could not execute statement [ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(TRASLADO) already exists.] [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; SQL [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; constraint [uk7nov7bl8f001qsvdhrqci9t7n]
+2026-05-20T17:39:15.777-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-20T17:39:15.777-05:00 ERROR 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(HIA-23005) already exists.
+2026-05-20T17:39:15.779-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] c.k.s.service.ExcelCargaService          : Error procesando fila Hidrante 2542: could not execute statement [ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(HIA-23005) already exists.] [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; SQL [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; constraint [uk7nov7bl8f001qsvdhrqci9t7n]
+2026-05-20T17:39:16.091-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-20T17:39:16.092-05:00 ERROR 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(NEW JERUSALEN) already exists.
+2026-05-20T17:39:16.092-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] c.k.s.service.ExcelCargaService          : Error procesando fila Hidrante 2889: could not execute statement [ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(NEW JERUSALEN) already exists.] [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; SQL [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; constraint [uk7nov7bl8f001qsvdhrqci9t7n]
+2026-05-20T17:39:20.150-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-20T17:39:20.150-05:00 ERROR 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.
+2026-05-20T17:39:20.150-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] c.k.s.service.ExcelCargaService          : Error procesando fila Hidrante 5055: could not execute statement [ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.] [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; SQL [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; constraint [uk7nov7bl8f001qsvdhrqci9t7n]
+2026-05-20T17:39:20.152-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-20T17:39:20.152-05:00 ERROR 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.
+2026-05-20T17:39:20.152-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] c.k.s.service.ExcelCargaService          : Error procesando fila Hidrante 5056: could not execute statement [ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.] [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; SQL [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; constraint [uk7nov7bl8f001qsvdhrqci9t7n]
+2026-05-20T17:39:20.153-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-20T17:39:20.153-05:00 ERROR 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.
+2026-05-20T17:39:20.154-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] c.k.s.service.ExcelCargaService          : Error procesando fila Hidrante 5057: could not execute statement [ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.] [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; SQL [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; constraint [uk7nov7bl8f001qsvdhrqci9t7n]
+2026-05-20T17:39:20.155-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-20T17:39:20.155-05:00 ERROR 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.
+2026-05-20T17:39:20.155-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] c.k.s.service.ExcelCargaService          : Error procesando fila Hidrante 5058: could not execute statement [ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.] [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; SQL [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; constraint [uk7nov7bl8f001qsvdhrqci9t7n]
+2026-05-20T17:39:20.156-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-20T17:39:20.156-05:00 ERROR 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.
+2026-05-20T17:39:20.156-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] c.k.s.service.ExcelCargaService          : Error procesando fila Hidrante 5059: could not execute statement [ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.] [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; SQL [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; constraint [uk7nov7bl8f001qsvdhrqci9t7n]
+2026-05-20T17:39:20.159-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-20T17:39:20.159-05:00 ERROR 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.
+2026-05-20T17:39:20.159-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] c.k.s.service.ExcelCargaService          : Error procesando fila Hidrante 5060: could not execute statement [ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.] [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; SQL [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; constraint [uk7nov7bl8f001qsvdhrqci9t7n]
+2026-05-20T17:39:20.160-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-20T17:39:20.160-05:00 ERROR 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.
+2026-05-20T17:39:20.160-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] c.k.s.service.ExcelCargaService          : Error procesando fila Hidrante 5061: could not execute statement [ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.] [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; SQL [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; constraint [uk7nov7bl8f001qsvdhrqci9t7n]
+2026-05-20T17:39:20.161-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-20T17:39:20.161-05:00 ERROR 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.
+2026-05-20T17:39:20.162-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] c.k.s.service.ExcelCargaService          : Error procesando fila Hidrante 5062: could not execute statement [ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.] [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; SQL [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; constraint [uk7nov7bl8f001qsvdhrqci9t7n]
+2026-05-20T17:39:20.163-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-20T17:39:20.163-05:00 ERROR 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.
+2026-05-20T17:39:20.163-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] c.k.s.service.ExcelCargaService          : Error procesando fila Hidrante 5063: could not execute statement [ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.] [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; SQL [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; constraint [uk7nov7bl8f001qsvdhrqci9t7n]
+2026-05-20T17:39:20.164-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-20T17:39:20.164-05:00 ERROR 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.
+2026-05-20T17:39:20.164-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] c.k.s.service.ExcelCargaService          : Error procesando fila Hidrante 5064: could not execute statement [ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.] [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; SQL [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; constraint [uk7nov7bl8f001qsvdhrqci9t7n]
+2026-05-20T17:39:20.165-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-20T17:39:20.165-05:00 ERROR 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.
+2026-05-20T17:39:20.165-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] c.k.s.service.ExcelCargaService          : Error procesando fila Hidrante 5065: could not execute statement [ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.] [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; SQL [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; constraint [uk7nov7bl8f001qsvdhrqci9t7n]
+2026-05-20T17:39:20.168-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-20T17:39:20.168-05:00 ERROR 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.
+2026-05-20T17:39:20.168-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] c.k.s.service.ExcelCargaService          : Error procesando fila Hidrante 5066: could not execute statement [ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.] [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; SQL [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; constraint [uk7nov7bl8f001qsvdhrqci9t7n]
+2026-05-20T17:39:20.169-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-20T17:39:20.169-05:00 ERROR 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.
+2026-05-20T17:39:20.169-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] c.k.s.service.ExcelCargaService          : Error procesando fila Hidrante 5067: could not execute statement [ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.] [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; SQL [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; constraint [uk7nov7bl8f001qsvdhrqci9t7n]
+2026-05-20T17:39:20.170-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-20T17:39:20.170-05:00 ERROR 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.
+2026-05-20T17:39:20.170-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] c.k.s.service.ExcelCargaService          : Error procesando fila Hidrante 5068: could not execute statement [ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.] [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; SQL [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; constraint [uk7nov7bl8f001qsvdhrqci9t7n]
+2026-05-20T17:39:20.172-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-20T17:39:20.172-05:00 ERROR 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.
+2026-05-20T17:39:20.173-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] c.k.s.service.ExcelCargaService          : Error procesando fila Hidrante 5069: could not execute statement [ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.] [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; SQL [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; constraint [uk7nov7bl8f001qsvdhrqci9t7n]
+2026-05-20T17:39:20.174-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-20T17:39:20.174-05:00 ERROR 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.
+2026-05-20T17:39:20.174-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] c.k.s.service.ExcelCargaService          : Error procesando fila Hidrante 5070: could not execute statement [ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.] [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; SQL [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; constraint [uk7nov7bl8f001qsvdhrqci9t7n]
+2026-05-20T17:39:20.175-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-20T17:39:20.175-05:00 ERROR 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.
+2026-05-20T17:39:20.175-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] c.k.s.service.ExcelCargaService          : Error procesando fila Hidrante 5071: could not execute statement [ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.] [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; SQL [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; constraint [uk7nov7bl8f001qsvdhrqci9t7n]
+2026-05-20T17:39:20.176-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-20T17:39:20.176-05:00 ERROR 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.
+2026-05-20T17:39:20.176-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] c.k.s.service.ExcelCargaService          : Error procesando fila Hidrante 5072: could not execute statement [ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.] [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; SQL [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; constraint [uk7nov7bl8f001qsvdhrqci9t7n]
+2026-05-20T17:39:20.177-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-20T17:39:20.177-05:00 ERROR 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.
+2026-05-20T17:39:20.177-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] c.k.s.service.ExcelCargaService          : Error procesando fila Hidrante 5073: could not execute statement [ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.] [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; SQL [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; constraint [uk7nov7bl8f001qsvdhrqci9t7n]
+2026-05-20T17:39:20.179-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-20T17:39:20.179-05:00 ERROR 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.
+2026-05-20T17:39:20.179-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] c.k.s.service.ExcelCargaService          : Error procesando fila Hidrante 5074: could not execute statement [ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.] [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; SQL [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; constraint [uk7nov7bl8f001qsvdhrqci9t7n]
+2026-05-20T17:39:20.180-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-20T17:39:20.180-05:00 ERROR 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.
+2026-05-20T17:39:20.180-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] c.k.s.service.ExcelCargaService          : Error procesando fila Hidrante 5075: could not execute statement [ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.] [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; SQL [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; constraint [uk7nov7bl8f001qsvdhrqci9t7n]
+2026-05-20T17:39:20.181-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-20T17:39:20.181-05:00 ERROR 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.
+2026-05-20T17:39:20.181-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] c.k.s.service.ExcelCargaService          : Error procesando fila Hidrante 5076: could not execute statement [ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.] [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; SQL [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; constraint [uk7nov7bl8f001qsvdhrqci9t7n]
+2026-05-20T17:39:20.182-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-20T17:39:20.182-05:00 ERROR 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.
+2026-05-20T17:39:20.182-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] c.k.s.service.ExcelCargaService          : Error procesando fila Hidrante 5077: could not execute statement [ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.] [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; SQL [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; constraint [uk7nov7bl8f001qsvdhrqci9t7n]
+2026-05-20T17:39:20.183-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-20T17:39:20.183-05:00 ERROR 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.
+2026-05-20T17:39:20.183-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] c.k.s.service.ExcelCargaService          : Error procesando fila Hidrante 5078: could not execute statement [ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.] [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; SQL [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; constraint [uk7nov7bl8f001qsvdhrqci9t7n]
+2026-05-20T17:39:20.184-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-20T17:39:20.184-05:00 ERROR 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.
+2026-05-20T17:39:20.184-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] c.k.s.service.ExcelCargaService          : Error procesando fila Hidrante 5079: could not execute statement [ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.] [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; SQL [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; constraint [uk7nov7bl8f001qsvdhrqci9t7n]
+2026-05-20T17:39:20.185-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-20T17:39:20.185-05:00 ERROR 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.
+2026-05-20T17:39:20.186-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] c.k.s.service.ExcelCargaService          : Error procesando fila Hidrante 5080: could not execute statement [ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.] [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; SQL [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; constraint [uk7nov7bl8f001qsvdhrqci9t7n]
+2026-05-20T17:39:20.189-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-20T17:39:20.189-05:00 ERROR 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.
+2026-05-20T17:39:20.189-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] c.k.s.service.ExcelCargaService          : Error procesando fila Hidrante 5081: could not execute statement [ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.] [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; SQL [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; constraint [uk7nov7bl8f001qsvdhrqci9t7n]
+2026-05-20T17:39:20.191-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-20T17:39:20.191-05:00 ERROR 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.
+2026-05-20T17:39:20.191-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] c.k.s.service.ExcelCargaService          : Error procesando fila Hidrante 5082: could not execute statement [ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.] [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; SQL [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; constraint [uk7nov7bl8f001qsvdhrqci9t7n]
+2026-05-20T17:39:20.192-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-20T17:39:20.192-05:00 ERROR 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.
+2026-05-20T17:39:20.192-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] c.k.s.service.ExcelCargaService          : Error procesando fila Hidrante 5083: could not execute statement [ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.] [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; SQL [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; constraint [uk7nov7bl8f001qsvdhrqci9t7n]
+2026-05-20T17:39:20.193-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-20T17:39:20.194-05:00 ERROR 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.
+2026-05-20T17:39:20.194-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] c.k.s.service.ExcelCargaService          : Error procesando fila Hidrante 5084: could not execute statement [ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.] [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; SQL [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; constraint [uk7nov7bl8f001qsvdhrqci9t7n]
+2026-05-20T17:39:20.196-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-20T17:39:20.196-05:00 ERROR 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.
+2026-05-20T17:39:20.196-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] c.k.s.service.ExcelCargaService          : Error procesando fila Hidrante 5085: could not execute statement [ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.] [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; SQL [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; constraint [uk7nov7bl8f001qsvdhrqci9t7n]
+2026-05-20T17:39:20.197-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-20T17:39:20.197-05:00 ERROR 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.
+2026-05-20T17:39:20.197-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] c.k.s.service.ExcelCargaService          : Error procesando fila Hidrante 5086: could not execute statement [ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.] [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; SQL [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; constraint [uk7nov7bl8f001qsvdhrqci9t7n]
+2026-05-20T17:39:20.198-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-20T17:39:20.198-05:00 ERROR 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.
+2026-05-20T17:39:20.198-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] c.k.s.service.ExcelCargaService          : Error procesando fila Hidrante 5087: could not execute statement [ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.] [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; SQL [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; constraint [uk7nov7bl8f001qsvdhrqci9t7n]
+2026-05-20T17:39:20.200-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-20T17:39:20.200-05:00 ERROR 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.
+2026-05-20T17:39:20.200-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] c.k.s.service.ExcelCargaService          : Error procesando fila Hidrante 5088: could not execute statement [ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.] [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; SQL [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; constraint [uk7nov7bl8f001qsvdhrqci9t7n]
+2026-05-20T17:39:20.201-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-20T17:39:20.202-05:00 ERROR 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.
+2026-05-20T17:39:20.202-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] c.k.s.service.ExcelCargaService          : Error procesando fila Hidrante 5089: could not execute statement [ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.] [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; SQL [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; constraint [uk7nov7bl8f001qsvdhrqci9t7n]
+2026-05-20T17:39:20.203-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-20T17:39:20.203-05:00 ERROR 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.
+2026-05-20T17:39:20.203-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] c.k.s.service.ExcelCargaService          : Error procesando fila Hidrante 5090: could not execute statement [ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.] [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; SQL [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; constraint [uk7nov7bl8f001qsvdhrqci9t7n]
+2026-05-20T17:39:20.204-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-20T17:39:20.204-05:00 ERROR 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.
+2026-05-20T17:39:20.204-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] c.k.s.service.ExcelCargaService          : Error procesando fila Hidrante 5091: could not execute statement [ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.] [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; SQL [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; constraint [uk7nov7bl8f001qsvdhrqci9t7n]
+2026-05-20T17:39:20.205-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-20T17:39:20.205-05:00 ERROR 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.
+2026-05-20T17:39:20.205-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] c.k.s.service.ExcelCargaService          : Error procesando fila Hidrante 5092: could not execute statement [ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.] [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; SQL [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; constraint [uk7nov7bl8f001qsvdhrqci9t7n]
+2026-05-20T17:39:20.206-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-20T17:39:20.206-05:00 ERROR 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.
+2026-05-20T17:39:20.207-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] c.k.s.service.ExcelCargaService          : Error procesando fila Hidrante 5093: could not execute statement [ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.] [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; SQL [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; constraint [uk7nov7bl8f001qsvdhrqci9t7n]
+2026-05-20T17:39:20.208-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-20T17:39:20.208-05:00 ERROR 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.
+2026-05-20T17:39:20.208-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] c.k.s.service.ExcelCargaService          : Error procesando fila Hidrante 5094: could not execute statement [ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.] [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; SQL [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; constraint [uk7nov7bl8f001qsvdhrqci9t7n]
+2026-05-20T17:39:20.209-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-20T17:39:20.209-05:00 ERROR 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.
+2026-05-20T17:39:20.209-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] c.k.s.service.ExcelCargaService          : Error procesando fila Hidrante 5095: could not execute statement [ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.] [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; SQL [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; constraint [uk7nov7bl8f001qsvdhrqci9t7n]
+2026-05-20T17:39:20.222-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-20T17:39:20.222-05:00 ERROR 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.
+2026-05-20T17:39:20.222-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] c.k.s.service.ExcelCargaService          : Error procesando fila Hidrante 5111: could not execute statement [ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.] [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; SQL [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; constraint [uk7nov7bl8f001qsvdhrqci9t7n]
+2026-05-20T17:39:20.223-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-20T17:39:20.223-05:00 ERROR 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.
+2026-05-20T17:39:20.223-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] c.k.s.service.ExcelCargaService          : Error procesando fila Hidrante 5112: could not execute statement [ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.] [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; SQL [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; constraint [uk7nov7bl8f001qsvdhrqci9t7n]
+2026-05-20T17:39:20.223-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-20T17:39:20.223-05:00 ERROR 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.
+2026-05-20T17:39:20.223-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] c.k.s.service.ExcelCargaService          : Error procesando fila Hidrante 5113: could not execute statement [ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.] [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; SQL [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; constraint [uk7nov7bl8f001qsvdhrqci9t7n]
+2026-05-20T17:39:20.223-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-20T17:39:20.223-05:00 ERROR 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.
+2026-05-20T17:39:20.223-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] c.k.s.service.ExcelCargaService          : Error procesando fila Hidrante 5114: could not execute statement [ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.] [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; SQL [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; constraint [uk7nov7bl8f001qsvdhrqci9t7n]
+2026-05-20T17:39:20.223-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-20T17:39:20.223-05:00 ERROR 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.
+2026-05-20T17:39:20.223-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] c.k.s.service.ExcelCargaService          : Error procesando fila Hidrante 5115: could not execute statement [ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.] [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; SQL [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; constraint [uk7nov7bl8f001qsvdhrqci9t7n]
+2026-05-20T17:39:20.223-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-20T17:39:20.223-05:00 ERROR 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.
+2026-05-20T17:39:20.223-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] c.k.s.service.ExcelCargaService          : Error procesando fila Hidrante 5116: could not execute statement [ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.] [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; SQL [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; constraint [uk7nov7bl8f001qsvdhrqci9t7n]
+2026-05-20T17:39:20.223-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-20T17:39:20.223-05:00 ERROR 16228 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.
+2026-05-20T17:39:20.223-05:00  WARN 16228 --- [sistema-ot] [nio-8080-exec-2] c.k.s.service.ExcelCargaService          : Error procesando fila Hidrante 5117: could not execute statement [ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
+  Detail: Key (hia)=(FALTA) already exists.] [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; SQL [insert into gis_hidrante (created_at,direccion,distrito,hia,latitud,localidad,longitud,sector,suministro,updated_at) values (?,?,?,?,?,?,?,?,?,?)]; constraint [uk7nov7bl8f001qsvdhrqci9t7n]

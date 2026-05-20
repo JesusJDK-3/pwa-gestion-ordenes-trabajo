@@ -926,6 +926,9 @@ CREATE TABLE public.op_orden_trabajo (
     id_tipo_punto bigint NOT NULL,
     id_punto_operativo bigint,
     nis character varying(30),
+    hia character varying(50),
+    vca character varying(50),
+    suministro character varying(50),
     id_capataz bigint NOT NULL,
     id_jornada bigint,
     id_estado_ot bigint NOT NULL,
@@ -934,6 +937,7 @@ CREATE TABLE public.op_orden_trabajo (
     fecha_fin timestamp without time zone,
     fecha_cierre date,
     direccion text,
+    localidad character varying(100),
     distrito character varying(100),
     sector character varying(100),
     latitud numeric(10,8),
@@ -1208,6 +1212,44 @@ ALTER SEQUENCE public.op_ot_validacion_foto_id_validacion_foto_seq OWNER TO post
 
 ALTER SEQUENCE public.op_ot_validacion_foto_id_validacion_foto_seq OWNED BY public.op_ot_validacion_foto.id_validacion_foto;
 
+
+--
+-- TOC entry GIS VPA
+-- Name: gis_vpa; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.gis_vpa (
+    id_vpa bigint PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    vca character varying(50) NOT NULL UNIQUE,
+    nis character varying(50) NOT NULL UNIQUE,
+    longitud numeric(11,8),
+    latitud numeric(10,8),
+    created_at timestamp without time zone DEFAULT now() NOT NULL,
+    updated_at timestamp without time zone DEFAULT now() NOT NULL
+);
+
+ALTER TABLE public.gis_vpa OWNER TO postgres;
+
+--
+-- TOC entry GIS HIDRANTE
+-- Name: gis_hidrante; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.gis_hidrante (
+    id_hidrante bigint PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    hia character varying(50) NOT NULL UNIQUE,
+    suministro character varying(50) NOT NULL UNIQUE,
+    direccion character varying(255),
+    localidad character varying(100),
+    distrito character varying(100),
+    sector character varying(100),
+    longitud numeric(11,8),
+    latitud numeric(10,8),
+    created_at timestamp without time zone DEFAULT now() NOT NULL,
+    updated_at timestamp without time zone DEFAULT now() NOT NULL
+);
+
+ALTER TABLE public.gis_hidrante OWNER TO postgres;
 
 --
 -- TOC entry 233 (class 1259 OID 19011)
@@ -2757,6 +2799,54 @@ CREATE INDEX idx_sync_pendientes ON public.sync_operacion_movil USING btree (est
 
 CREATE INDEX idx_sync_usuario ON public.sync_operacion_movil USING btree (id_usuario);
 
+--
+-- TOC entry GIS Indices
+-- Name: idx_gis_vpa_vca; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX idx_gis_vpa_vca ON public.gis_vpa USING btree (vca);
+
+--
+-- TOC entry GIS Indices
+-- Name: idx_gis_vpa_nis; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX idx_gis_vpa_nis ON public.gis_vpa USING btree (nis);
+
+--
+-- TOC entry GIS Indices
+-- Name: idx_gis_hidrante_hia; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX idx_gis_hidrante_hia ON public.gis_hidrante USING btree (hia);
+
+--
+-- TOC entry GIS Indices
+-- Name: idx_gis_hidrante_suministro; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX idx_gis_hidrante_suministro ON public.gis_hidrante USING btree (suministro);
+
+--
+-- TOC entry OT Relation Indices
+-- Name: idx_op_orden_trabajo_hia; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX idx_op_orden_trabajo_hia ON public.op_orden_trabajo USING btree (hia);
+
+--
+-- TOC entry OT Relation Indices
+-- Name: idx_op_orden_trabajo_vca; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX idx_op_orden_trabajo_vca ON public.op_orden_trabajo USING btree (vca);
+
+--
+-- TOC entry OT Relation Indices
+-- Name: idx_op_orden_trabajo_suministro; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX idx_op_orden_trabajo_suministro ON public.op_orden_trabajo USING btree (suministro);
 
 --
 -- TOC entry 6233 (class 2620 OID 19710)
