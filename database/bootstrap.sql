@@ -105,6 +105,22 @@ CREATE TABLE IF NOT EXISTS alertas (
     created_at    TIMESTAMP  NOT NULL DEFAULT NOW()
 );
 
+INSERT INTO cat_tipo_punto_operativo (codigo, nombre, activo)
+VALUES ('VCA',   'Válvula / Cámara de Agua', true),
+       ('HIA',   'Hidrante',                 true),
+       ('CIVIL', 'Obra Civil General',        true)
+ON CONFLICT (codigo) DO NOTHING;
+
+
+INSERT INTO cat_estado_ot 
+(codigo, nombre, descripcion, es_final, orden, activo)
+VALUES
+('PENDIENTE',   'Pendiente',   'OT pendiente de ejecución',  false, 1, true),
+('EN_PROGRESO', 'En Progreso', 'OT en ejecución',            false, 2, true),
+('COMPLETADA',  'Completada',  'OT ejecutada correctamente', true,  3, true),
+('OBSERVADA',   'Observada',   'OT con observaciones',       false, 4, true),
+('ANULADA',     'Anulada',     'OT anulada',                 true,  5, true);
+
 -- ── Nota ──────────────────────────────────────────────────────────────────────
 -- El DataInitializer de Spring Boot inserta automáticamente:
 --   Roles: SUPERVISOR, CAPATAZ, ADMINISTRADOR

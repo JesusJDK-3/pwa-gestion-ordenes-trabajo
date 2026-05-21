@@ -30,18 +30,14 @@ public class ExcelCargaService {
     private final CatTipoPuntoOperativoRepository tipoPuntoRepo;
     private final RrhhCapatazRepository capatazRepo;
     private final ImpOtLoteRepository loteRepo;
+    private final ImpOtFilaRepository filaRepo;
     private final UsuarioRepository usuarioRepo;
     private final GisVpaRepository vpaRepo;
     private final GisHidranteRepository hidranteRepo;
 
-    /**
-     * Carga Excel de VPA (Puntos de Agua)
-     * Columnas esperadas:
-     * A: VCA (código único)
-     * B: NIS (relaciona con suministro de hidrantes)
-     * C: LONGITUD
-     * D: LATITUD
-     */
+    // ─────────────────────────────────────────────────────────────────────────
+    // CARGA VPA
+    // ─────────────────────────────────────────────────────────────────────────
     public Map<String, Object> cargarVpaExcel(MultipartFile file) throws IOException {
         int creadas = 0, duplicadas = 0, errores = 0;
         List<String> erroresList = new ArrayList<>();
@@ -58,14 +54,12 @@ public class ExcelCargaService {
                     duplicadas++;
                     continue;
                 }
-                
                 try {
                     guardarVpaFila(vca, row);
                     creadas++;
                 } catch (Exception e) {
                     errores++;
                     erroresList.add("Fila " + (rowIdx + 1) + ": " + e.getMessage());
-                    log.warn("Error procesando fila VPA {}: {}", rowIdx + 1, e.getMessage());
                 }
             }
         }
@@ -93,18 +87,9 @@ public class ExcelCargaService {
         vpaRepo.save(vpa);
     }
 
-    /**
-     * Carga Excel de Hidrantes
-     * Columnas esperadas:
-     * A: HIA (código único)
-     * B: SUMINISTRO (identificador único, se relaciona con OT)
-     * C: DIRECCIÓN
-     * D: LOCALIDAD
-     * E: DISTRITO
-     * F: SECTOR
-     * G: LONGITUD
-     * H: LATITUD
-     */
+    // ─────────────────────────────────────────────────────────────────────────
+    // CARGA HIDRANTES
+    // ─────────────────────────────────────────────────────────────────────────
     public Map<String, Object> cargarHidranteExcel(MultipartFile file) throws IOException {
         int creadas = 0, duplicadas = 0, errores = 0;
         List<String> erroresList = new ArrayList<>();
@@ -121,14 +106,12 @@ public class ExcelCargaService {
                     duplicadas++;
                     continue;
                 }
-                
                 try {
                     guardarHidranteFila(suministro, row);
                     creadas++;
                 } catch (Exception e) {
                     errores++;
                     erroresList.add("Fila " + (rowIdx + 1) + ": " + e.getMessage());
-                    log.warn("Error procesando fila Hidrante {}: {}", rowIdx + 1, e.getMessage());
                 }
             }
         }
@@ -160,34 +143,38 @@ public class ExcelCargaService {
         hidranteRepo.save(hidrante);
     }
 
-    /**
-     * Columnas esperadas en el Excel de OT (a partir de la fila 2):
-     * A: ITEM
-     * B: OT (SGIO - código único)
-     * C: HIA (Hidrante - PRIORIDAD 1)
-     * D: VCA (Punto de Agua - PRIORIDAD 2)
-     * E: NIS (fallback - PRIORIDAD 3, solo si no está vacío o "FALTA")
-     * F: DIRECCIÓN (opcional, fallback si no existe HIA/VCA)
-     * G: LOCALIDAD (opcional, fallback)
-     * H: DISTRITO (opcional, fallback)
-     * I: SECTOR (opcional, fallback)
-     * J: FECHA programada (YYYY-MM-DD)
-     */
+    // ─────────────────────────────────────────────────────────────────────────
+    // CARGA OT — Excel real SEDAPAL
+    // Columnas:
+    //   A(0): (GIS)      → HIA o "FALTA"
+    //   B(1): SUMINISTRO → número suministro
+    //   C(2): SGIO       → código único OT
+    //   D(3): DIRECCION
+    //   E(4): LOCALIDAD
+    //   F(5): DISTRITO
+    //   G(6): SECTOR
+    //   H(7): EJECUTADO  → SI/NO
+    //   I(8): FECHA
+    // ─────────────────────────────────────────────────────────────────────────
     public Map<String, Object> cargarExcel(MultipartFile file, String usernameCreador) throws IOException {
-        // Buscar estado PENDIENTE, si no existe usar el primer estado activo
+
         CatEstadoOt estadoPendiente = estadoRepo.findByCodigo("PENDIENTE")
                 .orElseGet(() -> estadoRepo.findAll().stream()
                         .filter(CatEstadoOt::getActivo).findFirst()
                         .orElseThrow(() -> new RuntimeException("No hay estados OT disponibles")));
+
         CatSubactividad subDefault = subactividadRepo.findAll().stream()
                 .filter(CatSubactividad::getActivo).findFirst()
                 .orElseThrow(() -> new RuntimeException("No hay subactividades disponibles"));
+
         CatTipoPuntoOperativo tipoDefault = tipoPuntoRepo.findAll().stream()
                 .filter(CatTipoPuntoOperativo::getActivo).findFirst()
                 .orElseThrow(() -> new RuntimeException("No hay tipos de punto disponibles"));
+
         RrhhCapataz capatazDefault = capatazRepo.findAll().stream()
                 .filter(RrhhCapataz::getActivo).findFirst()
                 .orElseThrow(() -> new RuntimeException("No hay capataces activos disponibles"));
+
         Usuario supervisor = usuarioRepo.findByUsername(usernameCreador)
                 .orElse(usuarioRepo.findAll().stream().findFirst()
                         .orElseThrow(() -> new RuntimeException("No hay usuarios en el sistema")));
@@ -208,16 +195,17 @@ public class ExcelCargaService {
             for (int rowIdx = 1; rowIdx <= sheet.getLastRowNum(); rowIdx++) {
                 Row row = sheet.getRow(rowIdx);
                 if (row == null) continue;
-                String sgio = cellStr(row, 1);  // Columna B: OT (SGIO)
+
+                // SGIO está en columna C (índice 2)
+                String sgio = cellStr(row, 2);
                 if (sgio == null || sgio.isBlank()) continue;
 
                 if (ordenRepo.findBySgio(sgio).isPresent()) {
                     duplicadas++;
                     continue;
                 }
-                
                 try {
-                    guardarOtFila(sgio, row, estadoPendiente, subDefault, tipoDefault, capatazDefault, lote);
+                    guardarOtFila(sgio, row, rowIdx, estadoPendiente, subDefault, tipoDefault, capatazDefault, lote);
                     creadas++;
                 } catch (Exception e) {
                     errores++;
@@ -245,9 +233,29 @@ public class ExcelCargaService {
     }
 
     @Transactional
-    private void guardarOtFila(String sgio, Row row, CatEstadoOt estadoPendiente, 
-                               CatSubactividad subDefault, CatTipoPuntoOperativo tipoDefault, 
-                               RrhhCapataz capatazDefault, ImpOtLote lote) {
+    private void guardarOtFila(String sgio, Row row, int rowIdx,
+                               CatEstadoOt estadoPendiente,
+                               CatSubactividad subDefault,
+                               CatTipoPuntoOperativo tipoDefault,
+                               RrhhCapataz capatazDefault,
+                               ImpOtLote lote) {
+
+        // Leer columnas del Excel real SEDAPAL
+        String gisCol    = cellStr(row, 0);  // A: (GIS) = HIA o "FALTA"
+        String suministro = cellStr(row, 1); // B: SUMINISTRO
+        // sgio ya viene como parámetro (col C índice 2)
+        String direccion = cellStr(row, 3);  // D
+        String localidad = cellStr(row, 4);  // E
+        String distrito  = cellStr(row, 5);  // F
+        String sector    = cellStr(row, 6);  // G
+        // Col H (índice 7): EJECUTADO — ignorado por ahora
+        String fechaStr  = cellStr(row, 8);  // I: FECHA
+
+        // Normalizar HIA
+        String hia = isFalta(gisCol) ? null : gisCol;
+        boolean coordenadasEncontradas = false;
+        StringBuilder validacionMsg = new StringBuilder();
+
         OpOrdenTrabajo ot = new OpOrdenTrabajo();
         ot.setSgio(sgio);
         ot.setSubactividad(subDefault);
@@ -255,79 +263,122 @@ public class ExcelCargaService {
         ot.setCapataz(capatazDefault);
         ot.setEstadoOt(estadoPendiente);
         ot.setLote(lote);
+        ot.setHia(gisCol);
+        ot.setSuministro(suministro);
 
-        // Leer campos identificadores
-        String hia = cellStr(row, 2);    // Columna C
-        String vca = cellStr(row, 3);    // Columna D
-        String nis = cellStr(row, 4);    // Columna E
-        
-        // Guardar en la OT
-        ot.setHia(hia);
-        ot.setVca(vca);
-        ot.setNis(nis);
-
-        // LÓGICA DE RELACIÓN - Prioridad: HIA > VCA > NIS
-        boolean coordendasEncontradas = false;
-
-        // PRIORIDAD 1: Buscar por HIA (Hidrante)
+        // PRIORIDAD 1: buscar por HIA en gis_hidrante
         if (hia != null && !hia.isBlank()) {
-            Optional<GisHidrante> hidrante = hidranteRepo.findByHia(hia);
-            if (hidrante.isPresent()) {
-                GisHidrante h = hidrante.get();
+            Optional<GisHidrante> hidranteOpt = hidranteRepo.findByHia(hia);
+            if (hidranteOpt.isPresent()) {
+                GisHidrante h = hidranteOpt.get();
                 ot.setLatitud(h.getLatitud());
                 ot.setLongitud(h.getLongitud());
                 ot.setDireccion(h.getDireccion());
                 ot.setLocalidad(h.getLocalidad());
                 ot.setDistrito(h.getDistrito());
                 ot.setSector(h.getSector());
-                coordendasEncontradas = true;
+                ot.setSuministro(h.getSuministro());
+                coordenadasEncontradas = true;
                 log.debug("OT {} relacionada con HIA {}", sgio, hia);
             }
         }
 
-        // PRIORIDAD 2: Si HIA no funcionó, buscar por VCA (Punto de Agua)
-        if (!coordendasEncontradas && vca != null && !vca.isBlank()) {
-            Optional<GisVpa> vpaOpt = vpaRepo.findByVca(vca);
+        // PRIORIDAD 2: buscar SUMINISTRO en gis_hidrante
+        if (!coordenadasEncontradas && suministro != null && !suministro.isBlank()) {
+            Optional<GisHidrante> hidranteOpt = hidranteRepo.findBySuministro(suministro);
+            if (hidranteOpt.isPresent()) {
+                GisHidrante h = hidranteOpt.get();
+                ot.setLatitud(h.getLatitud());
+                ot.setLongitud(h.getLongitud());
+                ot.setDireccion(h.getDireccion());
+                ot.setLocalidad(h.getLocalidad());
+                ot.setDistrito(h.getDistrito());
+                ot.setSector(h.getSector());
+                coordenadasEncontradas = true;
+                log.debug("OT {} relacionada con SUMINISTRO {} en hidrante", sgio, suministro);
+            }
+        }
+
+        // PRIORIDAD 3: buscar SUMINISTRO como NIS en gis_vpa
+        if (!coordenadasEncontradas && suministro != null && !suministro.isBlank()) {
+            Optional<GisVpa> vpaOpt = vpaRepo.findByNis(suministro);
             if (vpaOpt.isPresent()) {
                 GisVpa v = vpaOpt.get();
                 ot.setLatitud(v.getLatitud());
                 ot.setLongitud(v.getLongitud());
-                coordendasEncontradas = true;
-                log.debug("OT {} relacionada con VCA {}", sgio, vca);
+                coordenadasEncontradas = true;
+                log.debug("OT {} relacionada con NIS {} en VPA", sgio, suministro);
             }
         }
 
-        // PRIORIDAD 3: Si HIA y VCA no funcionaron, buscar por NIS
-        // (Solo si NIS no está vacío y no es "FALTA")
-        if (!coordendasEncontradas && nis != null && !nis.isBlank() && !"FALTA".equalsIgnoreCase(nis)) {
-            Optional<GisVpa> vpaByNis = vpaRepo.findByNis(nis);
-            if (vpaByNis.isPresent()) {
-                GisVpa v = vpaByNis.get();
-                ot.setLatitud(v.getLatitud());
-                ot.setLongitud(v.getLongitud());
-                coordendasEncontradas = true;
-                log.debug("OT {} relacionada con NIS {} -> VCA {}", sgio, nis, v.getVca());
-            }
+        // Fallback: usar datos del Excel
+        if (!coordenadasEncontradas) {
+            ot.setDireccion(direccion);
+            ot.setLocalidad(localidad);
+            ot.setDistrito(distrito);
+            ot.setSector(sector != null ? sector : "");
+            validacionMsg.append("Coordenadas no resueltas automáticamente");
+            log.debug("OT {} sin coordenadas, usando fallback del Excel", sgio);
         }
 
-        // Si no se encontraron coordenadas, usar datos del Excel como fallback
-        if (!coordendasEncontradas) {
-            ot.setDireccion(cellStr(row, 5));     // Columna F
-            ot.setLocalidad(cellStr(row, 6));     // Columna G
-            ot.setDistrito(cellStr(row, 7));      // Columna H
-            ot.setSector(cellStr(row, 8));        // Columna I
-            log.debug("OT {} sin relación encontrada, usando datos del Excel", sgio);
+        if (isFalta(gisCol)) {
+            validacionMsg.append(validacionMsg.length() > 0 ? " - " : "").append("GIS marcado como FALTA");
         }
 
-        String fechaStr = cellStr(row, 9);  // Columna J: FECHA
+        // Parsear fecha
         if (fechaStr != null && !fechaStr.isBlank()) {
-            try { ot.setFechaProgramada(LocalDate.parse(fechaStr.trim())); }
-            catch (Exception ignored) {}
+            try {
+                ot.setFechaProgramada(LocalDate.parse(fechaStr.trim()));
+            } catch (Exception e) {
+                log.warn("No se pudo parsear fecha para OT {}: {}", sgio, fechaStr);
+            }
         }
+
         ot.setActivo(true);
         ot.setCreatedAt(LocalDateTime.now());
         ot.setUpdatedAt(LocalDateTime.now());
+        ot = ordenRepo.save(ot);
+
+        // Guardar fila de importación
+        ImpOtFila fila = new ImpOtFila();
+        fila.setLote(lote);
+        fila.setNumeroFilaExcel(rowIdx);
+        fila.setSgio(sgio);
+        fila.setNis(suministro);
+        fila.setHiaCodigo(gisCol);
+        fila.setDireccionExcel(direccion);
+        fila.setLocalidadExcel(localidad);
+        fila.setDistritoExcel(distrito);
+        fila.setSectorExcel(sector != null ? sector : "");
+
+        if (fechaStr != null && !fechaStr.isBlank()) {
+            try {
+                fila.setFechaProgramada(LocalDate.parse(fechaStr.trim()));
+            } catch (Exception ignored) {}
+        }
+
+        if (validacionMsg.length() > 0) {
+            fila.setEstadoValidacion("PENDIENTE");
+            fila.setRequiereRevision(true);
+            fila.setMensajeValidacion(validacionMsg.toString());
+        } else {
+            fila.setEstadoValidacion("APROBADO");
+            fila.setRequiereRevision(false);
+        }
+
+        fila.setCreatedAt(LocalDateTime.now());
+        fila.setUpdatedAt(LocalDateTime.now());
+        fila = filaRepo.save(fila);
+
+        ot.setFilaImportacion(fila);
         ordenRepo.save(ot);
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // UTILIDADES
+    // ─────────────────────────────────────────────────────────────────────────
+    private boolean isFalta(String valor) {
+        return valor != null && "FALTA".equalsIgnoreCase(valor.trim());
     }
 
     private String cellStr(Row row, int col) {
