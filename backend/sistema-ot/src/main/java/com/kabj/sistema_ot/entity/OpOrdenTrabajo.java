@@ -51,7 +51,7 @@ public class OpOrdenTrabajo {
     private String suministro;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_capataz", nullable = false)
+    @JoinColumn(name = "id_capataz", nullable = true)
     private RrhhCapataz capataz;
 
     @ManyToOne(fetch = FetchType.LAZY)

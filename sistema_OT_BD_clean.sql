@@ -655,7 +655,7 @@ CREATE TABLE public.imp_ot_lote (
     id_supervisor_usuario bigint NOT NULL,
     id_subactividad bigint,
     id_tipo_punto bigint,
-    id_capataz bigint,
+    id_capataz bigint NOT NULL,
     estado_lote character varying(20) DEFAULT 'PROCESANDO'::character varying NOT NULL,
     total_filas integer DEFAULT 0 NOT NULL,
     filas_correctas integer DEFAULT 0 NOT NULL,

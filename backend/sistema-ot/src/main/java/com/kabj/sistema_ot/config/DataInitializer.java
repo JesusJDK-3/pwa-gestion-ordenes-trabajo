@@ -29,6 +29,8 @@ public class DataInitializer implements ApplicationRunner {
     private final RrhhTrabajadorRepository trabajadorRepository;
     private final RrhhCapatazRepository capatazRepository;
     private final CatSubactividadRepository subactividadRepository;
+    private final CatTipoPuntoOperativoRepository tipoPuntoRepository;
+    private final CatEstadoOtRepository estadoOtRepository;
 
     @Override
     @Transactional
@@ -36,6 +38,8 @@ public class DataInitializer implements ApplicationRunner {
         seedRoles();
         seedUsuarios();
         seedSubactividades();
+        seedTiposPunto();
+        seedEstadosOt();
     }
 
     private void seedRoles() {
@@ -64,13 +68,11 @@ public class DataInitializer implements ApplicationRunner {
         usuarioRepository.saveAll(List.of(uSupervisor, uCapataz1, uCapataz2, uAdmin));
         log.warn("Usuarios de prueba creados. Password para todos: password123 — cámbialo en producción.");
 
-        // Create trabajadores and capataces for field users
         if (trabajadorRepository.count() == 0) {
             RrhhTrabajador t1 = buildTrabajador("12345678", "Juan",  "Quispe",  "Capataz de Campo");
             RrhhTrabajador t2 = buildTrabajador("87654321", "Pedro", "Flores",  "Capataz de Campo");
             trabajadorRepository.saveAll(List.of(t1, t2));
 
-            // Re-fetch saved users
             Usuario cap1 = usuarioRepository.findByEmail("capataz1@ot.com").orElseThrow();
             Usuario cap2 = usuarioRepository.findByEmail("capataz2@ot.com").orElseThrow();
 
@@ -83,15 +85,15 @@ public class DataInitializer implements ApplicationRunner {
     private void seedSubactividades() {
         if (subactividadRepository.count() > 0) return;
         java.util.List<String[]> subacts = java.util.List.of(
-            new String[]{"INST_MED",   "Instalación de medidor"},
-            new String[]{"CAMB_MED",   "Cambio de medidor"},
-            new String[]{"INSP_RED",   "Inspección de red"},
-            new String[]{"MANT_VALV",  "Mantenimiento de válvula"},
-            new String[]{"REPAR_CAM",  "Reparación de cámara"},
-            new String[]{"REPAR_TUB",  "Reparación de tubería"},
-            new String[]{"LIMPIEZA",   "Limpieza de red"},
-            new String[]{"INSP_HID",   "Inspección de hidrante"},
-            new String[]{"OBRA_CIVIL", "Obra civil"},
+            new String[]{"A1.37",   "A1.37 - PURGA DE REDES SECUNDARIAS - GCI"},
+            new String[]{"C.3",   "C.3 - MANTENIMIENTO PREVENTIVO DE VALVULAS DE PURGA DE AIRE HASTA 315 MM"},
+            new String[]{"C.14",   "C.14 - COLOCACION DE VALVULA DE PURGA DE AIRE HASTA 315 MM"},
+            new String[]{"C.15",  "C.15 - CAMBIO DE VALVULA PURGA DE AIRE HASTA 315 MM"},
+            new String[]{"C.20",  "C.20 - CAMBIO DE HIDRANTE"},
+            new String[]{"C.25",  "C.25 - COLOCACION  O CAMBIO DE MARCO Y TAPA PARA VALVULAS"},
+            new String[]{"A1.31",   "A1.31 - INSTALACION O CAMBIO DE MARCO Y TAPA DE HIERRO FUNDIDO P CAMARAS, CISTERNAS YO RESERVORIOS"},
+            new String[]{"ACT C",   "ACT C  - MANTENIMIENTO CORRECTIVO DE VALVULAS (HASTA  315MM) E HIDRANTES"},
+            new String[]{"ACT A1", "ACT A1 - MANTENIMIENTO CORRECTIVO DE REDES DE AGUA POTABLE (HASTA   315MM)"},
             new String[]{"OTRO",       "Otro trabajo"}
         );
         for (String[] s : subacts) {
@@ -103,6 +105,47 @@ public class DataInitializer implements ApplicationRunner {
         }
         log.info("Subactividades sembradas.");
     }
+
+    private void seedTiposPunto() {
+        if (tipoPuntoRepository.count() > 0) return;
+        java.util.List<String[]> tipos = java.util.List.of(
+            new String[]{"VCA",   "Válvula / Cámara de Agua"},
+            new String[]{"HIA",   "Hidrante"},
+            new String[]{"CIVIL", "Obra Civil General"}
+        );
+        for (String[] t : tipos) {
+            CatTipoPuntoOperativo tipo = new CatTipoPuntoOperativo();
+            tipo.setCodigo(t[0]);
+            tipo.setNombre(t[1]);
+            tipo.setActivo(true);
+            tipoPuntoRepository.save(tipo);
+        }
+        log.info("Tipos de punto sembrados.");
+    }
+
+    private void seedEstadosOt() {
+        if (estadoOtRepository.count() > 0) return;
+        java.util.List<Object[]> estados = java.util.List.of(
+            new Object[]{"PENDIENTE",   "Pendiente",   "OT pendiente de ejecución",  false, 1},
+            new Object[]{"EN_PROGRESO", "En Progreso", "OT en ejecución",            false, 2},
+            new Object[]{"COMPLETADA",  "Completada",  "OT ejecutada correctamente", true,  3},
+            new Object[]{"OBSERVADA",   "Observada",   "OT con observaciones",       false, 4},
+            new Object[]{"ANULADA",     "Anulada",     "OT anulada",                 true,  5}
+        );
+        for (Object[] e : estados) {
+            CatEstadoOt estado = new CatEstadoOt();
+            estado.setCodigo((String)  e[0]);
+            estado.setNombre((String)  e[1]);
+            estado.setDescripcion((String) e[2]);
+            estado.setEsFinal((Boolean) e[3]);
+            estado.setOrden((Integer)  e[4]);
+            estado.setActivo(true);
+            estadoOtRepository.save(estado);
+        }
+        log.info("Estados de OT sembrados.");
+    }
+
+    // ── builders ──────────────────────────────────────────────────────────────
 
     private Rol buildRol(String codigo, String nombre, String descripcion) {
         Rol rol = new Rol();

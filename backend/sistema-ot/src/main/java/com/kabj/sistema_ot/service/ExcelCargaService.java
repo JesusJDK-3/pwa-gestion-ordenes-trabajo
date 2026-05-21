@@ -145,16 +145,18 @@ public class ExcelCargaService {
 
     // ─────────────────────────────────────────────────────────────────────────
     // CARGA OT — Excel real SEDAPAL
-    // Columnas:
-    //   A(0): (GIS)      → HIA o "FALTA"
-    //   B(1): SUMINISTRO → número suministro
-    //   C(2): SGIO       → código único OT
+    // Columnas leídas (A–I):
+    //   A(0): (GIS)       → código HIA o "FALTA"
+    //   B(1): SUMINISTRO  → número suministro
+    //   C(2): SGIO        → código único OT
     //   D(3): DIRECCION
     //   E(4): LOCALIDAD
     //   F(5): DISTRITO
     //   G(6): SECTOR
-    //   H(7): EJECUTADO  → SI/NO
+    //   H(7): EJECUTADO   → ignorado
     //   I(8): FECHA
+    // Todo lo que viene después de la columna I es ignorado.
+    // El capataz se deja en null — el supervisor lo asigna después.
     // ─────────────────────────────────────────────────────────────────────────
     public Map<String, Object> cargarExcel(MultipartFile file, String usernameCreador) throws IOException {
 
@@ -170,10 +172,6 @@ public class ExcelCargaService {
         CatTipoPuntoOperativo tipoDefault = tipoPuntoRepo.findAll().stream()
                 .filter(CatTipoPuntoOperativo::getActivo).findFirst()
                 .orElseThrow(() -> new RuntimeException("No hay tipos de punto disponibles"));
-
-        RrhhCapataz capatazDefault = capatazRepo.findAll().stream()
-                .filter(RrhhCapataz::getActivo).findFirst()
-                .orElseThrow(() -> new RuntimeException("No hay capataces activos disponibles"));
 
         Usuario supervisor = usuarioRepo.findByUsername(usernameCreador)
                 .orElse(usuarioRepo.findAll().stream().findFirst()
@@ -196,8 +194,7 @@ public class ExcelCargaService {
                 Row row = sheet.getRow(rowIdx);
                 if (row == null) continue;
 
-                // SGIO está en columna C (índice 2)
-                String sgio = cellStr(row, 2);
+                String sgio = cellStr(row, 2); // columna C = SGIO
                 if (sgio == null || sgio.isBlank()) continue;
 
                 if (ordenRepo.findBySgio(sgio).isPresent()) {
@@ -205,7 +202,7 @@ public class ExcelCargaService {
                     continue;
                 }
                 try {
-                    guardarOtFila(sgio, row, rowIdx, estadoPendiente, subDefault, tipoDefault, capatazDefault, lote);
+                    guardarOtFila(sgio, row, rowIdx, estadoPendiente, subDefault, tipoDefault, lote);
                     creadas++;
                 } catch (Exception e) {
                     errores++;
@@ -237,22 +234,22 @@ public class ExcelCargaService {
                                CatEstadoOt estadoPendiente,
                                CatSubactividad subDefault,
                                CatTipoPuntoOperativo tipoDefault,
-                               RrhhCapataz capatazDefault,
                                ImpOtLote lote) {
 
-        // Leer columnas del Excel real SEDAPAL
-        String gisCol    = cellStr(row, 0);  // A: (GIS) = HIA o "FALTA"
+        // Leer solo columnas A–I (índices 0–8). El resto se ignora.
+        String gisCol     = cellStr(row, 0); // A: (GIS) = HIA o "FALTA"
         String suministro = cellStr(row, 1); // B: SUMINISTRO
-        // sgio ya viene como parámetro (col C índice 2)
-        String direccion = cellStr(row, 3);  // D
-        String localidad = cellStr(row, 4);  // E
-        String distrito  = cellStr(row, 5);  // F
-        String sector    = cellStr(row, 6);  // G
-        // Col H (índice 7): EJECUTADO — ignorado por ahora
-        String fechaStr  = cellStr(row, 8);  // I: FECHA
+        // sgio = col C (índice 2) — viene como parámetro
+        String direccion  = cellStr(row, 3); // D
+        String localidad  = cellStr(row, 4); // E
+        String distrito   = cellStr(row, 5); // F
+        String sector     = cellStr(row, 6); // G
+        // col H (índice 7) = EJECUTADO — ignorado
+        String fechaStr   = cellStr(row, 8); // I: FECHA
 
-        // Normalizar HIA
+        // Normalizar HIA: si es "FALTA" (o variante) se trata como ausente
         String hia = isFalta(gisCol) ? null : gisCol;
+
         boolean coordenadasEncontradas = false;
         StringBuilder validacionMsg = new StringBuilder();
 
@@ -260,7 +257,7 @@ public class ExcelCargaService {
         ot.setSgio(sgio);
         ot.setSubactividad(subDefault);
         ot.setTipoPunto(tipoDefault);
-        ot.setCapataz(capatazDefault);
+        ot.setCapataz(null);          // Sin asignar — el supervisor lo asigna después
         ot.setEstadoOt(estadoPendiente);
         ot.setLote(lote);
         ot.setHia(gisCol);
@@ -279,11 +276,11 @@ public class ExcelCargaService {
                 ot.setSector(h.getSector());
                 ot.setSuministro(h.getSuministro());
                 coordenadasEncontradas = true;
-                log.debug("OT {} relacionada con HIA {}", sgio, hia);
+                log.debug("OT {} → coords por HIA {}", sgio, hia);
             }
         }
 
-        // PRIORIDAD 2: buscar SUMINISTRO en gis_hidrante
+        // PRIORIDAD 2: buscar por SUMINISTRO en gis_hidrante
         if (!coordenadasEncontradas && suministro != null && !suministro.isBlank()) {
             Optional<GisHidrante> hidranteOpt = hidranteRepo.findBySuministro(suministro);
             if (hidranteOpt.isPresent()) {
@@ -295,7 +292,7 @@ public class ExcelCargaService {
                 ot.setDistrito(h.getDistrito());
                 ot.setSector(h.getSector());
                 coordenadasEncontradas = true;
-                log.debug("OT {} relacionada con SUMINISTRO {} en hidrante", sgio, suministro);
+                log.debug("OT {} → coords por SUMINISTRO {} en hidrante", sgio, suministro);
             }
         }
 
@@ -307,7 +304,7 @@ public class ExcelCargaService {
                 ot.setLatitud(v.getLatitud());
                 ot.setLongitud(v.getLongitud());
                 coordenadasEncontradas = true;
-                log.debug("OT {} relacionada con NIS {} en VPA", sgio, suministro);
+                log.debug("OT {} → coords por NIS {} en VPA", sgio, suministro);
             }
         }
 
@@ -318,14 +315,15 @@ public class ExcelCargaService {
             ot.setDistrito(distrito);
             ot.setSector(sector != null ? sector : "");
             validacionMsg.append("Coordenadas no resueltas automáticamente");
-            log.debug("OT {} sin coordenadas, usando fallback del Excel", sgio);
+            log.debug("OT {} sin coordenadas — fallback Excel", sgio);
         }
 
         if (isFalta(gisCol)) {
-            validacionMsg.append(validacionMsg.length() > 0 ? " - " : "").append("GIS marcado como FALTA");
+            if (validacionMsg.length() > 0) validacionMsg.append(" - ");
+            validacionMsg.append("GIS marcado como FALTA");
         }
 
-        // Parsear fecha
+        // Parsear fecha (columna I)
         if (fechaStr != null && !fechaStr.isBlank()) {
             try {
                 ot.setFechaProgramada(LocalDate.parse(fechaStr.trim()));
