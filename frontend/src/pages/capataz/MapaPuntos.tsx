@@ -66,7 +66,8 @@ export default function MapaPuntos() {
 
   // HU13: solo puntos operativos (el backend ya filtra, pero por seguridad excluimos finales)
   const operativos   = puntos.filter(p => !['COMPLETADA','ANULADA'].includes(p.estadoCodigo ?? ''))
-  const conUbicacion = operativos.filter(p => p.latitud && p.longitud)
+  const conUbicacion = operativos.filter(p => p.latitud != null && p.longitud != null)
+  const sinUbicacion = operativos.length - conUbicacion.length
 
   if (loading) return (
     <div className="space-y-4 animate-pulse">
@@ -88,6 +89,11 @@ export default function MapaPuntos() {
               <span className="ml-1.5 text-emerald-600 font-medium">· {puntos.length - operativos.length} completado(s) retirado(s)</span>
             )}
           </p>
+          {sinUbicacion > 0 && (
+            <p className="text-xs text-gray-500 mt-1">
+              {sinUbicacion} punto{sinUbicacion !== 1 ? 's' : ''} sin coordenadas no se muestran en el mapa.
+            </p>
+          )}
         </div>
 
         {/* Leyenda — solo estados operativos */}

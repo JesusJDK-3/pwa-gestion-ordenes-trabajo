@@ -1,16 +1,24 @@
 package com.kabj.sistema_ot.controller;
 
 import com.kabj.sistema_ot.dto.ApiResponse;
+import com.kabj.sistema_ot.entity.OpCuadrilla;
+import com.kabj.sistema_ot.entity.RrhhCapataz;
+import com.kabj.sistema_ot.entity.RrhhTrabajador;
 import com.kabj.sistema_ot.repository.CatEstadoOtRepository;
 import com.kabj.sistema_ot.repository.OpOrdenTrabajoRepository;
+import com.kabj.sistema_ot.repository.RrhhCapatazRepository;
+import com.kabj.sistema_ot.repository.UsuarioRepository;
+import com.kabj.sistema_ot.service.CuadrillaService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Slf4j
 @RestController
@@ -20,6 +28,9 @@ public class RegistroController {
 
     private final OpOrdenTrabajoRepository ordenRepo;
     private final CatEstadoOtRepository estadoRepo;
+    private final UsuarioRepository usuarioRepository;
+    private final RrhhCapatazRepository capatazRepository;
+    private final CuadrillaService cuadrillaService;
 
     /**
      * Registra actividad de campo del capataz.
@@ -33,7 +44,8 @@ public class RegistroController {
      *   creadoOffline (Boolean)
      */
     @PostMapping("/registros")
-    public ResponseEntity<ApiResponse<Map<String, Object>>> crear(@RequestBody Map<String, Object> body) {
+    public ResponseEntity<ApiResponse<Map<String, Object>>> crear(@RequestBody Map<String, Object> body,
+                                                                   Authentication auth) {
         Long idOt          = parseLong(body.get("puntoId"));
         String nuevoEstado = str(body.get("estado"));
         String tipo        = str(body.get("tipoActividad"));
@@ -58,6 +70,45 @@ public class RegistroController {
             String obsExistente = ot.getObservacion() != null ? ot.getObservacion() + "\n" : "";
             String prefijo = tipo != null ? "[" + tipo + "] " : "";
             ot.setObservacion(obsExistente + prefijo + obs);
+        }
+
+        String cuadrillaNombre = str(body.get("cuadrillaNombre"));
+        Long cuadrillaId = parseLong(body.get("cuadrillaId"));
+        Long asistenteId = parseLong(body.get("asistenteId"));
+        String asistenteDni = str(body.get("asistenteDni"));
+        String asistenteNombres = str(body.get("asistenteNombres"));
+        String asistenteApellidos = str(body.get("asistenteApellidos"));
+        String asistenteCargo = str(body.get("asistenteCargo"));
+        String cargoEnCuadrilla = str(body.get("cargoEnCuadrilla"));
+
+        RrhhCapataz capataz = getCapataz(auth);
+        OpCuadrilla cuadrilla = null;
+        if (cuadrillaId != null) {
+            cuadrilla = cuadrillaService.buscarPorIdYCapataz(cuadrillaId, capataz)
+                    .orElseThrow(() -> new RuntimeException("Cuadrilla no encontrada o no corresponde al capataz"));
+        } else if (cuadrillaNombre != null && !cuadrillaNombre.isBlank()) {
+            cuadrilla = cuadrillaService.crearOActualizarCuadrilla(capataz, cuadrillaNombre);
+        }
+
+        RrhhTrabajador asistente = null;
+        if (asistenteId != null) {
+            asistente = cuadrillaService.buscarTrabajadorPorId(asistenteId)
+                    .orElseThrow(() -> new RuntimeException("Trabajador no encontrado"));
+        } else if ((asistenteDni != null && !asistenteDni.isBlank())
+                || ((asistenteNombres != null && !asistenteNombres.isBlank())
+                && (asistenteApellidos != null && !asistenteApellidos.isBlank()))) {
+            asistente = cuadrillaService.crearOEncontrarTrabajador(asistenteDni, asistenteNombres, asistenteApellidos, asistenteCargo);
+        }
+
+        if (cuadrilla != null && asistente != null) {
+            cuadrillaService.asegurarMiembroPlantilla(cuadrilla, asistente, cargoEnCuadrilla);
+        }
+
+        if (cuadrilla != null) {
+            ot.setCuadrilla(cuadrilla);
+        }
+        if (asistente != null) {
+            ot.setAsistente(asistente);
         }
 
         // Actualizar estado solo si se indica uno distinto al actual y válido para el capataz
@@ -133,10 +184,11 @@ public class RegistroController {
     }
 
     @PostMapping("/registros/sync")
-    public ResponseEntity<ApiResponse<Map<String, Object>>> sync(@RequestBody List<Map<String, Object>> registros) {
+    public ResponseEntity<ApiResponse<Map<String, Object>>> sync(@RequestBody List<Map<String, Object>> registros,
+                                                                  Authentication auth) {
         int ok = 0;
         for (Map<String, Object> reg : registros) {
-            try { crear(reg); ok++; } catch (Exception e) {
+            try { crear(reg, auth); ok++; } catch (Exception e) {
                 log.warn("Error en sync registro: {}", e.getMessage());
             }
         }
@@ -174,5 +226,15 @@ public class RegistroController {
 
     private String str(Object o) {
         return o != null ? o.toString().trim() : null;
+    }
+
+    private RrhhCapataz getCapataz(Authentication auth) {
+        if (auth == null || auth.getName() == null) {
+            throw new RuntimeException("Usuario no autenticado");
+        }
+        var usuario = usuarioRepository.findByUsername(auth.getName())
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        return capatazRepository.findByUsuario(usuario)
+                .orElseThrow(() -> new RuntimeException("No existe registro de capataz para este usuario"));
     }
 }

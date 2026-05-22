@@ -1,22 +1,15 @@
 import { type FormEvent, useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { puntoService, registroService, safeInput } from '../../services/api'
+import { cuadrillaService, puntoService, registroService, safeInput } from '../../services/api'
 import { offlineDB } from '../../services/offlineDB'
 import { useOfflineSync } from '../../hooks/useOfflineSync'
+import { ACTIVIDADES } from '../../data/actividades'
+import type { Actividad } from '../../types/kabj'
 import type { EstadoOt, OrdenTrabajo } from '../../types'
 import { ArrowLeft, WifiOff, CheckCircle2, AlertCircle, Loader2, Save, Info } from 'lucide-react'
 
-// Tipos de trabajo que realiza el capataz en campo
-const TIPOS_TRABAJO = [
-  'Inspección',
-  'Mantenimiento preventivo',
-  'Mantenimiento correctivo',
-  'Reparación',
-  'Instalación',
-  'Limpieza',
-  'Revisión técnica',
-  'Otro',
-]
+const ACTIVIDADES_CAPATAZ: Actividad[] = ACTIVIDADES.filter(a => ['A1', 'A2'].includes(a.id))
+const ACTIVIDADES_OPCIONES = ACTIVIDADES_CAPATAZ.length > 0 ? ACTIVIDADES_CAPATAZ : ACTIVIDADES
 
 // Estados que puede asignar el capataz (NO puede Anular — eso es del supervisor/admin)
 const ESTADOS_CAPATAZ: { value: string; label: string; color: string }[] = [
@@ -39,14 +32,25 @@ export default function FormularioActividad() {
   const navigate     = useNavigate()
   const { isOnline, updatePendingCount } = useOfflineSync()
 
-  const [punto,         setPunto]     = useState<OrdenTrabajo | null>(null)
-  const [tipoActividad, setTipo]      = useState(TIPOS_TRABAJO[0])
-  const [nuevoEstado,   setEstado]    = useState('SIN_CAMBIO')
-  const [observaciones, setObs]       = useState('')
-  const [fecha,         setFecha]     = useState(new Date().toISOString().slice(0, 10))
-  const [loading,       setLoading]   = useState(false)
-  const [loadingPunto,  setLoadingPunto] = useState(true)
-  const [resultado,     setResultado] = useState<{ ok: boolean; msg: string; estadoActual?: string } | null>(null)
+  const [punto,             setPunto]     = useState<OrdenTrabajo | null>(null)
+  const [cuadrillaId,       setCuadrillaId] = useState<number | null>(null)
+  const [cuadrillaNombre,   setCuadrillaNombre] = useState('')
+  const [miembros,          setMiembros] = useState<Array<{ id: number; idTrabajador: number; dni?: string; nombres: string; apellidos: string; cargo?: string }>>([])
+  const [asistenteId,       setAsistenteId] = useState<number | null>(null)
+  const [nuevoTrabajador,   setNuevoTrabajador] = useState(false)
+  const [asistenteDni,      setAsistenteDni] = useState('')
+  const [asistenteNombres,  setAsistenteNombres] = useState('')
+  const [asistenteApellidos,setAsistenteApellidos] = useState('')
+  const [asistenteCargo,    setAsistenteCargo] = useState('')
+  const [cargoEnCuadrilla,  setCargoEnCuadrilla] = useState('')
+  const [actividadId,       setActividadId] = useState<string>(ACTIVIDADES_OPCIONES[0]?.id ?? '')
+  const [subactividadId,    setSubactividadId] = useState<string>(ACTIVIDADES_OPCIONES[0]?.subactividades[0]?.id ?? '')
+  const [nuevoEstado,       setEstado]    = useState('SIN_CAMBIO')
+  const [observaciones,     setObs]       = useState('')
+  const [fecha,             setFecha]     = useState(new Date().toISOString().slice(0, 10))
+  const [loading,           setLoading]   = useState(false)
+  const [loadingPunto,      setLoadingPunto] = useState(true)
+  const [resultado,         setResultado] = useState<{ ok: boolean; msg: string; estadoActual?: string } | null>(null)
 
   useEffect(() => {
     if (!puntoId) return
@@ -64,6 +68,22 @@ export default function FormularioActividad() {
       .finally(() => setLoadingPunto(false))
   }, [puntoId])
 
+  useEffect(() => {
+    if (!isOnline) return
+
+    cuadrillaService.obtener()
+      .then(r => {
+        const data = (r.data as any)?.data ?? {}
+        setCuadrillaId(data.cuadrillaId ?? null)
+        setCuadrillaNombre(data.nombre ?? '')
+        setMiembros(Array.isArray(data.miembros) ? data.miembros : [])
+      })
+      .catch(() => {
+        setCuadrillaId(null)
+        setMiembros([])
+      })
+  }, [isOnline])
+
   // Sugerir automáticamente el estado según el estado actual de la OT
   useEffect(() => {
     if (!punto) return
@@ -74,8 +94,27 @@ export default function FormularioActividad() {
     }
   }, [punto])
 
+  const actividadSeleccionada = ACTIVIDADES_OPCIONES.find(a => a.id === actividadId)
+  const subactividadSeleccionada = actividadSeleccionada?.subactividades.find(s => s.id === subactividadId)
+
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
+    if (!cuadrillaNombre.trim()) {
+      setResultado({ ok: false, msg: 'La cuadrilla es obligatoria.' })
+      return
+    }
+    if (!subactividadSeleccionada) {
+      setResultado({ ok: false, msg: 'Selecciona una subactividad válida.' })
+      return
+    }
+    if (!asistenteId && !nuevoTrabajador) {
+      setResultado({ ok: false, msg: 'Selecciona un trabajador o agrega uno nuevo.' })
+      return
+    }
+    if (nuevoTrabajador && (!asistenteNombres.trim() || !asistenteApellidos.trim())) {
+      setResultado({ ok: false, msg: 'Ingresa nombre y apellidos del trabajador.' })
+      return
+    }
     if (!observaciones.trim()) {
       setResultado({ ok: false, msg: 'Las observaciones son obligatorias.' })
       return
@@ -84,12 +123,22 @@ export default function FormularioActividad() {
     setResultado(null)
 
     const payload = {
-      puntoId:      Number(puntoId),
-      tipoActividad: safeInput(tipoActividad, 100),
-      estado:        nuevoEstado === 'SIN_CAMBIO' ? undefined : nuevoEstado,
-      observaciones: safeInput(observaciones, 500),
-      fechaRegistro: fecha + ' 00:00:00',
-      creadoOffline: !isOnline,
+      puntoId:           Number(puntoId),
+      cuadrillaId:       cuadrillaId ?? undefined,
+      cuadrillaNombre:   safeInput(cuadrillaNombre, 100),
+      asistenteId:       asistenteId ?? undefined,
+      asistenteDni:      safeInput(asistenteDni, 8),
+      asistenteNombres:  safeInput(asistenteNombres, 100),
+      asistenteApellidos:safeInput(asistenteApellidos, 100),
+      asistenteCargo:    safeInput(asistenteCargo, 100),
+      cargoEnCuadrilla:  safeInput(cargoEnCuadrilla, 100),
+      actividad:         safeInput(actividadSeleccionada?.nombre ?? '', 100),
+      subactividad:      safeInput(subactividadSeleccionada.nombre, 100),
+      tipoActividad:     safeInput(`${actividadSeleccionada?.nombre ?? ''} / ${subactividadSeleccionada.nombre}`, 100),
+      estado:            nuevoEstado === 'SIN_CAMBIO' ? undefined : nuevoEstado,
+      observaciones:     safeInput(observaciones, 500),
+      fechaRegistro:     fecha + ' 00:00:00',
+      creadoOffline:     !isOnline,
     }
 
     try {
@@ -198,13 +247,150 @@ export default function FormularioActividad() {
       {/* Formulario */}
       <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-card p-6 space-y-5">
 
-        {/* Tipo de trabajo */}
+        {/* Cuadrilla */}
         <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-1.5">
-            Tipo de trabajo realizado
-          </label>
-          <select value={tipoActividad} onChange={e => setTipo(e.target.value)} className={inputClass}>
-            {TIPOS_TRABAJO.map(t => <option key={t} value={t}>{t}</option>)}
+          <label className="block text-sm font-semibold text-gray-700 mb-1.5">Cuadrilla</label>
+          <input
+            type="text"
+            value={cuadrillaNombre}
+            onChange={e => {
+              setCuadrillaNombre(e.target.value)
+              if (cuadrillaId !== null) {
+                setCuadrillaId(null)
+              }
+            }}
+            placeholder="Nombre o código de la cuadrilla"
+            required
+            className={inputClass}
+          />
+          {miembros.length > 0 && (
+            <p className="mt-2 text-xs text-gray-500">
+              Miembros registrados: {miembros.length}. Puedes seleccionar un trabajador existente o agregar uno nuevo.
+            </p>
+          )}
+        </div>
+
+        {/* Trabajador acompañante */}
+        <div className="space-y-3">
+          <div className="flex items-center justify-between gap-3">
+            <label className="block text-sm font-semibold text-gray-700">Trabajador que acompaña</label>
+            <button
+              type="button"
+              onClick={() => {
+                setNuevoTrabajador(prev => !prev)
+                setAsistenteId(null)
+                setAsistenteDni('')
+                setAsistenteNombres('')
+                setAsistenteApellidos('')
+                setAsistenteCargo('')
+              }}
+              className="text-xs text-[#CC1111] hover:text-[#AA0E0E]"
+            >
+              {nuevoTrabajador ? 'Seleccionar existente' : 'Agregar nuevo trabajador'}
+            </button>
+          </div>
+          {!nuevoTrabajador ? (
+            <select
+              value={asistenteId ?? ''}
+              onChange={e => setAsistenteId(e.target.value ? Number(e.target.value) : null)}
+              className={inputClass}
+            >
+              <option value="">Selecciona un trabajador</option>
+              {miembros.map(miembro => (
+                <option key={miembro.idTrabajador} value={miembro.idTrabajador}>
+                  {miembro.nombres} {miembro.apellidos}{miembro.dni ? ` · ${miembro.dni}` : ''}
+                </option>
+              ))}
+            </select>
+          ) : (
+            <div className="grid gap-3 sm:grid-cols-2">
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-1.5">DNI</label>
+                <input
+                  type="text"
+                  value={asistenteDni}
+                  onChange={e => setAsistenteDni(e.target.value)}
+                  placeholder="Ej. 12345678"
+                  className={inputClass}
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-1.5">Nombres</label>
+                <input
+                  type="text"
+                  value={asistenteNombres}
+                  onChange={e => setAsistenteNombres(e.target.value)}
+                  placeholder="Nombres del trabajador"
+                  className={inputClass}
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-1.5">Apellidos</label>
+                <input
+                  type="text"
+                  value={asistenteApellidos}
+                  onChange={e => setAsistenteApellidos(e.target.value)}
+                  placeholder="Apellidos del trabajador"
+                  className={inputClass}
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-1.5">Cargo</label>
+                <input
+                  type="text"
+                  value={asistenteCargo}
+                  onChange={e => setAsistenteCargo(e.target.value)}
+                  placeholder="Cargo del trabajador"
+                  className={inputClass}
+                />
+              </div>
+            </div>
+          )}
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-1.5">Rol en la cuadrilla</label>
+            <input
+              type="text"
+              value={cargoEnCuadrilla}
+              onChange={e => setCargoEnCuadrilla(e.target.value)}
+              placeholder="Ej. Técnico, Ayudante, Chofer"
+              className={inputClass}
+            />
+          </div>
+        </div>
+
+        {/* Actividad */}
+        <div>
+          <label className="block text-sm font-semibold text-gray-700 mb-1.5">Actividad</label>
+          <select
+            value={actividadId}
+            onChange={e => {
+              setActividadId(e.target.value)
+              const act = ACTIVIDADES_OPCIONES.find(a => a.id === e.target.value)
+              setSubactividadId(act?.subactividades[0]?.id ?? '')
+            }}
+            className={inputClass}
+          >
+            {ACTIVIDADES_OPCIONES.map(act => (
+              <option key={act.id} value={act.id}>{act.nombre}</option>
+            ))}
+          </select>
+        </div>
+
+        {/* Subactividad */}
+        <div>
+          <label className="block text-sm font-semibold text-gray-700 mb-1.5">Subactividad</label>
+          <select
+            value={subactividadId}
+            onChange={e => setSubactividadId(e.target.value)}
+            className={inputClass}
+            required
+          >
+            {actividadSeleccionada?.subactividades.map(sub => (
+              <option key={sub.id} value={sub.id}>{sub.nombre}</option>
+            ))}
+            {actividadSeleccionada?.subactividades.length === 0 && (
+              <option value="">Sin subactividades disponibles</option>
+            )}
           </select>
         </div>
 

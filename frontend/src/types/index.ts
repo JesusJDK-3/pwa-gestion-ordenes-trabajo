@@ -36,6 +36,8 @@ export interface OrdenTrabajo {
   fechaFin?: string
   capatazNombre?: string
   capatazId?: number
+  cuadrillaNombre?: string
+  asistenteNombre?: string
   estadoSincronizacion?: string
   observacion?: string
   createdAt?: string
@@ -59,7 +61,17 @@ export interface SeguimientoOt {
 export interface RegistroPendiente {
   id?: number
   puntoId: number
-  estado: EstadoOt
+  cuadrillaId?: number
+  cuadrillaNombre?: string
+  asistenteId?: number
+  asistenteDni?: string
+  asistenteNombres?: string
+  asistenteApellidos?: string
+  asistenteCargo?: string
+  cargoEnCuadrilla?: string
+  actividad?: string
+  subactividad?: string
+  estado: string
   observaciones: string
   fechaRegistro: string
   creadoOffline: boolean

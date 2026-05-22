@@ -5,7 +5,6 @@ import com.kabj.sistema_ot.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -42,7 +41,7 @@ public class ExcelCargaService {
         int creadas = 0, duplicadas = 0, errores = 0;
         List<String> erroresList = new ArrayList<>();
 
-        try (Workbook wb = new XSSFWorkbook(file.getInputStream())) {
+        try (Workbook wb = WorkbookFactory.create(file.getInputStream())) {
             Sheet sheet = wb.getSheetAt(0);
             for (int rowIdx = 1; rowIdx <= sheet.getLastRowNum(); rowIdx++) {
                 Row row = sheet.getRow(rowIdx);
@@ -94,7 +93,7 @@ public class ExcelCargaService {
         int creadas = 0, duplicadas = 0, errores = 0;
         List<String> erroresList = new ArrayList<>();
 
-        try (Workbook wb = new XSSFWorkbook(file.getInputStream())) {
+        try (Workbook wb = WorkbookFactory.create(file.getInputStream())) {
             Sheet sheet = wb.getSheetAt(0);
             for (int rowIdx = 1; rowIdx <= sheet.getLastRowNum(); rowIdx++) {
                 Row row = sheet.getRow(rowIdx);
@@ -188,13 +187,27 @@ public class ExcelCargaService {
         int creadas = 0, duplicadas = 0, errores = 0;
         List<String> erroresList = new ArrayList<>();
 
-        try (Workbook wb = new XSSFWorkbook(file.getInputStream())) {
+        try (Workbook wb = WorkbookFactory.create(file.getInputStream())) {
             Sheet sheet = wb.getSheetAt(0);
+            if (sheet.getPhysicalNumberOfRows() == 0) {
+                throw new RuntimeException("El archivo Excel está vacío");
+            }
+
+            Row header = sheet.getRow(0);
+            Map<String, Integer> headerIndex = buildHeaderIndex(header);
+            boolean isSedapal = headerIndex.containsKey("SGIO");
+            boolean isMnttoPrevVpa = headerIndex.containsKey("NRO_OT") && headerIndex.containsKey("NIS_RAD") && headerIndex.containsKey("DESC_SUBACTIVIDAD");
+
             for (int rowIdx = 1; rowIdx <= sheet.getLastRowNum(); rowIdx++) {
                 Row row = sheet.getRow(rowIdx);
                 if (row == null) continue;
 
-                String sgio = cellStr(row, 2); // columna C = SGIO
+                String sgio;
+                if (isMnttoPrevVpa) {
+                    sgio = cellStr(row, headerIndex.getOrDefault("NRO_OT", -1));
+                } else {
+                    sgio = cellStr(row, 2); // columna C = SGIO
+                }
                 if (sgio == null || sgio.isBlank()) continue;
 
                 if (ordenRepo.findBySgio(sgio).isPresent()) {
@@ -202,7 +215,11 @@ public class ExcelCargaService {
                     continue;
                 }
                 try {
-                    guardarOtFila(sgio, row, rowIdx, estadoPendiente, subDefault, tipoDefault, lote);
+                    if (isMnttoPrevVpa) {
+                        guardarOtFilaPreventivoVpa(row, rowIdx, estadoPendiente, tipoDefault, headerIndex, lote);
+                    } else {
+                        guardarOtFila(sgio, row, rowIdx, estadoPendiente, subDefault, tipoDefault, lote);
+                    }
                     creadas++;
                 } catch (Exception e) {
                     errores++;
@@ -372,6 +389,158 @@ public class ExcelCargaService {
         ordenRepo.save(ot);
     }
 
+    @Transactional
+    private void guardarOtFilaPreventivoVpa(Row row, int rowIdx,
+                                           CatEstadoOt estadoPendiente,
+                                           CatTipoPuntoOperativo tipoDefault,
+                                           Map<String, Integer> headerIndex,
+                                           ImpOtLote lote) {
+
+        String sgio            = cellStr(row, headerIndex.getOrDefault("NRO_OT", -1));
+        String nis             = cellStr(row, headerIndex.getOrDefault("NIS_RAD", -1));
+        String actividadCodigo = cellStr(row, headerIndex.getOrDefault("ACTIVIDAD", -1));
+        String actividadNombre = cellStr(row, headerIndex.getOrDefault("DESC_ACTIVIDAD", -1));
+        String subactCodigo    = cellStr(row, headerIndex.getOrDefault("SUBACTIVIDAD", -1));
+        String subactNombre    = cellStr(row, headerIndex.getOrDefault("DESC_SUBACTIVIDAD", -1));
+        String direccion       = cellStr(row, headerIndex.getOrDefault("DIRECCION", -1));
+        String localidad       = cellStr(row, headerIndex.getOrDefault("LOCALIDAD", -1));
+        String distrito        = cellStr(row, headerIndex.getOrDefault("MUNICIPIO", -1));
+        String fechaStr        = cellStr(row, headerIndex.getOrDefault("F_PROGRAMACION", -1));
+        String observacion     = cellStr(row, headerIndex.getOrDefault("VOBSERVACION_CONTRATA", -1));
+
+        CatSubactividad subactividad = resolveSubactividad(subactCodigo, subactNombre);
+        CatTipoPuntoOperativo tipoPunto = resolveTipoPunto(actividadNombre, subactNombre, tipoDefault);
+
+        OpOrdenTrabajo ot = new OpOrdenTrabajo();
+        ot.setSgio(sgio);
+        ot.setSubactividad(subactividad);
+        ot.setTipoPunto(tipoPunto);
+        ot.setCapataz(null);
+        ot.setEstadoOt(estadoPendiente);
+        ot.setLote(lote);
+        ot.setNis(nis);
+        ot.setDireccion(direccion);
+        ot.setLocalidad(localidad);
+        ot.setDistrito(distrito);
+        ot.setSector("");
+
+        boolean coordenadasEncontradas = false;
+        StringBuilder validacionMsg = new StringBuilder();
+
+        if (nis != null && !nis.isBlank()) {
+            Optional<GisVpa> vpaOpt = vpaRepo.findByNis(nis);
+            if (vpaOpt.isPresent()) {
+                GisVpa vpa = vpaOpt.get();
+                ot.setLatitud(vpa.getLatitud());
+                ot.setLongitud(vpa.getLongitud());
+                ot.setVca(vpa.getVca());
+                coordenadasEncontradas = true;
+                log.debug("OT {} → coords por NIS {} en VPA", sgio, nis);
+            }
+        }
+
+        if (!coordenadasEncontradas) {
+            validacionMsg.append("Coordenadas no resueltas automáticamente");
+            log.debug("OT {} sin coordenadas — fallback Excel", sgio);
+        }
+
+        if (fechaStr != null && !fechaStr.isBlank()) {
+            try {
+                ot.setFechaProgramada(LocalDate.parse(fechaStr.trim()));
+            } catch (Exception e) {
+                log.warn("No se pudo parsear fecha para OT {}: {}", sgio, fechaStr);
+            }
+        }
+
+        if (observacion != null && !observacion.isBlank()) {
+            ot.setObservacion(observacion);
+        }
+
+        ot.setActivo(true);
+        ot.setCreatedAt(LocalDateTime.now());
+        ot.setUpdatedAt(LocalDateTime.now());
+        ot = ordenRepo.save(ot);
+
+        ImpOtFila fila = new ImpOtFila();
+        fila.setLote(lote);
+        fila.setNumeroFilaExcel(rowIdx);
+        fila.setSgio(sgio);
+        fila.setNis(nis);
+        fila.setHiaCodigo(null);
+        fila.setVcaCodigo(ot.getVca());
+        fila.setDireccionExcel(direccion);
+        fila.setLocalidadExcel(localidad);
+        fila.setDistritoExcel(distrito);
+        fila.setSectorExcel("");
+        if (fechaStr != null && !fechaStr.isBlank()) {
+            try {
+                fila.setFechaProgramada(LocalDate.parse(fechaStr.trim()));
+            } catch (Exception ignored) {}
+        }
+        if (validacionMsg.length() > 0) {
+            fila.setEstadoValidacion("PENDIENTE");
+            fila.setRequiereRevision(true);
+            fila.setMensajeValidacion(validacionMsg.toString());
+        } else {
+            fila.setEstadoValidacion("APROBADO");
+            fila.setRequiereRevision(false);
+        }
+        fila.setCreatedAt(LocalDateTime.now());
+        fila.setUpdatedAt(LocalDateTime.now());
+        fila = filaRepo.save(fila);
+
+        ot.setFilaImportacion(fila);
+        ordenRepo.save(ot);
+    }
+
+    private Map<String, Integer> buildHeaderIndex(Row row) {
+        Map<String, Integer> index = new java.util.HashMap<>();
+        if (row == null) return index;
+        for (int i = 0; i < row.getLastCellNum(); i++) {
+            Cell cell = row.getCell(i, Row.MissingCellPolicy.RETURN_BLANK_AS_NULL);
+            if (cell == null) continue;
+            String text = switch (cell.getCellType()) {
+                case STRING  -> cell.getStringCellValue().trim();
+                case NUMERIC -> String.valueOf((long) cell.getNumericCellValue());
+                case BOOLEAN -> String.valueOf(cell.getBooleanCellValue());
+                default      -> null;
+            };
+            if (text != null && !text.isBlank()) {
+                index.put(text.toUpperCase().trim(), i);
+            }
+        }
+        return index;
+    }
+
+    private CatSubactividad resolveSubactividad(String codigo, String nombre) {
+        if (codigo != null && !codigo.isBlank()) {
+            Optional<CatSubactividad> byCodigo = subactividadRepo.findByCodigo(codigo.trim());
+            if (byCodigo.isPresent()) return byCodigo.get();
+        }
+        if (nombre != null && !nombre.isBlank()) {
+            Optional<CatSubactividad> byNombre = subactividadRepo.findByNombreIgnoreCase(nombre.trim());
+            if (byNombre.isPresent()) return byNombre.get();
+        }
+        CatSubactividad nuevo = new CatSubactividad();
+        nuevo.setCodigo(codigo != null && !codigo.isBlank() ? codigo.trim() : "OTRO");
+        nuevo.setNombre(nombre != null && !nombre.isBlank() ? nombre.trim() : "Otro");
+        nuevo.setActivo(true);
+        return subactividadRepo.save(nuevo);
+    }
+
+    private CatTipoPuntoOperativo resolveTipoPunto(String actividadNombre, String subactNombre,
+                                                  CatTipoPuntoOperativo tipoDefault) {
+        String texto = (actividadNombre != null ? actividadNombre : "") + " " + (subactNombre != null ? subactNombre : "");
+        String upper = texto.toUpperCase();
+        if (upper.contains("HIDRANTE")) {
+            return tipoPuntoRepo.findByCodigo("HIA").orElse(tipoDefault);
+        }
+        if (upper.contains("VALVULA") || upper.contains("PURGA") || upper.contains("VÁLVULA") || upper.contains("VAVULA")) {
+            return tipoPuntoRepo.findByCodigo("VCA").orElse(tipoDefault);
+        }
+        return tipoDefault;
+    }
+
     // ─────────────────────────────────────────────────────────────────────────
     // UTILIDADES
     // ─────────────────────────────────────────────────────────────────────────
@@ -380,6 +549,7 @@ public class ExcelCargaService {
     }
 
     private String cellStr(Row row, int col) {
+        if (row == null || col < 0) return null;
         Cell cell = row.getCell(col, Row.MissingCellPolicy.RETURN_BLANK_AS_NULL);
         if (cell == null) return null;
         return switch (cell.getCellType()) {
@@ -393,6 +563,7 @@ public class ExcelCargaService {
     }
 
     private Double cellNum(Row row, int col) {
+        if (row == null || col < 0) return null;
         Cell cell = row.getCell(col, Row.MissingCellPolicy.RETURN_BLANK_AS_NULL);
         if (cell == null) return null;
         return switch (cell.getCellType()) {

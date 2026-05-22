@@ -13,7 +13,7 @@
 [INFO] 
 [INFO] --- compiler:3.14.1:compile (default-compile) @ sistema-ot ---
 [INFO] Recompiling the module because of changed source code.
-[INFO] Compiling 54 source files with javac [debug parameters release 21] to target\classes
+[INFO] Compiling 60 source files with javac [debug parameters release 21] to target\classes
 WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
 WARNING: sun.misc.Unsafe::objectFieldOffset has been called by lombok.permit.Permit
 WARNING: Please consider reporting this to the maintainers of class lombok.permit.Permit
@@ -41,26 +41,26 @@ WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
 
  :: Spring Boot ::               (v3.5.14)
 
-2026-05-21T16:43:59.058-05:00  INFO 1732 --- [sistema-ot] [  restartedMain] c.kabj.sistema_ot.SistemaOtApplication   : Starting SistemaOtApplication using Java 25.0.3 with PID 1732 (C:\Users\W11\Documents\GitHub\pwa-gestion-ordenes-trabajo\backend\sistema-ot\target\classes started by W11 in C:\Users\W11\Documents\GitHub\pwa-gestion-ordenes-trabajo\backend\sistema-ot)
-2026-05-21T16:43:59.060-05:00  INFO 1732 --- [sistema-ot] [  restartedMain] c.kabj.sistema_ot.SistemaOtApplication   : No active profile set, falling back to 1 default profile: "default"
-2026-05-21T16:43:59.085-05:00  INFO 1732 --- [sistema-ot] [  restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
-2026-05-21T16:43:59.085-05:00  INFO 1732 --- [sistema-ot] [  restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
-2026-05-21T16:43:59.497-05:00  INFO 1732 --- [sistema-ot] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2026-05-21T16:43:59.550-05:00  INFO 1732 --- [sistema-ot] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 48 ms. Found 13 JPA repository interfaces.
-2026-05-21T16:43:59.917-05:00  INFO 1732 --- [sistema-ot] [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
-2026-05-21T16:43:59.924-05:00  INFO 1732 --- [sistema-ot] [  restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
-2026-05-21T16:43:59.924-05:00  INFO 1732 --- [sistema-ot] [  restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.54]
-2026-05-21T16:43:59.950-05:00  INFO 1732 --- [sistema-ot] [  restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
-2026-05-21T16:43:59.951-05:00  INFO 1732 --- [sistema-ot] [  restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 864 ms
-2026-05-21T16:44:00.031-05:00  INFO 1732 --- [sistema-ot] [  restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
-2026-05-21T16:44:00.054-05:00  INFO 1732 --- [sistema-ot] [  restartedMain] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.49.Final
-2026-05-21T16:44:00.070-05:00  INFO 1732 --- [sistema-ot] [  restartedMain] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
-2026-05-21T16:44:00.223-05:00  INFO 1732 --- [sistema-ot] [  restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
-2026-05-21T16:44:00.238-05:00  INFO 1732 --- [sistema-ot] [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-2026-05-21T16:44:00.336-05:00  INFO 1732 --- [sistema-ot] [  restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@41fbaaa0
-2026-05-21T16:44:00.337-05:00  INFO 1732 --- [sistema-ot] [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
-2026-05-21T16:44:00.354-05:00  WARN 1732 --- [sistema-ot] [  restartedMain] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
-2026-05-21T16:44:00.365-05:00  INFO 1732 --- [sistema-ot] [  restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+2026-05-22T10:35:35.777-05:00  INFO 13060 --- [sistema-ot] [  restartedMain] c.kabj.sistema_ot.SistemaOtApplication   : Starting SistemaOtApplication using Java 25.0.3 with PID 13060 (C:\Users\W11\Documents\GitHub\pwa-gestion-ordenes-trabajo\backend\sistema-ot\target\classes started by W11 in C:\Users\W11\Documents\GitHub\pwa-gestion-ordenes-trabajo\backend\sistema-ot)
+2026-05-22T10:35:35.778-05:00  INFO 13060 --- [sistema-ot] [  restartedMain] c.kabj.sistema_ot.SistemaOtApplication   : No active profile set, falling back to 1 default profile: "default"
+2026-05-22T10:35:35.807-05:00  INFO 13060 --- [sistema-ot] [  restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2026-05-22T10:35:35.807-05:00  INFO 13060 --- [sistema-ot] [  restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2026-05-22T10:35:36.221-05:00  INFO 13060 --- [sistema-ot] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-05-22T10:35:36.280-05:00  INFO 13060 --- [sistema-ot] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 54 ms. Found 15 JPA repository interfaces.
+2026-05-22T10:35:36.666-05:00  INFO 13060 --- [sistema-ot] [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-05-22T10:35:36.675-05:00  INFO 13060 --- [sistema-ot] [  restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-05-22T10:35:36.675-05:00  INFO 13060 --- [sistema-ot] [  restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.54]
+2026-05-22T10:35:36.699-05:00  INFO 13060 --- [sistema-ot] [  restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-05-22T10:35:36.699-05:00  INFO 13060 --- [sistema-ot] [  restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 892 ms
+2026-05-22T10:35:36.774-05:00  INFO 13060 --- [sistema-ot] [  restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-05-22T10:35:36.797-05:00  INFO 13060 --- [sistema-ot] [  restartedMain] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.49.Final
+2026-05-22T10:35:36.813-05:00  INFO 13060 --- [sistema-ot] [  restartedMain] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-05-22T10:35:36.970-05:00  INFO 13060 --- [sistema-ot] [  restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-05-22T10:35:36.986-05:00  INFO 13060 --- [sistema-ot] [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-05-22T10:35:37.096-05:00  INFO 13060 --- [sistema-ot] [  restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@5a1e8100
+2026-05-22T10:35:37.096-05:00  INFO 13060 --- [sistema-ot] [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-05-22T10:35:37.114-05:00  WARN 13060 --- [sistema-ot] [  restartedMain] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-05-22T10:35:37.124-05:00  INFO 13060 --- [sistema-ot] [  restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
 	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
 	Database driver: undefined/unknown
 	Database version: 18.3
@@ -68,174 +68,219 @@ WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
 	Isolation level: undefined/unknown
 	Minimum pool size: undefined/unknown
 	Maximum pool size: undefined/unknown
-2026-05-21T16:44:01.033-05:00  INFO 1732 --- [sistema-ot] [  restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
-2026-05-21T16:44:01.170-05:00  INFO 1732 --- [sistema-ot] [  restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
-2026-05-21T16:44:01.325-05:00  INFO 1732 --- [sistema-ot] [  restartedMain] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
-2026-05-21T16:44:01.869-05:00  WARN 1732 --- [sistema-ot] [  restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2026-05-21T16:44:02.209-05:00  INFO 1732 --- [sistema-ot] [  restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
-2026-05-21T16:44:02.228-05:00  INFO 1732 --- [sistema-ot] [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
-2026-05-21T16:44:02.233-05:00  INFO 1732 --- [sistema-ot] [  restartedMain] c.kabj.sistema_ot.SistemaOtApplication   : Started SistemaOtApplication in 3.406 seconds (process running for 3.684)
-2026-05-21T16:44:02.383-05:00  WARN 1732 --- [sistema-ot] [  restartedMain] c.k.sistema_ot.config.DataInitializer    : Usuarios de prueba creados. Password para todos: password123 — cámbialo en producción.
-2026-05-21T16:44:02.394-05:00  INFO 1732 --- [sistema-ot] [  restartedMain] c.k.sistema_ot.config.DataInitializer    : Trabajadores y capataces creados.
-2026-05-21T16:44:11.750-05:00  INFO 1732 --- [sistema-ot] [nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
-2026-05-21T16:44:11.752-05:00  INFO 1732 --- [sistema-ot] [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
-2026-05-21T16:44:11.752-05:00  INFO 1732 --- [sistema-ot] [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 0 ms
-2026-05-21T16:44:22.662-05:00  WARN 1732 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
-2026-05-21T16:44:22.662-05:00 ERROR 1732 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uklwc3vccrh6xrp73ilqb6iawn2"
-  Detail: Key (nis)=(3684441) already exists.
-2026-05-21T16:44:30.058-05:00  WARN 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
-2026-05-21T16:44:30.059-05:00 ERROR 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
-  Detail: Key (hia)=(HIA-11484) already exists.
-2026-05-21T16:44:30.112-05:00  WARN 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
-2026-05-21T16:44:30.112-05:00 ERROR 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
-  Detail: Key (hia)=(TRASLADO) already exists.
-2026-05-21T16:44:30.153-05:00  WARN 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
-2026-05-21T16:44:30.153-05:00 ERROR 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
-  Detail: Key (hia)=(HIA-23005) already exists.
-2026-05-21T16:44:30.394-05:00  WARN 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
-2026-05-21T16:44:30.394-05:00 ERROR 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
-  Detail: Key (hia)=(NEW JERUSALEN) already exists.
-2026-05-21T16:44:33.453-05:00  WARN 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
-2026-05-21T16:44:33.453-05:00 ERROR 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
-  Detail: Key (hia)=(FALTA) already exists.
-2026-05-21T16:44:33.456-05:00  WARN 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
-2026-05-21T16:44:33.456-05:00 ERROR 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
-  Detail: Key (hia)=(FALTA) already exists.
-2026-05-21T16:44:33.456-05:00  WARN 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
-2026-05-21T16:44:33.457-05:00 ERROR 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
-  Detail: Key (hia)=(FALTA) already exists.
-2026-05-21T16:44:33.457-05:00  WARN 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
-2026-05-21T16:44:33.457-05:00 ERROR 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
-  Detail: Key (hia)=(FALTA) already exists.
-2026-05-21T16:44:33.458-05:00  WARN 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
-2026-05-21T16:44:33.458-05:00 ERROR 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
-  Detail: Key (hia)=(FALTA) already exists.
-2026-05-21T16:44:33.459-05:00  WARN 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
-2026-05-21T16:44:33.459-05:00 ERROR 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
-  Detail: Key (hia)=(FALTA) already exists.
-2026-05-21T16:44:33.460-05:00  WARN 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
-2026-05-21T16:44:33.460-05:00 ERROR 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
-  Detail: Key (hia)=(FALTA) already exists.
-2026-05-21T16:44:33.460-05:00  WARN 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
-2026-05-21T16:44:33.460-05:00 ERROR 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
-  Detail: Key (hia)=(FALTA) already exists.
-2026-05-21T16:44:33.462-05:00  WARN 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
-2026-05-21T16:44:33.462-05:00 ERROR 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
-  Detail: Key (hia)=(FALTA) already exists.
-2026-05-21T16:44:33.462-05:00  WARN 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
-2026-05-21T16:44:33.462-05:00 ERROR 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
-  Detail: Key (hia)=(FALTA) already exists.
-2026-05-21T16:44:33.463-05:00  WARN 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
-2026-05-21T16:44:33.463-05:00 ERROR 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
-  Detail: Key (hia)=(FALTA) already exists.
-2026-05-21T16:44:33.464-05:00  WARN 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
-2026-05-21T16:44:33.464-05:00 ERROR 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
-  Detail: Key (hia)=(FALTA) already exists.
-2026-05-21T16:44:33.464-05:00  WARN 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
-2026-05-21T16:44:33.464-05:00 ERROR 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
-  Detail: Key (hia)=(FALTA) already exists.
-2026-05-21T16:44:33.465-05:00  WARN 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
-2026-05-21T16:44:33.465-05:00 ERROR 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
-  Detail: Key (hia)=(FALTA) already exists.
-2026-05-21T16:44:33.466-05:00  WARN 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
-2026-05-21T16:44:33.466-05:00 ERROR 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
-  Detail: Key (hia)=(FALTA) already exists.
-2026-05-21T16:44:33.467-05:00  WARN 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
-2026-05-21T16:44:33.467-05:00 ERROR 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
-  Detail: Key (hia)=(FALTA) already exists.
-2026-05-21T16:44:33.467-05:00  WARN 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
-2026-05-21T16:44:33.467-05:00 ERROR 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
-  Detail: Key (hia)=(FALTA) already exists.
-2026-05-21T16:44:33.469-05:00  WARN 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
-2026-05-21T16:44:33.469-05:00 ERROR 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
-  Detail: Key (hia)=(FALTA) already exists.
-2026-05-21T16:44:33.469-05:00  WARN 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
-2026-05-21T16:44:33.469-05:00 ERROR 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
-  Detail: Key (hia)=(FALTA) already exists.
-2026-05-21T16:44:33.470-05:00  WARN 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
-2026-05-21T16:44:33.470-05:00 ERROR 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
-  Detail: Key (hia)=(FALTA) already exists.
-2026-05-21T16:44:33.471-05:00  WARN 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
-2026-05-21T16:44:33.471-05:00 ERROR 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
-  Detail: Key (hia)=(FALTA) already exists.
-2026-05-21T16:44:33.471-05:00  WARN 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
-2026-05-21T16:44:33.471-05:00 ERROR 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
-  Detail: Key (hia)=(FALTA) already exists.
-2026-05-21T16:44:33.472-05:00  WARN 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
-2026-05-21T16:44:33.472-05:00 ERROR 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
-  Detail: Key (hia)=(FALTA) already exists.
-2026-05-21T16:44:33.472-05:00  WARN 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
-2026-05-21T16:44:33.472-05:00 ERROR 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
-  Detail: Key (hia)=(FALTA) already exists.
-2026-05-21T16:44:33.473-05:00  WARN 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
-2026-05-21T16:44:33.473-05:00 ERROR 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
-  Detail: Key (hia)=(FALTA) already exists.
-2026-05-21T16:44:33.474-05:00  WARN 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
-2026-05-21T16:44:33.474-05:00 ERROR 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
-  Detail: Key (hia)=(FALTA) already exists.
-2026-05-21T16:44:33.475-05:00  WARN 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
-2026-05-21T16:44:33.475-05:00 ERROR 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
-  Detail: Key (hia)=(FALTA) already exists.
-2026-05-21T16:44:33.476-05:00  WARN 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
-2026-05-21T16:44:33.476-05:00 ERROR 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
-  Detail: Key (hia)=(FALTA) already exists.
-2026-05-21T16:44:33.476-05:00  WARN 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
-2026-05-21T16:44:33.476-05:00 ERROR 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
-  Detail: Key (hia)=(FALTA) already exists.
-2026-05-21T16:44:33.477-05:00  WARN 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
-2026-05-21T16:44:33.477-05:00 ERROR 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
-  Detail: Key (hia)=(FALTA) already exists.
-2026-05-21T16:44:33.478-05:00  WARN 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
-2026-05-21T16:44:33.478-05:00 ERROR 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
-  Detail: Key (hia)=(FALTA) already exists.
-2026-05-21T16:44:33.478-05:00  WARN 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
-2026-05-21T16:44:33.478-05:00 ERROR 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
-  Detail: Key (hia)=(FALTA) already exists.
-2026-05-21T16:44:33.479-05:00  WARN 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
-2026-05-21T16:44:33.479-05:00 ERROR 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
-  Detail: Key (hia)=(FALTA) already exists.
-2026-05-21T16:44:33.479-05:00  WARN 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
-2026-05-21T16:44:33.479-05:00 ERROR 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
-  Detail: Key (hia)=(FALTA) already exists.
-2026-05-21T16:44:33.480-05:00  WARN 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
-2026-05-21T16:44:33.480-05:00 ERROR 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
-  Detail: Key (hia)=(FALTA) already exists.
-2026-05-21T16:44:33.480-05:00  WARN 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
-2026-05-21T16:44:33.482-05:00 ERROR 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
-  Detail: Key (hia)=(FALTA) already exists.
-2026-05-21T16:44:33.482-05:00  WARN 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
-2026-05-21T16:44:33.482-05:00 ERROR 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
-  Detail: Key (hia)=(FALTA) already exists.
-2026-05-21T16:44:33.483-05:00  WARN 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
-2026-05-21T16:44:33.483-05:00 ERROR 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
-  Detail: Key (hia)=(FALTA) already exists.
-2026-05-21T16:44:33.484-05:00  WARN 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
-2026-05-21T16:44:33.484-05:00 ERROR 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
-  Detail: Key (hia)=(FALTA) already exists.
-2026-05-21T16:44:33.484-05:00  WARN 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
-2026-05-21T16:44:33.484-05:00 ERROR 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
-  Detail: Key (hia)=(FALTA) already exists.
-2026-05-21T16:44:33.485-05:00  WARN 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
-2026-05-21T16:44:33.485-05:00 ERROR 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
-  Detail: Key (hia)=(FALTA) already exists.
-2026-05-21T16:44:33.492-05:00  WARN 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
-2026-05-21T16:44:33.492-05:00 ERROR 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
-  Detail: Key (hia)=(FALTA) already exists.
-2026-05-21T16:44:33.493-05:00  WARN 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
-2026-05-21T16:44:33.493-05:00 ERROR 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
-  Detail: Key (hia)=(FALTA) already exists.
-2026-05-21T16:44:33.494-05:00  WARN 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
-2026-05-21T16:44:33.494-05:00 ERROR 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
-  Detail: Key (hia)=(FALTA) already exists.
-2026-05-21T16:44:33.495-05:00  WARN 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
-2026-05-21T16:44:33.495-05:00 ERROR 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
-  Detail: Key (hia)=(FALTA) already exists.
-2026-05-21T16:44:33.495-05:00  WARN 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
-2026-05-21T16:44:33.495-05:00 ERROR 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
-  Detail: Key (hia)=(FALTA) already exists.
-2026-05-21T16:44:33.496-05:00  WARN 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
-2026-05-21T16:44:33.496-05:00 ERROR 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
-  Detail: Key (hia)=(FALTA) already exists.
-2026-05-21T16:44:33.496-05:00  WARN 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
-2026-05-21T16:44:33.497-05:00 ERROR 1732 --- [sistema-ot] [nio-8080-exec-4] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: duplicate key value violates unique constraint "uk7nov7bl8f001qsvdhrqci9t7n"
-  Detail: Key (hia)=(FALTA) already exists.
+2026-05-22T10:35:37.792-05:00  INFO 13060 --- [sistema-ot] [  restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-05-22T10:35:37.902-05:00  WARN 13060 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2026-05-22T10:35:37.902-05:00  WARN 13060 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : no existe la restricción «uk7vch37nnt2xad8l5w4trxfv9i» en la relación «cat_estado_ot», omitiendo
+2026-05-22T10:35:37.904-05:00  WARN 13060 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2026-05-22T10:35:37.905-05:00  WARN 13060 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : no existe la restricción «ukptejohlb6njlmp0f6l6d6k3j9» en la relación «cat_subactividad», omitiendo
+2026-05-22T10:35:37.906-05:00  WARN 13060 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2026-05-22T10:35:37.906-05:00  WARN 13060 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : no existe la restricción «uk1mjaviaesq11takno0vxbg6g0» en la relación «cat_tipo_punto_operativo», omitiendo
+2026-05-22T10:35:37.907-05:00  WARN 13060 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2026-05-22T10:35:37.908-05:00  WARN 13060 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : no existe la restricción «uk7nov7bl8f001qsvdhrqci9t7n» en la relación «gis_hidrante», omitiendo
+2026-05-22T10:35:37.909-05:00  WARN 13060 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2026-05-22T10:35:37.909-05:00  WARN 13060 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : no existe la restricción «ukiywr14vbxx11yfcofd99qn1ag» en la relación «gis_hidrante», omitiendo
+2026-05-22T10:35:37.910-05:00  WARN 13060 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2026-05-22T10:35:37.910-05:00  WARN 13060 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : no existe la restricción «uklwc3vccrh6xrp73ilqb6iawn2» en la relación «gis_vpa», omitiendo
+2026-05-22T10:35:37.911-05:00  WARN 13060 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2026-05-22T10:35:37.911-05:00  WARN 13060 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : no existe la restricción «ukltxk91uvhn8tdc5m01c9xkl2e» en la relación «gis_vpa», omitiendo
+2026-05-22T10:35:37.912-05:00  WARN 13060 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2026-05-22T10:35:37.912-05:00  WARN 13060 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : no existe la restricción «uktoh8vhy27s71b3e1aiorj9dus» en la relación «imp_ot_fila», omitiendo
+2026-05-22T10:35:37.913-05:00  WARN 13060 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2026-05-22T10:35:37.914-05:00  WARN 13060 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : no existe la restricción «ukogscvgavs2n5vvdf2b6bf2s9p» en la relación «op_cuadrilla», omitiendo
+2026-05-22T10:35:37.915-05:00  WARN 13060 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2026-05-22T10:35:37.915-05:00  WARN 13060 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : no existe la restricción «uk7cunlh6rdx1fr75xytwo2k6bb» en la relación «op_cuadrilla_miembro_plantilla», omitiendo
+2026-05-22T10:35:37.916-05:00  WARN 13060 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2026-05-22T10:35:37.916-05:00  WARN 13060 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : no existe la restricción «ukqcbgd0bp7gf1a4ouyvknf1vhm» en la relación «op_orden_trabajo», omitiendo
+2026-05-22T10:35:37.917-05:00  WARN 13060 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2026-05-22T10:35:37.917-05:00  WARN 13060 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : no existe la restricción «uk3mkg7yhv8xel1bjm6n5mtrjru» en la relación «op_orden_trabajo», omitiendo
+2026-05-22T10:35:37.918-05:00  WARN 13060 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2026-05-22T10:35:37.918-05:00  WARN 13060 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : no existe la restricción «uk1v45e9dyoqxr8h4tg64xa9ri5» en la relación «rrhh_capataz», omitiendo
+2026-05-22T10:35:37.919-05:00  WARN 13060 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2026-05-22T10:35:37.919-05:00  WARN 13060 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : no existe la restricción «ukhqv16k6q89axsaahvxda909gt» en la relación «rrhh_capataz», omitiendo
+2026-05-22T10:35:37.920-05:00  WARN 13060 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2026-05-22T10:35:37.920-05:00  WARN 13060 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : no existe la restricción «uk8obr5nn8ybgutucrarx7ap4qe» en la relación «rrhh_capataz», omitiendo
+2026-05-22T10:35:37.921-05:00  WARN 13060 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2026-05-22T10:35:37.921-05:00  WARN 13060 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : no existe la restricción «ukh6jxdunw727f433xhn9o7pub7» en la relación «rrhh_trabajador», omitiendo
+2026-05-22T10:35:37.922-05:00  WARN 13060 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2026-05-22T10:35:37.922-05:00  WARN 13060 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : no existe la restricción «uk1udhej9d8enfgbepfc93o7jl» en la relación «seg_rol», omitiendo
+2026-05-22T10:35:37.924-05:00  WARN 13060 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2026-05-22T10:35:37.924-05:00  WARN 13060 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : no existe la restricción «uktlx6k8r8b516a23yaef54e9lm» en la relación «seg_usuario», omitiendo
+2026-05-22T10:35:37.925-05:00  WARN 13060 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2026-05-22T10:35:37.925-05:00  WARN 13060 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : no existe la restricción «ukodj60lunc7wlyo1t5rnqxnb9l» en la relación «seg_usuario», omitiendo
+2026-05-22T10:35:37.957-05:00  INFO 13060 --- [sistema-ot] [  restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-05-22T10:35:38.119-05:00  INFO 13060 --- [sistema-ot] [  restartedMain] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-05-22T10:35:38.716-05:00  WARN 13060 --- [sistema-ot] [  restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-05-22T10:35:39.059-05:00  INFO 13060 --- [sistema-ot] [  restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2026-05-22T10:35:39.078-05:00  INFO 13060 --- [sistema-ot] [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2026-05-22T10:35:39.083-05:00  INFO 13060 --- [sistema-ot] [  restartedMain] c.kabj.sistema_ot.SistemaOtApplication   : Started SistemaOtApplication in 3.536 seconds (process running for 3.814)
+2026-05-22T10:35:39.143-05:00  INFO 13060 --- [sistema-ot] [  restartedMain] c.k.sistema_ot.config.DataInitializer    : Roles creados.
+2026-05-22T10:35:39.238-05:00  WARN 13060 --- [sistema-ot] [  restartedMain] c.k.sistema_ot.config.DataInitializer    : Usuarios de prueba creados. Password para todos: password123 — cámbialo en producción.
+2026-05-22T10:35:39.249-05:00  INFO 13060 --- [sistema-ot] [  restartedMain] c.k.sistema_ot.config.DataInitializer    : Trabajadores y capataces creados.
+2026-05-22T10:35:39.257-05:00  INFO 13060 --- [sistema-ot] [  restartedMain] c.k.sistema_ot.config.DataInitializer    : Subactividades sembradas.
+2026-05-22T10:35:39.260-05:00  INFO 13060 --- [sistema-ot] [  restartedMain] c.k.sistema_ot.config.DataInitializer    : Tipos de punto sembrados.
+2026-05-22T10:35:39.265-05:00  INFO 13060 --- [sistema-ot] [  restartedMain] c.k.sistema_ot.config.DataInitializer    : Estados de OT sembrados.
+2026-05-22T10:35:44.104-05:00  INFO 13060 --- [sistema-ot] [nio-8080-exec-2] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-05-22T10:35:44.104-05:00  INFO 13060 --- [sistema-ot] [nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-05-22T10:35:44.105-05:00  INFO 13060 --- [sistema-ot] [nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2026-05-22T10:36:16.229-05:00  WARN 13060 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-22T10:36:16.229-05:00 ERROR 13060 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: llave duplicada viola restricción de unicidad «uklwc3vccrh6xrp73ilqb6iawn2»
+  Detail: Ya existe la llave (nis)=(3684441).
+2026-05-22T10:36:23.082-05:00  WARN 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-22T10:36:23.082-05:00 ERROR 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: llave duplicada viola restricción de unicidad «uk7nov7bl8f001qsvdhrqci9t7n»
+  Detail: Ya existe la llave (hia)=(HIA-11484).
+2026-05-22T10:36:23.133-05:00  WARN 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-22T10:36:23.133-05:00 ERROR 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: llave duplicada viola restricción de unicidad «uk7nov7bl8f001qsvdhrqci9t7n»
+  Detail: Ya existe la llave (hia)=(TRASLADO).
+2026-05-22T10:36:23.166-05:00  WARN 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-22T10:36:23.166-05:00 ERROR 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: llave duplicada viola restricción de unicidad «uk7nov7bl8f001qsvdhrqci9t7n»
+  Detail: Ya existe la llave (hia)=(HIA-23005).
+2026-05-22T10:36:23.374-05:00  WARN 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-22T10:36:23.374-05:00 ERROR 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: llave duplicada viola restricción de unicidad «uk7nov7bl8f001qsvdhrqci9t7n»
+  Detail: Ya existe la llave (hia)=(NEW JERUSALEN).
+2026-05-22T10:36:26.676-05:00  WARN 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-22T10:36:26.676-05:00 ERROR 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: llave duplicada viola restricción de unicidad «uk7nov7bl8f001qsvdhrqci9t7n»
+  Detail: Ya existe la llave (hia)=(FALTA).
+2026-05-22T10:36:26.677-05:00  WARN 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-22T10:36:26.677-05:00 ERROR 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: llave duplicada viola restricción de unicidad «uk7nov7bl8f001qsvdhrqci9t7n»
+  Detail: Ya existe la llave (hia)=(FALTA).
+2026-05-22T10:36:26.677-05:00  WARN 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-22T10:36:26.678-05:00 ERROR 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: llave duplicada viola restricción de unicidad «uk7nov7bl8f001qsvdhrqci9t7n»
+  Detail: Ya existe la llave (hia)=(FALTA).
+2026-05-22T10:36:26.678-05:00  WARN 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-22T10:36:26.678-05:00 ERROR 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: llave duplicada viola restricción de unicidad «uk7nov7bl8f001qsvdhrqci9t7n»
+  Detail: Ya existe la llave (hia)=(FALTA).
+2026-05-22T10:36:26.680-05:00  WARN 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-22T10:36:26.680-05:00 ERROR 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: llave duplicada viola restricción de unicidad «uk7nov7bl8f001qsvdhrqci9t7n»
+  Detail: Ya existe la llave (hia)=(FALTA).
+2026-05-22T10:36:26.681-05:00  WARN 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-22T10:36:26.681-05:00 ERROR 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: llave duplicada viola restricción de unicidad «uk7nov7bl8f001qsvdhrqci9t7n»
+  Detail: Ya existe la llave (hia)=(FALTA).
+2026-05-22T10:36:26.682-05:00  WARN 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-22T10:36:26.682-05:00 ERROR 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: llave duplicada viola restricción de unicidad «uk7nov7bl8f001qsvdhrqci9t7n»
+  Detail: Ya existe la llave (hia)=(FALTA).
+2026-05-22T10:36:26.683-05:00  WARN 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-22T10:36:26.683-05:00 ERROR 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: llave duplicada viola restricción de unicidad «uk7nov7bl8f001qsvdhrqci9t7n»
+  Detail: Ya existe la llave (hia)=(FALTA).
+2026-05-22T10:36:26.684-05:00  WARN 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-22T10:36:26.684-05:00 ERROR 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: llave duplicada viola restricción de unicidad «uk7nov7bl8f001qsvdhrqci9t7n»
+  Detail: Ya existe la llave (hia)=(FALTA).
+2026-05-22T10:36:26.685-05:00  WARN 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-22T10:36:26.685-05:00 ERROR 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: llave duplicada viola restricción de unicidad «uk7nov7bl8f001qsvdhrqci9t7n»
+  Detail: Ya existe la llave (hia)=(FALTA).
+2026-05-22T10:36:26.685-05:00  WARN 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-22T10:36:26.685-05:00 ERROR 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: llave duplicada viola restricción de unicidad «uk7nov7bl8f001qsvdhrqci9t7n»
+  Detail: Ya existe la llave (hia)=(FALTA).
+2026-05-22T10:36:26.687-05:00  WARN 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-22T10:36:26.687-05:00 ERROR 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: llave duplicada viola restricción de unicidad «uk7nov7bl8f001qsvdhrqci9t7n»
+  Detail: Ya existe la llave (hia)=(FALTA).
+2026-05-22T10:36:26.687-05:00  WARN 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-22T10:36:26.687-05:00 ERROR 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: llave duplicada viola restricción de unicidad «uk7nov7bl8f001qsvdhrqci9t7n»
+  Detail: Ya existe la llave (hia)=(FALTA).
+2026-05-22T10:36:26.688-05:00  WARN 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-22T10:36:26.688-05:00 ERROR 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: llave duplicada viola restricción de unicidad «uk7nov7bl8f001qsvdhrqci9t7n»
+  Detail: Ya existe la llave (hia)=(FALTA).
+2026-05-22T10:36:26.690-05:00  WARN 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-22T10:36:26.690-05:00 ERROR 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: llave duplicada viola restricción de unicidad «uk7nov7bl8f001qsvdhrqci9t7n»
+  Detail: Ya existe la llave (hia)=(FALTA).
+2026-05-22T10:36:26.690-05:00  WARN 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-22T10:36:26.690-05:00 ERROR 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: llave duplicada viola restricción de unicidad «uk7nov7bl8f001qsvdhrqci9t7n»
+  Detail: Ya existe la llave (hia)=(FALTA).
+2026-05-22T10:36:26.691-05:00  WARN 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-22T10:36:26.691-05:00 ERROR 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: llave duplicada viola restricción de unicidad «uk7nov7bl8f001qsvdhrqci9t7n»
+  Detail: Ya existe la llave (hia)=(FALTA).
+2026-05-22T10:36:26.692-05:00  WARN 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-22T10:36:26.692-05:00 ERROR 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: llave duplicada viola restricción de unicidad «uk7nov7bl8f001qsvdhrqci9t7n»
+  Detail: Ya existe la llave (hia)=(FALTA).
+2026-05-22T10:36:26.692-05:00  WARN 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-22T10:36:26.692-05:00 ERROR 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: llave duplicada viola restricción de unicidad «uk7nov7bl8f001qsvdhrqci9t7n»
+  Detail: Ya existe la llave (hia)=(FALTA).
+2026-05-22T10:36:26.693-05:00  WARN 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-22T10:36:26.693-05:00 ERROR 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: llave duplicada viola restricción de unicidad «uk7nov7bl8f001qsvdhrqci9t7n»
+  Detail: Ya existe la llave (hia)=(FALTA).
+2026-05-22T10:36:26.694-05:00  WARN 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-22T10:36:26.694-05:00 ERROR 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: llave duplicada viola restricción de unicidad «uk7nov7bl8f001qsvdhrqci9t7n»
+  Detail: Ya existe la llave (hia)=(FALTA).
+2026-05-22T10:36:26.695-05:00  WARN 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-22T10:36:26.695-05:00 ERROR 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: llave duplicada viola restricción de unicidad «uk7nov7bl8f001qsvdhrqci9t7n»
+  Detail: Ya existe la llave (hia)=(FALTA).
+2026-05-22T10:36:26.696-05:00  WARN 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-22T10:36:26.696-05:00 ERROR 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: llave duplicada viola restricción de unicidad «uk7nov7bl8f001qsvdhrqci9t7n»
+  Detail: Ya existe la llave (hia)=(FALTA).
+2026-05-22T10:36:26.696-05:00  WARN 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-22T10:36:26.697-05:00 ERROR 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: llave duplicada viola restricción de unicidad «uk7nov7bl8f001qsvdhrqci9t7n»
+  Detail: Ya existe la llave (hia)=(FALTA).
+2026-05-22T10:36:26.698-05:00  WARN 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-22T10:36:26.698-05:00 ERROR 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: llave duplicada viola restricción de unicidad «uk7nov7bl8f001qsvdhrqci9t7n»
+  Detail: Ya existe la llave (hia)=(FALTA).
+2026-05-22T10:36:26.698-05:00  WARN 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-22T10:36:26.698-05:00 ERROR 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: llave duplicada viola restricción de unicidad «uk7nov7bl8f001qsvdhrqci9t7n»
+  Detail: Ya existe la llave (hia)=(FALTA).
+2026-05-22T10:36:26.699-05:00  WARN 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-22T10:36:26.699-05:00 ERROR 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: llave duplicada viola restricción de unicidad «uk7nov7bl8f001qsvdhrqci9t7n»
+  Detail: Ya existe la llave (hia)=(FALTA).
+2026-05-22T10:36:26.700-05:00  WARN 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-22T10:36:26.700-05:00 ERROR 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: llave duplicada viola restricción de unicidad «uk7nov7bl8f001qsvdhrqci9t7n»
+  Detail: Ya existe la llave (hia)=(FALTA).
+2026-05-22T10:36:26.701-05:00  WARN 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-22T10:36:26.701-05:00 ERROR 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: llave duplicada viola restricción de unicidad «uk7nov7bl8f001qsvdhrqci9t7n»
+  Detail: Ya existe la llave (hia)=(FALTA).
+2026-05-22T10:36:26.701-05:00  WARN 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-22T10:36:26.701-05:00 ERROR 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: llave duplicada viola restricción de unicidad «uk7nov7bl8f001qsvdhrqci9t7n»
+  Detail: Ya existe la llave (hia)=(FALTA).
+2026-05-22T10:36:26.703-05:00  WARN 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-22T10:36:26.703-05:00 ERROR 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: llave duplicada viola restricción de unicidad «uk7nov7bl8f001qsvdhrqci9t7n»
+  Detail: Ya existe la llave (hia)=(FALTA).
+2026-05-22T10:36:26.704-05:00  WARN 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-22T10:36:26.704-05:00 ERROR 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: llave duplicada viola restricción de unicidad «uk7nov7bl8f001qsvdhrqci9t7n»
+  Detail: Ya existe la llave (hia)=(FALTA).
+2026-05-22T10:36:26.705-05:00  WARN 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-22T10:36:26.705-05:00 ERROR 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: llave duplicada viola restricción de unicidad «uk7nov7bl8f001qsvdhrqci9t7n»
+  Detail: Ya existe la llave (hia)=(FALTA).
+2026-05-22T10:36:26.706-05:00  WARN 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-22T10:36:26.706-05:00 ERROR 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: llave duplicada viola restricción de unicidad «uk7nov7bl8f001qsvdhrqci9t7n»
+  Detail: Ya existe la llave (hia)=(FALTA).
+2026-05-22T10:36:26.706-05:00  WARN 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-22T10:36:26.706-05:00 ERROR 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: llave duplicada viola restricción de unicidad «uk7nov7bl8f001qsvdhrqci9t7n»
+  Detail: Ya existe la llave (hia)=(FALTA).
+2026-05-22T10:36:26.707-05:00  WARN 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-22T10:36:26.707-05:00 ERROR 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: llave duplicada viola restricción de unicidad «uk7nov7bl8f001qsvdhrqci9t7n»
+  Detail: Ya existe la llave (hia)=(FALTA).
+2026-05-22T10:36:26.708-05:00  WARN 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-22T10:36:26.708-05:00 ERROR 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: llave duplicada viola restricción de unicidad «uk7nov7bl8f001qsvdhrqci9t7n»
+  Detail: Ya existe la llave (hia)=(FALTA).
+2026-05-22T10:36:26.709-05:00  WARN 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-22T10:36:26.709-05:00 ERROR 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: llave duplicada viola restricción de unicidad «uk7nov7bl8f001qsvdhrqci9t7n»
+  Detail: Ya existe la llave (hia)=(FALTA).
+2026-05-22T10:36:26.709-05:00  WARN 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-22T10:36:26.709-05:00 ERROR 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: llave duplicada viola restricción de unicidad «uk7nov7bl8f001qsvdhrqci9t7n»
+  Detail: Ya existe la llave (hia)=(FALTA).
+2026-05-22T10:36:26.710-05:00  WARN 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-22T10:36:26.710-05:00 ERROR 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: llave duplicada viola restricción de unicidad «uk7nov7bl8f001qsvdhrqci9t7n»
+  Detail: Ya existe la llave (hia)=(FALTA).
+2026-05-22T10:36:26.711-05:00  WARN 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-22T10:36:26.711-05:00 ERROR 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: llave duplicada viola restricción de unicidad «uk7nov7bl8f001qsvdhrqci9t7n»
+  Detail: Ya existe la llave (hia)=(FALTA).
+2026-05-22T10:36:26.720-05:00  WARN 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-22T10:36:26.720-05:00 ERROR 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: llave duplicada viola restricción de unicidad «uk7nov7bl8f001qsvdhrqci9t7n»
+  Detail: Ya existe la llave (hia)=(FALTA).
+2026-05-22T10:36:26.721-05:00  WARN 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-22T10:36:26.721-05:00 ERROR 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: llave duplicada viola restricción de unicidad «uk7nov7bl8f001qsvdhrqci9t7n»
+  Detail: Ya existe la llave (hia)=(FALTA).
+2026-05-22T10:36:26.721-05:00  WARN 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-22T10:36:26.721-05:00 ERROR 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: llave duplicada viola restricción de unicidad «uk7nov7bl8f001qsvdhrqci9t7n»
+  Detail: Ya existe la llave (hia)=(FALTA).
+2026-05-22T10:36:26.722-05:00  WARN 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-22T10:36:26.722-05:00 ERROR 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: llave duplicada viola restricción de unicidad «uk7nov7bl8f001qsvdhrqci9t7n»
+  Detail: Ya existe la llave (hia)=(FALTA).
+2026-05-22T10:36:26.722-05:00  WARN 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-22T10:36:26.722-05:00 ERROR 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: llave duplicada viola restricción de unicidad «uk7nov7bl8f001qsvdhrqci9t7n»
+  Detail: Ya existe la llave (hia)=(FALTA).
+2026-05-22T10:36:26.723-05:00  WARN 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-22T10:36:26.723-05:00 ERROR 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: llave duplicada viola restricción de unicidad «uk7nov7bl8f001qsvdhrqci9t7n»
+  Detail: Ya existe la llave (hia)=(FALTA).
+2026-05-22T10:36:26.724-05:00  WARN 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 23505
+2026-05-22T10:36:26.724-05:00 ERROR 13060 --- [sistema-ot] [nio-8080-exec-1] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: llave duplicada viola restricción de unicidad «uk7nov7bl8f001qsvdhrqci9t7n»
+  Detail: Ya existe la llave (hia)=(FALTA).
+2026-05-22T10:39:09.399-05:00  WARN 13060 --- [sistema-ot] [nio-8080-exec-9] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [java.lang.NullPointerException]
+2026-05-22T10:39:09.409-05:00  WARN 13060 --- [sistema-ot] [nio-8080-exec-4] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [java.lang.NullPointerException]
+2026-05-22T10:41:18.699-05:00  INFO 13060 --- [sistema-ot] [nio-8080-exec-6] c.k.s.controller.RegistroController      : Registro OT-122 | tipo=Purgado en Redes / Purgado en redes primarias | PENDIENTE → EN_PROGRESO

@@ -8,7 +8,7 @@ import { useAuth } from './context/AuthContext'
 function SmartRedirect() {
   const { isAuthenticated, user } = useAuth()
   if (!isAuthenticated || !user) return <Navigate to="/login" replace />
-  if (user.rol === 'capataz')    return <Navigate to="/dashboard"  replace />
+  if (user.rol === 'capataz')    return <Navigate to="/capataz" replace />
   if (user.rol === 'supervisor') return <Navigate to="/supervisor" replace />
   return <Navigate to="/admin" replace />
 }
@@ -35,15 +35,7 @@ import HistorialPage  from './pages/kabj/HistorialPage'
 const router = createBrowserRouter([
   { path: '/login', element: <LoginPage /> },
 
-  // ── KABJ field-tech routes (own Navbar, no sidebar) ────────
-  {
-    path: '/dashboard',
-    element: (
-      <PrivateRoute roles={['capataz']}>
-        <DashboardPage />
-      </PrivateRoute>
-    ),
-  },
+  // ── KABJ field-tech routes (special pages) ────────────────
   {
     path: '/actividad/:id',
     element: (
@@ -106,6 +98,10 @@ const router = createBrowserRouter([
       {
         path: 'capataz/mapa',
         element: <PrivateRoute roles={['capataz']}><MapaPuntos /></PrivateRoute>,
+      },
+      {
+        path: 'dashboard',
+        element: <PrivateRoute roles={['capataz']}><DashboardPage /></PrivateRoute>,
       },
       {
         path: 'capataz/registrar/:puntoId',

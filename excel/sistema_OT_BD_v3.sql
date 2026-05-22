@@ -510,8 +510,6 @@ CREATE TABLE op_orden_trabajo (
     id_punto_operativo      BIGINT        REFERENCES gis_punto_operativo(id_punto_operativo),
     nis                     VARCHAR(30),
     id_capataz              BIGINT        NOT NULL REFERENCES rrhh_capataz(id_capataz),
-    id_cuadrilla            BIGINT        REFERENCES op_cuadrilla(id_cuadrilla),
-    id_asistente            BIGINT        REFERENCES rrhh_trabajador(id_trabajador),
     id_jornada              BIGINT        REFERENCES op_jornada_campo(id_jornada),
     id_estado_ot            BIGINT        NOT NULL REFERENCES cat_estado_ot(id_estado_ot),
     fecha_programada        DATE,
@@ -538,8 +536,6 @@ CREATE TABLE op_orden_trabajo (
 
 CREATE INDEX idx_ot_capataz      ON op_orden_trabajo(id_capataz);
 CREATE INDEX idx_ot_mapa         ON op_orden_trabajo(id_capataz, visible_en_mapa);
-CREATE INDEX idx_ot_cuadrilla    ON op_orden_trabajo(id_cuadrilla);
-CREATE INDEX idx_ot_asistente    ON op_orden_trabajo(id_asistente);
 CREATE INDEX idx_ot_estado       ON op_orden_trabajo(id_estado_ot);
 CREATE INDEX idx_ot_fecha_cierre ON op_orden_trabajo(fecha_cierre);
 CREATE INDEX idx_ot_jornada      ON op_orden_trabajo(id_jornada);

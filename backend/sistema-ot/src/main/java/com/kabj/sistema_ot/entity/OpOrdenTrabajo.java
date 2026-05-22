@@ -55,6 +55,14 @@ public class OpOrdenTrabajo {
     private RrhhCapataz capataz;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_cuadrilla")
+    private OpCuadrilla cuadrilla;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_asistente")
+    private RrhhTrabajador asistente;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_jornada")
     private OpJornadaCampo jornada;
 

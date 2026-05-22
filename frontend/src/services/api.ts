@@ -87,6 +87,12 @@ export const alertaService = {
   marcarLeida: (id: number) => api.put(`/alertas/${id}/leer`),
 }
 
+export const cuadrillaService = {
+  obtener: () => api.get('/cuadrilla'),
+  guardar: (data: object) => api.post('/cuadrilla', data),
+  agregarMiembro: (data: object) => api.post('/cuadrilla/miembros', data),
+}
+
 export const puntoExtraService = {
   misCompletadas: () => api.get('/puntos/mis-completadas'), // HU18: historial capataz
 }

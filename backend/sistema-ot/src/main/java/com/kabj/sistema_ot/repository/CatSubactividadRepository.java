@@ -6,4 +6,5 @@ import java.util.Optional;
 
 public interface CatSubactividadRepository extends JpaRepository<CatSubactividad, Long> {
     Optional<CatSubactividad> findByCodigo(String codigo);
+    Optional<CatSubactividad> findByNombreIgnoreCase(String nombre);
 }
