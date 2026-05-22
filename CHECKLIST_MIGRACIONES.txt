@@ -1,0 +1,317 @@
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃                                                                        ┃
+┃                    CHECKLIST DE PREPARACION                           ┃
+┃                  MIGRACIONES DE BASE DE DATOS                         ┃
+┃                                                                        ┃
+┃              Acompañantes y Purgado de Hidrantes                      ┃
+┃                                                                        ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+SECCION 1: PREPARACION DEL ENTORNO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ☐ PostgreSQL 15+ instalado
+  ☐ Servicio PostgreSQL activo (verificar en Services.msc)
+  ☐ Puerto 5432 disponible (netstat -an | find ":5432")
+  ☐ Usuario "postgres" existe
+  ☐ Contraseña "melcita123" configurada
+  ☐ psql disponible en PATH (psql --version)
+  ☐ Base de datos "sistema_ot" creada
+  ☐ Conexión a BD verificada (psql -h localhost -U postgres -d sistema_ot)
+
+
+SECCION 2: VERIFICACION DE ARCHIVOS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  Scripts SQL:
+  ☐ database/add_acompanantes_purgado.sql
+  ☐ database/apply_migrations_manual.sql
+  ☐ database/run_migrations.sql
+
+  Ejecutables:
+  ☐ database/apply_migrations.bat
+  ☐ database/apply_migrations.ps1
+  ☐ database/apply_migrations.py
+
+  Utilidades:
+  ☐ database/verify_prereq.ps1
+
+  Documentación:
+  ☐ database/README.txt
+  ☐ database/EJECUCION.md
+  ☐ database/MIGRACIONES.md
+  ☐ PREPARACION_MIGRACIONES_LISTA.txt (raíz)
+  ☐ CONFIRMACION_PREPARACION.txt (raíz)
+  ☐ Este checklist (raíz)
+
+
+SECCION 3: VERIFICACION DE TABLAS BASE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  En PostgreSQL (psql):
+  ☐ \dt op_orden_trabajo     -- Tabla que tendrán FKs los acompañantes
+  ☐ \dt rrhh_trabajador      -- Tabla opcional para FK del acompañante
+  ☐ \dt op_ot_formulario     -- Tabla que tendrá FK el purgado
+
+
+SECCION 4: VERIFICACION DE REQUISITOS (OPCIONAL)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  Ejecutar:
+  ☐ PowerShell: .\database\verify_prereq.ps1
+
+  Script verificará:
+  ☐ Archivos SQL presentes
+  ☐ Scripts ejecutables disponibles
+  ☐ PostgreSQL instalado
+  ☐ Conexión a BD exitosa
+  ☐ Tablas base existen
+  ☐ Las nuevas tablas aún no existen
+
+
+SECCION 5: EJECUCION DE MIGRACIONES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  Elegir UNA opción:
+
+  OPCION 1: Script Batch (RECOMENDADO)
+  ☐ Abrir CMD o PowerShell
+  ☐ cd database
+  ☐ apply_migrations.bat
+  ☐ Esperar a "[✓] Migraciones aplicadas exitosamente"
+
+  OPCION 2: PowerShell
+  ☐ Abrir PowerShell
+  ☐ cd database
+  ☐ Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process
+  ☐ .\apply_migrations.ps1
+  ☐ Esperar a "[✓] Migraciones aplicadas exitosamente"
+
+  OPCION 3: Línea de Comandos (CMD)
+  ☐ set PGPASSWORD=melcita123
+  ☐ psql -h localhost -U postgres -d sistema_ot -f database/apply_migrations_manual.sql
+
+  OPCION 4: Línea de Comandos (PowerShell)
+  ☐ $env:PGPASSWORD = "melcita123"
+  ☐ psql -h localhost -U postgres -d sistema_ot -f database/apply_migrations_manual.sql
+
+  OPCION 5: Python
+  ☐ pip install psycopg2-binary
+  ☐ python database/apply_migrations.py
+
+
+SECCION 6: VERIFICACION POST-MIGRACION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  En PostgreSQL (psql -h localhost -U postgres -d sistema_ot):
+
+  Tablas creadas:
+  ☐ \d op_ot_acompanante     -- Ver estructura
+  ☐ \d op_ot_purgado_hidrante -- Ver estructura
+  ☐ SELECT COUNT(*) FROM op_ot_acompanante;      -- Debería mostrar 0
+  ☐ SELECT COUNT(*) FROM op_ot_purgado_hidrante; -- Debería mostrar 0
+
+  Funciones creadas:
+  ☐ \df fn_validar_limite_acompanantes
+  ☐ \df fn_validar_purgado_obligatorios
+
+  Índices creados:
+  ☐ \di idx_ot_acompanante*
+  ☐ \di idx_purgado*
+
+
+SECCION 7: DESARROLLO BACKEND (JAVA)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  Entidades (@Entity):
+  ☐ backend/sistema-ot/src/main/java/com/example/model/OtAcompanante.java
+     - Mapear campos: id_ot, id_trabajador, dni, nombres, apellidos, rol
+     - Anotaciones JPA: @Entity, @Table, @Column, @GeneratedValue
+     - Relaciones: @ManyToOne con OrdenTrabajo y Trabajador
+
+  ☐ backend/sistema-ot/src/main/java/com/example/model/OtPurgadoHidrante.java
+     - Mapear campos: id_ot_formulario, id_ot, marca_hidrante, etc
+     - Anotaciones JPA: @Entity, @Table, @Column, @GeneratedValue
+     - Relaciones: @ManyToOne con OrdenTrabajo y OtFormulario
+
+  Repositorios (JpaRepository):
+  ☐ backend/sistema-ot/src/main/java/com/example/repository/OtAcompananteRepository.java
+     - Extender JpaRepository<OtAcompanante, Long>
+     - Métodos: findByIdOt(), findByIdTrabajador()
+
+  ☐ backend/sistema-ot/src/main/java/com/example/repository/OtPurgadoHidranteRepository.java
+     - Extender JpaRepository<OtPurgadoHidrante, Long>
+     - Métodos: findByIdOtFormulario(), findByIdOt()
+
+  Servicios (@Service):
+  ☐ backend/sistema-ot/src/main/java/com/example/service/OtAcompananteService.java
+     - Métodos CRUD: crear, obtener, actualizar, eliminar
+     - Validación: máximo 10 acompañantes por OT
+     - Manejo de excepciones
+
+  ☐ backend/sistema-ot/src/main/java/com/example/service/OtPurgadoHidranteService.java
+     - Métodos CRUD: crear, obtener, actualizar
+     - Validación: campos obligatorios cuando formulario está COMPLETADO
+     - Manejo de excepciones
+
+  Controladores REST (@RestController):
+  ☐ backend/sistema-ot/src/main/java/com/example/controller/OtAcompananteController.java
+     - Endpoints: GET, POST, PUT, DELETE
+     - Path: /api/ot/{idOt}/acompanantes
+     - Validación de request/response
+
+  ☐ backend/sistema-ot/src/main/java/com/example/controller/OtPurgadoHidranteController.java
+     - Endpoints: GET, POST, PUT
+     - Path: /api/ot/{idOt}/purgado
+     - Validación de request/response
+
+  Testing:
+  ☐ Tests unitarios de servicios
+  ☐ Tests de integración de repositorios
+  ☐ Tests de controladores REST
+
+
+SECCION 8: DESARROLLO FRONTEND (REACT)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  Componentes React:
+  ☐ frontend/src/components/OtAcompanantes.tsx
+     - Mostrar lista de acompañantes
+     - Agregar/editar/eliminar acompañantes
+     - Validar máximo 10 acompañantes
+     - Componente de formulario
+
+  ☐ frontend/src/components/OtPurgadoForm.tsx
+     - Formulario para datos técnicos
+     - Campos: marca, bocamazas, presión, tiempos, cloro
+     - Validación de campos obligatorios
+     - Integración con API
+
+  Hooks personalizados:
+  ☐ frontend/src/hooks/useAcompanantes.ts
+     - Hook para manejar estado de acompañantes
+     - Llamadas API
+
+  ☐ frontend/src/hooks/usePurgado.ts
+     - Hook para manejar estado del purgado
+     - Llamadas API
+
+  Servicios API:
+  ☐ frontend/src/services/acompananteService.ts
+     - Métodos: getAll, create, update, delete
+
+  ☐ frontend/src/services/purgadoService.ts
+     - Métodos: getAll, create, update
+
+  Testing:
+  ☐ Tests de componentes con React Testing Library
+  ☐ Tests de hooks
+  ☐ Tests de integración con API
+
+
+SECCION 9: INTEGRACION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  Backend:
+  ☐ Compilar: mvn clean install
+  ☐ Ejecutar: mvn spring-boot:run
+  ☐ Verificar: http://localhost:8080/api/...
+
+  Frontend:
+  ☐ Instalar: npm install
+  ☐ Compilar: npm run build
+  ☐ Ejecutar: npm run dev
+  ☐ Verificar: http://localhost:5173
+
+  Integración completa:
+  ☐ Backend y frontend comunicándose
+  ☐ Agregar acompañante desde UI
+  ☐ Ver lista de acompañantes
+  ☐ Editar acompañante
+  ☐ Eliminar acompañante
+  ☐ Agregar datos de purgado
+  ☐ Ver datos de purgado
+  ☐ Validaciones funcionando
+
+
+SECCION 10: TESTING
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  Backend:
+  ☐ Tests unitarios de servicios
+  ☐ Tests de validación de límite de acompañantes
+  ☐ Tests de validación de purgado
+  ☐ Tests de controladores REST
+  ☐ Tests de integración con BD
+
+  Frontend:
+  ☐ Tests de componentes
+  ☐ Tests de hooks
+  ☐ Tests de integración
+  ☐ Tests de validaciones en UI
+
+  Manual:
+  ☐ Prueba agregar 10 acompañantes (debe permitir)
+  ☐ Prueba agregar 11 acompañante (debe rechazar)
+  ☐ Prueba campos obligatorios del purgado
+  ☐ Prueba que funciona con diferentes navegadores
+
+
+SECCION 11: DEPLOYMENT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  Preparación:
+  ☐ Variables de entorno configuradas
+  ☐ Configuración de BD en producción
+  ☐ JWT secret configurado
+  ☐ CORS permitido
+
+  Documentación:
+  ☐ README actualizado
+  ☐ API documentation actualizada
+  ☐ Instrucciones de instalación claras
+
+  Deployment:
+  ☐ Backend desplegado
+  ☐ Frontend desplegado
+  ☐ Verificación en producción
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+NOTAS ADICIONALES:
+
+  Acompañantes:
+  • Máximo 10 por OT (validado en trigger y backend)
+  • Rol fijo: "AYUDANTE" (no seleccionable)
+  • Pueden ser trabajadores existentes o nuevos (DNI)
+  • Soporte para soft delete mediante campo "activo"
+
+  Purgado:
+  • Un único purgado por formulario técnico
+  • Validación de campos obligatorios cuando formulario COMPLETADO
+  • Incluye: marca, bocamazas, presión PSI, tiempos, cloro
+
+  Índices:
+  • Optimizados para búsqueda rápida por OT
+  • Soporte para ordenamiento
+  • Búsqueda por fecha
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+MARCADO PERSONALIZADO:
+
+  ☐  = Por hacer
+  ☑  = En progreso  (cambia ☐ por ☑)
+  ☒  = Completado   (cambia ☐ por ☒)
+
+Imprime este documento y usa como guía paso a paso.
+Marca con ☒ cada sección completada para monitorear progreso.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Preparado: 2026-05-22
+Versión: 1.0
+Proyecto: Gestión de Órdenes de Trabajo (PWA)
+
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
