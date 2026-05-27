@@ -82,6 +82,11 @@ export const usuarioService = {
   listar: () => api.get('/usuarios'),
 }
 
+export const trabajadorService = {
+  listar: () => api.get('/trabajadores'),
+  crear:  (data: object) => api.post('/trabajadores', data),
+}
+
 export const alertaService = {
   listar:      () => api.get('/reportes/alertas'),   // HU16: alertas reales
   marcarLeida: (id: number) => api.put(`/alertas/${id}/leer`),

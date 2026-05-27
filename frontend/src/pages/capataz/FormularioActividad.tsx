@@ -1,6 +1,6 @@
 import { type FormEvent, useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { cuadrillaService, puntoService, registroService, safeInput } from '../../services/api'
+import { puntoService, registroService, safeInput, trabajadorService } from '../../services/api'
 import { offlineDB } from '../../services/offlineDB'
 import { useOfflineSync } from '../../hooks/useOfflineSync'
 import { ACTIVIDADES } from '../../data/actividades'
@@ -33,20 +33,14 @@ export default function FormularioActividad() {
   const { isOnline, updatePendingCount } = useOfflineSync()
 
   const [punto,             setPunto]     = useState<OrdenTrabajo | null>(null)
-  const [cuadrillaId,       setCuadrillaId] = useState<number | null>(null)
-  const [cuadrillaNombre,   setCuadrillaNombre] = useState('')
-  const [miembros,          setMiembros] = useState<Array<{ id: number; idTrabajador: number; dni?: string; nombres: string; apellidos: string; cargo?: string }>>([])
-  const [asistenteId,       setAsistenteId] = useState<number | null>(null)
-  const [nuevoTrabajador,   setNuevoTrabajador] = useState(false)
-  const [asistenteDni,      setAsistenteDni] = useState('')
-  const [asistenteNombres,  setAsistenteNombres] = useState('')
-  const [asistenteApellidos,setAsistenteApellidos] = useState('')
-  const [asistenteCargo,    setAsistenteCargo] = useState('')
-  const [cargoEnCuadrilla,  setCargoEnCuadrilla] = useState('')
+  const [miembros,          setMiembros] = useState<Array<{ idTrabajador: number; dni?: string; nombres: string; apellidos: string; cargo?: string }>>([])
+  const [asistenteIds,      setAsistenteIds] = useState<number[]>([])
+  const [nuevoAsistenteId,  setNuevoAsistenteId] = useState<number | null>(null)
   const [actividadId,       setActividadId] = useState<string>(ACTIVIDADES_OPCIONES[0]?.id ?? '')
   const [subactividadId,    setSubactividadId] = useState<string>(ACTIVIDADES_OPCIONES[0]?.subactividades[0]?.id ?? '')
   const [nuevoEstado,       setEstado]    = useState('SIN_CAMBIO')
   const [observaciones,     setObs]       = useState('')
+  const [hasLocalStorageData, setHasLocalStorageData] = useState(false)
   const [fecha,             setFecha]     = useState(new Date().toISOString().slice(0, 10))
   const [loading,           setLoading]   = useState(false)
   const [loadingPunto,      setLoadingPunto] = useState(true)
@@ -71,18 +65,55 @@ export default function FormularioActividad() {
   useEffect(() => {
     if (!isOnline) return
 
-    cuadrillaService.obtener()
+    trabajadorService.listar()
       .then(r => {
-        const data = (r.data as any)?.data ?? {}
-        setCuadrillaId(data.cuadrillaId ?? null)
-        setCuadrillaNombre(data.nombre ?? '')
-        setMiembros(Array.isArray(data.miembros) ? data.miembros : [])
+        const data = (r.data as any)?.data ?? []
+        setMiembros(Array.isArray(data) ? data : [])
       })
       .catch(() => {
-        setCuadrillaId(null)
         setMiembros([])
       })
   }, [isOnline])
+
+  // Cargar datos guardados en localStorage para esta OT
+  useEffect(() => {
+    if (!puntoId) return
+    const saved = localStorage.getItem(`form-ot-${puntoId}`)
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved)
+        setAsistenteIds(parsed.asistenteIds || [])
+        setActividadId((parsed.actividadId || ACTIVIDADES_OPCIONES[0]?.id) ?? '')
+        setSubactividadId((parsed.subactividadId || ACTIVIDADES_OPCIONES[0]?.subactividades[0]?.id) ?? '')
+        setEstado(parsed.nuevoEstado || 'SIN_CAMBIO')
+        setObs(parsed.observaciones || '')
+        setFecha(parsed.fecha || new Date().toISOString().slice(0, 10))
+      } catch (e) {
+        // Ignorar si hay error al parsear
+      }
+    }
+  }, [puntoId])
+
+  // Guardar datos en localStorage cuando cambien
+  useEffect(() => {
+    if (!puntoId) return
+    const dataToSave = {
+      asistenteIds,
+      actividadId,
+      subactividadId,
+      nuevoEstado,
+      observaciones,
+      fecha,
+    }
+    localStorage.setItem(`form-ot-${puntoId}`, JSON.stringify(dataToSave))
+  }, [puntoId, asistenteIds, actividadId, subactividadId, nuevoEstado, observaciones, fecha])
+
+  // Limpiar localStorage cuando se envíe el formulario exitosamente
+  const limpiarFormulario = () => {
+    if (puntoId) {
+      localStorage.removeItem(`form-ot-${puntoId}`)
+    }
+  }
 
   // Sugerir automáticamente el estado según el estado actual de la OT
   useEffect(() => {
@@ -99,39 +130,23 @@ export default function FormularioActividad() {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
-    if (!cuadrillaNombre.trim()) {
-      setResultado({ ok: false, msg: 'La cuadrilla es obligatoria.' })
-      return
-    }
     if (!subactividadSeleccionada) {
       setResultado({ ok: false, msg: 'Selecciona una subactividad válida.' })
       return
     }
-    if (!asistenteId && !nuevoTrabajador) {
-      setResultado({ ok: false, msg: 'Selecciona un trabajador o agrega uno nuevo.' })
+    if (asistenteIds.length === 0) {
+      setResultado({ ok: false, msg: 'Selecciona al menos un ayudante registrado.' })
       return
     }
-    if (nuevoTrabajador && (!asistenteNombres.trim() || !asistenteApellidos.trim())) {
-      setResultado({ ok: false, msg: 'Ingresa nombre y apellidos del trabajador.' })
-      return
-    }
-    if (!observaciones.trim()) {
-      setResultado({ ok: false, msg: 'Las observaciones son obligatorias.' })
+    if (nuevoEstado === 'OBSERVADA' && !observaciones.trim()) {
+      setResultado({ ok: false, msg: 'Las observaciones son obligatorias cuando el estado es OBSERVADA.' })
       return
     }
     setLoading(true)
     setResultado(null)
 
-    const payload = {
+    const payload: any = {
       puntoId:           Number(puntoId),
-      cuadrillaId:       cuadrillaId ?? undefined,
-      cuadrillaNombre:   safeInput(cuadrillaNombre, 100),
-      asistenteId:       asistenteId ?? undefined,
-      asistenteDni:      safeInput(asistenteDni, 8),
-      asistenteNombres:  safeInput(asistenteNombres, 100),
-      asistenteApellidos:safeInput(asistenteApellidos, 100),
-      asistenteCargo:    safeInput(asistenteCargo, 100),
-      cargoEnCuadrilla:  safeInput(cargoEnCuadrilla, 100),
       actividad:         safeInput(actividadSeleccionada?.nombre ?? '', 100),
       subactividad:      safeInput(subactividadSeleccionada.nombre, 100),
       tipoActividad:     safeInput(`${actividadSeleccionada?.nombre ?? ''} / ${subactividadSeleccionada.nombre}`, 100),
@@ -140,6 +155,8 @@ export default function FormularioActividad() {
       fechaRegistro:     fecha + ' 00:00:00',
       creadoOffline:     !isOnline,
     }
+
+    payload.asistenteIds = asistenteIds.length > 0 ? asistenteIds : undefined
 
     try {
       if (isOnline) {
@@ -160,6 +177,7 @@ export default function FormularioActividad() {
         await updatePendingCount()
         setResultado({ ok: true, msg: 'Guardado offline. Se sincronizará al recuperar conexión.' })
       }
+      limpiarFormulario()
       setTimeout(() => navigate(-1), 2500)
     } catch (err: any) {
       const msg = err?.response?.data?.message ?? 'Error al guardar el registro.'
@@ -167,6 +185,18 @@ export default function FormularioActividad() {
     } finally {
       setLoading(false)
     }
+  }
+
+  const handleAgregarAsistente = () => {
+    if (nuevoAsistenteId == null) return
+    if (!asistenteIds.includes(nuevoAsistenteId)) {
+      setAsistenteIds(prev => [...prev, nuevoAsistenteId])
+    }
+    setNuevoAsistenteId(null)
+  }
+
+  const handleEliminarAsistente = (id: number) => {
+    setAsistenteIds(prev => prev.filter(item => item !== id))
   }
 
   const inputClass = 'w-full border border-gray-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#CC1111]/20 focus:border-[#CC1111] transition-all bg-white'
@@ -247,114 +277,71 @@ export default function FormularioActividad() {
       {/* Formulario */}
       <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-card p-6 space-y-5">
 
-        {/* Cuadrilla */}
-        <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-1.5">Cuadrilla</label>
-          <input
-            type="text"
-            value={cuadrillaNombre}
-            onChange={e => {
-              setCuadrillaNombre(e.target.value)
-              if (cuadrillaId !== null) {
-                setCuadrillaId(null)
-              }
-            }}
-            placeholder="Nombre o código de la cuadrilla"
-            required
-            className={inputClass}
-          />
-          {miembros.length > 0 && (
-            <p className="mt-2 text-xs text-gray-500">
-              Miembros registrados: {miembros.length}. Puedes seleccionar un trabajador existente o agregar uno nuevo.
-            </p>
-          )}
-        </div>
-
-        {/* Trabajador acompañante */}
+        {/* Ayudante */}
         <div className="space-y-3">
           <div className="flex items-center justify-between gap-3">
-            <label className="block text-sm font-semibold text-gray-700">Trabajador que acompaña</label>
-            <button
-              type="button"
-              onClick={() => {
-                setNuevoTrabajador(prev => !prev)
-                setAsistenteId(null)
-                setAsistenteDni('')
-                setAsistenteNombres('')
-                setAsistenteApellidos('')
-                setAsistenteCargo('')
-              }}
-              className="text-xs text-[#CC1111] hover:text-[#AA0E0E]"
-            >
-              {nuevoTrabajador ? 'Seleccionar existente' : 'Agregar nuevo trabajador'}
-            </button>
-          </div>
-          {!nuevoTrabajador ? (
-            <select
-              value={asistenteId ?? ''}
-              onChange={e => setAsistenteId(e.target.value ? Number(e.target.value) : null)}
-              className={inputClass}
-            >
-              <option value="">Selecciona un trabajador</option>
-              {miembros.map(miembro => (
-                <option key={miembro.idTrabajador} value={miembro.idTrabajador}>
-                  {miembro.nombres} {miembro.apellidos}{miembro.dni ? ` · ${miembro.dni}` : ''}
-                </option>
-              ))}
-            </select>
-          ) : (
-            <div className="grid gap-3 sm:grid-cols-2">
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-1.5">DNI</label>
-                <input
-                  type="text"
-                  value={asistenteDni}
-                  onChange={e => setAsistenteDni(e.target.value)}
-                  placeholder="Ej. 12345678"
-                  className={inputClass}
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-1.5">Nombres</label>
-                <input
-                  type="text"
-                  value={asistenteNombres}
-                  onChange={e => setAsistenteNombres(e.target.value)}
-                  placeholder="Nombres del trabajador"
-                  className={inputClass}
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-1.5">Apellidos</label>
-                <input
-                  type="text"
-                  value={asistenteApellidos}
-                  onChange={e => setAsistenteApellidos(e.target.value)}
-                  placeholder="Apellidos del trabajador"
-                  className={inputClass}
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-1.5">Cargo</label>
-                <input
-                  type="text"
-                  value={asistenteCargo}
-                  onChange={e => setAsistenteCargo(e.target.value)}
-                  placeholder="Cargo del trabajador"
-                  className={inputClass}
-                />
-              </div>
+            <div>
+              <label className="block text-sm font-semibold text-gray-700">Ayudantes</label>
+              <p className="text-xs text-gray-500">Selecciona uno o varios ayudantes registrados.</p>
             </div>
-          )}
-          <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1.5">Rol en la cuadrilla</label>
-            <input
-              type="text"
-              value={cargoEnCuadrilla}
-              onChange={e => setCargoEnCuadrilla(e.target.value)}
-              placeholder="Ej. Técnico, Ayudante, Chofer"
-              className={inputClass}
-            />
+            <a href="/capataz/ayudantes" className="text-xs text-[#CC1111] hover:text-[#AA0E0E]">Registrar ayudantes</a>
+          </div>
+
+          <div className="space-y-2">
+            <div className="max-h-44 overflow-y-auto rounded-2xl border border-gray-200 bg-gray-50 p-3">
+              {asistenteIds.length > 0 ? (
+                <div className="flex flex-wrap gap-2">
+                  {miembros
+                    .filter(miembro => asistenteIds.includes(miembro.idTrabajador))
+                    .map(miembro => (
+                      <button
+                        key={miembro.idTrabajador}
+                        type="button"
+                        onClick={() => handleEliminarAsistente(miembro.idTrabajador)}
+                        className="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-3 py-1 text-sm text-gray-700 hover:bg-gray-100"
+                      >
+                        {miembro.nombres} {miembro.apellidos}
+                        <span className="text-gray-500">×</span>
+                      </button>
+                    ))}
+                </div>
+              ) : (
+                <p className="text-sm text-gray-500">Aún no se ha agregado ningún ayudante.</p>
+              )}
+            </div>
+
+            <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+              <select
+                value={nuevoAsistenteId ?? ''}
+                onChange={e => setNuevoAsistenteId(e.target.value ? Number(e.target.value) : null)}
+                className={inputClass}
+              >
+                <option value="">Agregar un ayudante</option>
+                {miembros
+                  .filter(miembro => !asistenteIds.includes(miembro.idTrabajador))
+                  .map(miembro => (
+                    <option key={miembro.idTrabajador} value={miembro.idTrabajador}>
+                      {miembro.nombres} {miembro.apellidos}{miembro.dni ? ` · ${miembro.dni}` : ''}
+                    </option>
+                  ))}
+              </select>
+              <button
+                type="button"
+                onClick={handleAgregarAsistente}
+                disabled={!nuevoAsistenteId}
+                className="inline-flex items-center justify-center rounded-xl bg-[#CC1111] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#AA0E0E] disabled:bg-gray-200 disabled:text-gray-400"
+              >
+                Añadir
+              </button>
+            </div>
+
+            {asistenteIds.length === 0 && miembros.length > 0 && (
+              <p className="text-xs text-gray-500">Selecciona ayudantes desde la lista y pulsa Añadir.</p>
+            )}
+
+            {miembros.length === 0 && (
+              <p className="text-xs text-gray-500">No hay ayudantes registrados. Ve a Registrar ayudantes para crear uno.</p>
+            )}
           </div>
         </div>
 
@@ -424,21 +411,37 @@ export default function FormularioActividad() {
           )}
         </div>
 
-        {/* Observaciones */}
-        <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-1.5">
-            Observaciones <span className="text-red-500">*</span>
-          </label>
-          <textarea
-            value={observaciones}
-            onChange={e => setObs(e.target.value)}
-            rows={4}
-            placeholder="Describe detalladamente el trabajo realizado, materiales usados, hallazgos, etc."
-            required
-            className={`${inputClass} resize-none`}
-          />
-          <p className="mt-1 text-xs text-gray-400">{observaciones.length}/500 caracteres</p>
-        </div>
+        {/* Observaciones - solo si estado es OBSERVADA */}
+        {nuevoEstado === 'OBSERVADA' && (
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-1.5">
+              Observaciones <span className="text-red-500">*</span>
+            </label>
+            <textarea
+              value={observaciones}
+              onChange={e => setObs(e.target.value)}
+              rows={4}
+              placeholder="Describe los problemas encontrados y lo que requiere atención."
+              className={`${inputClass} resize-none`}
+            />
+            <p className="mt-1 text-xs text-gray-400">{observaciones.length}/500 caracteres</p>
+          </div>
+        )}
+
+        {/* Notas generales - cuando NO es OBSERVADA */}
+        {nuevoEstado !== 'OBSERVADA' && (
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-1.5">Notas (opcional)</label>
+            <textarea
+              value={observaciones}
+              onChange={e => setObs(e.target.value)}
+              rows={3}
+              placeholder="Anota cualquier detalle relevante del trabajo (opcional)..."
+              className={`${inputClass} resize-none`}
+            />
+            <p className="mt-1 text-xs text-gray-400">{observaciones.length}/500 caracteres</p>
+          </div>
+        )}
 
         {/* Fecha */}
         <div>
@@ -449,7 +452,7 @@ export default function FormularioActividad() {
         {/* Submit */}
         <button
           type="submit"
-          disabled={loading || !observaciones.trim()}
+          disabled={loading || (nuevoEstado === 'OBSERVADA' && !observaciones.trim())}
           className="w-full flex items-center justify-center gap-2 bg-[#CC1111] hover:bg-[#AA0E0E] disabled:bg-gray-200 disabled:text-gray-400 text-white font-semibold py-3 rounded-xl transition-colors text-sm shadow-sm"
         >
           {loading

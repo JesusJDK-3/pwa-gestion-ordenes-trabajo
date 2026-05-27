@@ -85,8 +85,12 @@ public class CuadrillaController {
         Long asistenteId = body.get("asistenteId") != null ? parseLong(body.get("asistenteId")) : null;
         RrhhTrabajador trabajador;
         if (asistenteId != null) {
-            trabajador = cuadrillaService.buscarTrabajadorPorId(asistenteId)
-                    .orElseThrow(() -> new RuntimeException("Trabajador no encontrado"));
+            var trabajadorOpt = cuadrillaService.buscarTrabajadorPorId(asistenteId);
+            if (trabajadorOpt.isEmpty()) {
+                return ResponseEntity.badRequest()
+                        .body(new ApiResponse<>(false, "Trabajador no encontrado", null));
+            }
+            trabajador = trabajadorOpt.get();
         } else {
             String dni = body.get("dni") != null ? body.get("dni").toString().trim() : null;
             String nombres = body.get("nombres") != null ? body.get("nombres").toString().trim() : null;

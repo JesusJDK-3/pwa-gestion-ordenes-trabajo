@@ -2,6 +2,7 @@ package com.kabj.sistema_ot.controller;
 
 import com.kabj.sistema_ot.dto.ApiResponse;
 import com.kabj.sistema_ot.entity.OpCuadrilla;
+import com.kabj.sistema_ot.entity.OpOtAcompanante;
 import com.kabj.sistema_ot.entity.RrhhCapataz;
 import com.kabj.sistema_ot.entity.RrhhTrabajador;
 import com.kabj.sistema_ot.repository.CatEstadoOtRepository;
@@ -9,6 +10,7 @@ import com.kabj.sistema_ot.repository.OpOrdenTrabajoRepository;
 import com.kabj.sistema_ot.repository.RrhhCapatazRepository;
 import com.kabj.sistema_ot.repository.UsuarioRepository;
 import com.kabj.sistema_ot.service.CuadrillaService;
+import com.kabj.sistema_ot.service.OpOtAcompananteService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +33,7 @@ public class RegistroController {
     private final UsuarioRepository usuarioRepository;
     private final RrhhCapatazRepository capatazRepository;
     private final CuadrillaService cuadrillaService;
+    private final OpOtAcompananteService acompananteService;
 
     /**
      * Registra actividad de campo del capataz.
@@ -74,6 +77,7 @@ public class RegistroController {
 
         String cuadrillaNombre = str(body.get("cuadrillaNombre"));
         Long cuadrillaId = parseLong(body.get("cuadrillaId"));
+        List<Long> asistenteIds = parseLongList(body.get("asistenteIds"));
         Long asistenteId = parseLong(body.get("asistenteId"));
         String asistenteDni = str(body.get("asistenteDni"));
         String asistenteNombres = str(body.get("asistenteNombres"));
@@ -84,20 +88,41 @@ public class RegistroController {
         RrhhCapataz capataz = getCapataz(auth);
         OpCuadrilla cuadrilla = null;
         if (cuadrillaId != null) {
-            cuadrilla = cuadrillaService.buscarPorIdYCapataz(cuadrillaId, capataz)
-                    .orElseThrow(() -> new RuntimeException("Cuadrilla no encontrada o no corresponde al capataz"));
+            var cuadrillaOpt = cuadrillaService.buscarPorIdYCapataz(cuadrillaId, capataz);
+            if (cuadrillaOpt.isEmpty()) {
+                return ResponseEntity.badRequest()
+                        .body(new ApiResponse<>(false, "Cuadrilla no encontrada o no corresponde al capataz", null));
+            }
+            cuadrilla = cuadrillaOpt.get();
         } else if (cuadrillaNombre != null && !cuadrillaNombre.isBlank()) {
             cuadrilla = cuadrillaService.crearOActualizarCuadrilla(capataz, cuadrillaNombre);
         }
 
         RrhhTrabajador asistente = null;
-        if (asistenteId != null) {
-            asistente = cuadrillaService.buscarTrabajadorPorId(asistenteId)
-                    .orElseThrow(() -> new RuntimeException("Trabajador no encontrado"));
+        List<RrhhTrabajador> asistentes = new java.util.ArrayList<>();
+        if (asistenteIds != null && !asistenteIds.isEmpty()) {
+            for (Long id : asistenteIds) {
+                var asistenteOpt = cuadrillaService.buscarTrabajadorPorId(id);
+                if (asistenteOpt.isEmpty()) {
+                    return ResponseEntity.badRequest()
+                            .body(new ApiResponse<>(false, "Trabajador no encontrado: " + id, null));
+                }
+                asistentes.add(asistenteOpt.get());
+            }
+            asistente = asistentes.get(0);
+        } else if (asistenteId != null) {
+            var asistenteOpt = cuadrillaService.buscarTrabajadorPorId(asistenteId);
+            if (asistenteOpt.isEmpty()) {
+                return ResponseEntity.badRequest()
+                        .body(new ApiResponse<>(false, "Trabajador no encontrado", null));
+            }
+            asistente = asistenteOpt.get();
+            asistentes.add(asistente);
         } else if ((asistenteDni != null && !asistenteDni.isBlank())
                 || ((asistenteNombres != null && !asistenteNombres.isBlank())
                 && (asistenteApellidos != null && !asistenteApellidos.isBlank()))) {
             asistente = cuadrillaService.crearOEncontrarTrabajador(asistenteDni, asistenteNombres, asistenteApellidos, asistenteCargo);
+            asistentes.add(asistente);
         }
 
         if (cuadrilla != null && asistente != null) {
@@ -109,6 +134,19 @@ public class RegistroController {
         }
         if (asistente != null) {
             ot.setAsistente(asistente);
+        }
+
+        if (!asistentes.isEmpty()) {
+            for (RrhhTrabajador cadaAsistente : asistentes) {
+                OpOtAcompanante acompanante = new OpOtAcompanante();
+                acompanante.setTrabajador(cadaAsistente);
+                acompanante.setDni(cadaAsistente.getDni());
+                acompanante.setNombres(cadaAsistente.getNombres());
+                acompanante.setApellidos(cadaAsistente.getApellidos());
+                acompanante.setCargo(cadaAsistente.getCargo());
+                acompanante.setRol("AYUDANTE");
+                acompananteService.crearAcompanante(idOt, acompanante);
+            }
         }
 
         // Actualizar estado solo si se indica uno distinto al actual y válido para el capataz
@@ -203,13 +241,26 @@ public class RegistroController {
             return ResponseEntity.ok(new ApiResponse<>(false, "OT no encontrada", null));
         }
         var o = ot.get();
+        var acompanantes = acompananteService.listarPorOT(puntoId);
+        var asistentes = acompanantes.stream()
+                .map(a -> {
+                    Map<String, Object> item = new java.util.HashMap<>();
+                    item.put("idTrabajador", a.getTrabajador() != null ? a.getTrabajador().getIdTrabajador() : null);
+                    item.put("dni", a.getDni());
+                    item.put("nombres", a.getNombres());
+                    item.put("apellidos", a.getApellidos());
+                    item.put("cargo", a.getCargo());
+                    return item;
+                })
+                .collect(Collectors.toList());
         return ResponseEntity.ok(new ApiResponse<>(true, null, Map.of(
                 "idOt",         o.getIdOt(),
                 "sgio",         o.getSgio(),
                 "estado",       o.getEstadoOt() != null ? o.getEstadoOt().getCodigo() : "PENDIENTE",
                 "observacion",  o.getObservacion() != null ? o.getObservacion() : "",
                 "fechaInicio",  o.getFechaInicio() != null ? o.getFechaInicio().toString() : "",
-                "fechaFin",     o.getFechaFin()    != null ? o.getFechaFin().toString()    : ""
+                "fechaFin",     o.getFechaFin()    != null ? o.getFechaFin().toString()    : "",
+                "asistentes",   asistentes
         )));
     }
 
@@ -222,6 +273,18 @@ public class RegistroController {
     private Long parseLong(Object o) {
         if (o == null) return null;
         try { return Long.valueOf(o.toString()); } catch (Exception e) { return null; }
+    }
+
+    private List<Long> parseLongList(Object o) {
+        if (!(o instanceof List<?> rawList)) return null;
+        List<Long> list = new java.util.ArrayList<>();
+        for (Object item : rawList) {
+            Long parsed = parseLong(item);
+            if (parsed != null) {
+                list.add(parsed);
+            }
+        }
+        return list;
     }
 
     private String str(Object o) {

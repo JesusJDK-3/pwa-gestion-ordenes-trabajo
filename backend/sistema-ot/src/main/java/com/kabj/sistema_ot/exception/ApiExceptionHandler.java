@@ -57,6 +57,18 @@ public class ApiExceptionHandler {
                         fieldErrors));
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ApiErrorResponse> handleIllegalArgument(IllegalArgumentException ex,
+                                                                  HttpServletRequest req) {
+        return ResponseEntity
+                .badRequest()
+                .body(ApiErrorResponse.of(
+                        HttpStatus.BAD_REQUEST.value(),
+                        "Bad Request",
+                        ex.getMessage() != null ? ex.getMessage() : "Valor inválido",
+                        req.getRequestURI()));
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiErrorResponse> handleGeneric(Exception ex,
                                                            HttpServletRequest req) {
