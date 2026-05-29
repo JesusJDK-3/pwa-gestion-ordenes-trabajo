@@ -12,13 +12,19 @@
 [INFO] Copying 1 resource from src\main\resources to target\classes
 [INFO] 
 [INFO] --- compiler:3.14.1:compile (default-compile) @ sistema-ot ---
-[INFO] Nothing to compile - all classes are up to date.
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 69 source files with javac [debug parameters release 21] to target\classes
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::objectFieldOffset has been called by lombok.permit.Permit
+WARNING: Please consider reporting this to the maintainers of class lombok.permit.Permit
+WARNING: sun.misc.Unsafe::objectFieldOffset will be removed in a future release
 [INFO] 
 [INFO] --- resources:3.3.1:testResources (default-testResources) @ sistema-ot ---
 [INFO] Copying 1 resource from src\test\resources to target\test-classes
 [INFO] 
 [INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ sistema-ot ---
-[INFO] Nothing to compile - all classes are up to date.
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 5 source files with javac [debug parameters release 21] to target\test-classes
 [INFO] 
 [INFO] <<< spring-boot:3.5.14:run (default-cli) < test-compile @ sistema-ot <<<
 [INFO] 
@@ -35,26 +41,26 @@
 
  :: Spring Boot ::               (v3.5.14)
 
-2026-05-27T12:20:52.836-05:00  INFO 17300 --- [sistema-ot] [  restartedMain] c.kabj.sistema_ot.SistemaOtApplication   : Starting SistemaOtApplication using Java 25.0.3 with PID 17300 (C:\Users\W11\Documents\GitHub\pwa-gestion-ordenes-trabajo\backend\sistema-ot\target\classes started by W11 in C:\Users\W11\Documents\GitHub\pwa-gestion-ordenes-trabajo\backend\sistema-ot)
-2026-05-27T12:20:52.837-05:00  INFO 17300 --- [sistema-ot] [  restartedMain] c.kabj.sistema_ot.SistemaOtApplication   : No active profile set, falling back to 1 default profile: "default"
-2026-05-27T12:20:52.863-05:00  INFO 17300 --- [sistema-ot] [  restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
-2026-05-27T12:20:52.863-05:00  INFO 17300 --- [sistema-ot] [  restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
-2026-05-27T12:20:53.363-05:00  INFO 17300 --- [sistema-ot] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2026-05-27T12:20:53.435-05:00  INFO 17300 --- [sistema-ot] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 65 ms. Found 18 JPA repository interfaces.
-2026-05-27T12:20:53.847-05:00  INFO 17300 --- [sistema-ot] [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
-2026-05-27T12:20:53.857-05:00  INFO 17300 --- [sistema-ot] [  restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
-2026-05-27T12:20:53.857-05:00  INFO 17300 --- [sistema-ot] [  restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.54]
-2026-05-27T12:20:53.883-05:00  INFO 17300 --- [sistema-ot] [  restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
-2026-05-27T12:20:53.883-05:00  INFO 17300 --- [sistema-ot] [  restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1020 ms
-2026-05-27T12:20:53.966-05:00  INFO 17300 --- [sistema-ot] [  restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
-2026-05-27T12:20:53.992-05:00  INFO 17300 --- [sistema-ot] [  restartedMain] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.49.Final
-2026-05-27T12:20:54.011-05:00  INFO 17300 --- [sistema-ot] [  restartedMain] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
-2026-05-27T12:20:54.192-05:00  INFO 17300 --- [sistema-ot] [  restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
-2026-05-27T12:20:54.210-05:00  INFO 17300 --- [sistema-ot] [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-2026-05-27T12:20:54.320-05:00  INFO 17300 --- [sistema-ot] [  restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@6833f1b5
-2026-05-27T12:20:54.321-05:00  INFO 17300 --- [sistema-ot] [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
-2026-05-27T12:20:54.342-05:00  WARN 17300 --- [sistema-ot] [  restartedMain] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
-2026-05-27T12:20:54.353-05:00  INFO 17300 --- [sistema-ot] [  restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+2026-05-29T16:54:06.010-05:00  INFO 12412 --- [sistema-ot] [  restartedMain] c.kabj.sistema_ot.SistemaOtApplication   : Starting SistemaOtApplication using Java 25.0.3 with PID 12412 (C:\Users\W11\Documents\GitHub\pwa-gestion-ordenes-trabajo\backend\sistema-ot\target\classes started by W11 in C:\Users\W11\Documents\GitHub\pwa-gestion-ordenes-trabajo\backend\sistema-ot)
+2026-05-29T16:54:06.011-05:00  INFO 12412 --- [sistema-ot] [  restartedMain] c.kabj.sistema_ot.SistemaOtApplication   : No active profile set, falling back to 1 default profile: "default"
+2026-05-29T16:54:06.042-05:00  INFO 12412 --- [sistema-ot] [  restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2026-05-29T16:54:06.042-05:00  INFO 12412 --- [sistema-ot] [  restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2026-05-29T16:54:06.542-05:00  INFO 12412 --- [sistema-ot] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-05-29T16:54:06.612-05:00  INFO 12412 --- [sistema-ot] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 63 ms. Found 18 JPA repository interfaces.
+2026-05-29T16:54:07.052-05:00  INFO 12412 --- [sistema-ot] [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-05-29T16:54:07.064-05:00  INFO 12412 --- [sistema-ot] [  restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-05-29T16:54:07.064-05:00  INFO 12412 --- [sistema-ot] [  restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.54]
+2026-05-29T16:54:07.095-05:00  INFO 12412 --- [sistema-ot] [  restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-05-29T16:54:07.096-05:00  INFO 12412 --- [sistema-ot] [  restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1053 ms
+2026-05-29T16:54:07.192-05:00  INFO 12412 --- [sistema-ot] [  restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-05-29T16:54:07.237-05:00  INFO 12412 --- [sistema-ot] [  restartedMain] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.49.Final
+2026-05-29T16:54:07.262-05:00  INFO 12412 --- [sistema-ot] [  restartedMain] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-05-29T16:54:07.463-05:00  INFO 12412 --- [sistema-ot] [  restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-05-29T16:54:07.484-05:00  INFO 12412 --- [sistema-ot] [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-05-29T16:54:07.610-05:00  INFO 12412 --- [sistema-ot] [  restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@23430d96
+2026-05-29T16:54:07.611-05:00  INFO 12412 --- [sistema-ot] [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-05-29T16:54:07.637-05:00  WARN 12412 --- [sistema-ot] [  restartedMain] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-05-29T16:54:07.650-05:00  INFO 12412 --- [sistema-ot] [  restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
 	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
 	Database driver: undefined/unknown
 	Database version: 18.3
@@ -62,14 +68,56 @@
 	Isolation level: undefined/unknown
 	Minimum pool size: undefined/unknown
 	Maximum pool size: undefined/unknown
-2026-05-27T12:20:55.110-05:00  INFO 17300 --- [sistema-ot] [  restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
-2026-05-27T12:20:55.287-05:00  INFO 17300 --- [sistema-ot] [  restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
-2026-05-27T12:20:55.486-05:00  INFO 17300 --- [sistema-ot] [  restartedMain] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
-2026-05-27T12:20:56.255-05:00  WARN 17300 --- [sistema-ot] [  restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2026-05-27T12:20:56.725-05:00  INFO 17300 --- [sistema-ot] [  restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
-2026-05-27T12:20:56.752-05:00  INFO 17300 --- [sistema-ot] [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
-2026-05-27T12:20:56.757-05:00  INFO 17300 --- [sistema-ot] [  restartedMain] c.kabj.sistema_ot.SistemaOtApplication   : Started SistemaOtApplication in 4.156 seconds (process running for 4.42)
-2026-05-27T12:21:02.225-05:00  INFO 17300 --- [sistema-ot] [nio-8080-exec-4] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
-2026-05-27T12:21:02.225-05:00  INFO 17300 --- [sistema-ot] [nio-8080-exec-4] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
-2026-05-27T12:21:02.229-05:00  INFO 17300 --- [sistema-ot] [nio-8080-exec-4] o.s.web.servlet.DispatcherServlet        : Completed initialization in 4 ms
-2026-05-27T12:27:55.345-05:00  INFO 17300 --- [sistema-ot] [nio-8080-exec-7] c.k.s.controller.RegistroController      : Registro OT-991 | tipo=Purgado en Redes / Purgado en redes secundarias | EN_PROGRESO → EN_PROGRESO
+2026-05-29T16:54:08.441-05:00  INFO 12412 --- [sistema-ot] [  restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-05-29T16:54:08.616-05:00  WARN 12412 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2026-05-29T16:54:08.616-05:00  WARN 12412 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : no existe la restricción «uk7vch37nnt2xad8l5w4trxfv9i» en la relación «cat_estado_ot», omitiendo
+2026-05-29T16:54:08.618-05:00  WARN 12412 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2026-05-29T16:54:08.618-05:00  WARN 12412 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : no existe la restricción «ukptejohlb6njlmp0f6l6d6k3j9» en la relación «cat_subactividad», omitiendo
+2026-05-29T16:54:08.619-05:00  WARN 12412 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2026-05-29T16:54:08.620-05:00  WARN 12412 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : no existe la restricción «uk1mjaviaesq11takno0vxbg6g0» en la relación «cat_tipo_punto_operativo», omitiendo
+2026-05-29T16:54:08.620-05:00  WARN 12412 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2026-05-29T16:54:08.620-05:00  WARN 12412 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : no existe la restricción «uk7nov7bl8f001qsvdhrqci9t7n» en la relación «gis_hidrante», omitiendo
+2026-05-29T16:54:08.622-05:00  WARN 12412 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2026-05-29T16:54:08.622-05:00  WARN 12412 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : no existe la restricción «ukiywr14vbxx11yfcofd99qn1ag» en la relación «gis_hidrante», omitiendo
+2026-05-29T16:54:08.624-05:00  WARN 12412 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2026-05-29T16:54:08.624-05:00  WARN 12412 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : no existe la restricción «uklwc3vccrh6xrp73ilqb6iawn2» en la relación «gis_vpa», omitiendo
+2026-05-29T16:54:08.625-05:00  WARN 12412 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2026-05-29T16:54:08.625-05:00  WARN 12412 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : no existe la restricción «ukltxk91uvhn8tdc5m01c9xkl2e» en la relación «gis_vpa», omitiendo
+2026-05-29T16:54:08.626-05:00  WARN 12412 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2026-05-29T16:54:08.626-05:00  WARN 12412 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : no existe la restricción «uktoh8vhy27s71b3e1aiorj9dus» en la relación «imp_ot_fila», omitiendo
+2026-05-29T16:54:08.627-05:00  WARN 12412 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2026-05-29T16:54:08.627-05:00  WARN 12412 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : no existe la restricción «ukogscvgavs2n5vvdf2b6bf2s9p» en la relación «op_cuadrilla», omitiendo
+2026-05-29T16:54:08.628-05:00  WARN 12412 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2026-05-29T16:54:08.628-05:00  WARN 12412 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : no existe la restricción «uk7cunlh6rdx1fr75xytwo2k6bb» en la relación «op_cuadrilla_miembro_plantilla», omitiendo
+2026-05-29T16:54:08.629-05:00  WARN 12412 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2026-05-29T16:54:08.629-05:00  WARN 12412 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : no existe la restricción «ukqcbgd0bp7gf1a4ouyvknf1vhm» en la relación «op_orden_trabajo», omitiendo
+2026-05-29T16:54:08.630-05:00  WARN 12412 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2026-05-29T16:54:08.630-05:00  WARN 12412 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : no existe la restricción «uk3mkg7yhv8xel1bjm6n5mtrjru» en la relación «op_orden_trabajo», omitiendo
+2026-05-29T16:54:08.633-05:00  WARN 12412 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2026-05-29T16:54:08.633-05:00  WARN 12412 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : no existe la restricción «ukth9paii4q3g686anfe2gf0mcy» en la relación «op_ot_purgado_hidrante», omitiendo
+2026-05-29T16:54:08.634-05:00  WARN 12412 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2026-05-29T16:54:08.634-05:00  WARN 12412 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : no existe la restricción «uk1v45e9dyoqxr8h4tg64xa9ri5» en la relación «rrhh_capataz», omitiendo
+2026-05-29T16:54:08.635-05:00  WARN 12412 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2026-05-29T16:54:08.635-05:00  WARN 12412 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : no existe la restricción «ukhqv16k6q89axsaahvxda909gt» en la relación «rrhh_capataz», omitiendo
+2026-05-29T16:54:08.636-05:00  WARN 12412 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2026-05-29T16:54:08.636-05:00  WARN 12412 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : no existe la restricción «uk8obr5nn8ybgutucrarx7ap4qe» en la relación «rrhh_capataz», omitiendo
+2026-05-29T16:54:08.637-05:00  WARN 12412 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2026-05-29T16:54:08.637-05:00  WARN 12412 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : no existe la restricción «ukh6jxdunw727f433xhn9o7pub7» en la relación «rrhh_trabajador», omitiendo
+2026-05-29T16:54:08.639-05:00  WARN 12412 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2026-05-29T16:54:08.639-05:00  WARN 12412 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : no existe la restricción «uk1udhej9d8enfgbepfc93o7jl» en la relación «seg_rol», omitiendo
+2026-05-29T16:54:08.640-05:00  WARN 12412 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2026-05-29T16:54:08.640-05:00  WARN 12412 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : no existe la restricción «uktlx6k8r8b516a23yaef54e9lm» en la relación «seg_usuario», omitiendo
+2026-05-29T16:54:08.641-05:00  WARN 12412 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Warning Code: 0, SQLState: 00000
+2026-05-29T16:54:08.641-05:00  WARN 12412 --- [sistema-ot] [  restartedMain] o.h.engine.jdbc.spi.SqlExceptionHelper   : no existe la restricción «ukodj60lunc7wlyo1t5rnqxnb9l» en la relación «seg_usuario», omitiendo
+2026-05-29T16:54:08.676-05:00  INFO 12412 --- [sistema-ot] [  restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-05-29T16:54:08.867-05:00  INFO 12412 --- [sistema-ot] [  restartedMain] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-05-29T16:54:09.518-05:00  WARN 12412 --- [sistema-ot] [  restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-05-29T16:54:09.914-05:00  INFO 12412 --- [sistema-ot] [  restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2026-05-29T16:54:09.937-05:00  INFO 12412 --- [sistema-ot] [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2026-05-29T16:54:09.942-05:00  INFO 12412 --- [sistema-ot] [  restartedMain] c.kabj.sistema_ot.SistemaOtApplication   : Started SistemaOtApplication in 4.227 seconds (process running for 4.545)
+2026-05-29T16:54:10.030-05:00  INFO 12412 --- [sistema-ot] [  restartedMain] c.k.sistema_ot.config.DataInitializer    : Roles creados.
+2026-05-29T16:54:10.140-05:00  WARN 12412 --- [sistema-ot] [  restartedMain] c.k.sistema_ot.config.DataInitializer    : Usuarios de prueba creados. Password para todos: password123 — cámbialo en producción.
+2026-05-29T16:54:10.150-05:00  INFO 12412 --- [sistema-ot] [  restartedMain] c.k.sistema_ot.config.DataInitializer    : Trabajadores y capataces creados.
+2026-05-29T16:54:10.159-05:00  INFO 12412 --- [sistema-ot] [  restartedMain] c.k.sistema_ot.config.DataInitializer    : Subactividades sembradas.
+2026-05-29T16:54:10.163-05:00  INFO 12412 --- [sistema-ot] [  restartedMain] c.k.sistema_ot.config.DataInitializer    : Tipos de punto sembrados.
+2026-05-29T16:54:10.169-05:00  INFO 12412 --- [sistema-ot] [  restartedMain] c.k.sistema_ot.config.DataInitializer    : Estados de OT sembrados.
