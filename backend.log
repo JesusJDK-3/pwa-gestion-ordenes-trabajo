@@ -15,7 +15,7 @@
 [INFO] Nothing to compile - all classes are up to date.
 [INFO] 
 [INFO] --- resources:3.3.1:testResources (default-testResources) @ sistema-ot ---
-[INFO] skip non existing resourceDirectory C:\Users\MELANY\OneDrive\Escritorio\pwa-gestion-ordenes-trabajo\backend\sistema-ot\src\test\resources
+[INFO] Copying 1 resource from src\test\resources to target\test-classes
 [INFO] 
 [INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ sistema-ot ---
 [INFO] Nothing to compile - all classes are up to date.
@@ -35,26 +35,26 @@
 
  :: Spring Boot ::               (v3.5.14)
 
-2026-05-17T23:43:56.830-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] c.kabj.sistema_ot.SistemaOtApplication   : Starting SistemaOtApplication using Java 23.0.1 with PID 29464 (C:\Users\MELANY\OneDrive\Escritorio\pwa-gestion-ordenes-trabajo\backend\sistema-ot\target\classes started by MELANY in C:\Users\MELANY\OneDrive\Escritorio\pwa-gestion-ordenes-trabajo\backend\sistema-ot)
-2026-05-17T23:43:56.832-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] c.kabj.sistema_ot.SistemaOtApplication   : No active profile set, falling back to 1 default profile: "default"
-2026-05-17T23:43:56.894-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
-2026-05-17T23:43:56.894-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
-2026-05-17T23:43:57.647-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2026-05-17T23:43:57.732-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 75 ms. Found 10 JPA repository interfaces.
-2026-05-17T23:43:58.438-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
-2026-05-17T23:43:58.453-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
-2026-05-17T23:43:58.454-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.54]
-2026-05-17T23:43:58.500-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
-2026-05-17T23:43:58.501-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1606 ms
-2026-05-17T23:43:58.629-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
-2026-05-17T23:43:58.698-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.49.Final
-2026-05-17T23:43:58.736-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
-2026-05-17T23:43:59.030-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
-2026-05-17T23:43:59.063-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-2026-05-17T23:43:59.371-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@12f2b64
-2026-05-17T23:43:59.372-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
-2026-05-17T23:43:59.410-05:00  WARN 29464 --- [sistema-ot] [  restartedMain] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
-2026-05-17T23:43:59.429-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+2026-06-10T14:00:01.002-05:00  INFO 12056 --- [sistema-ot] [  restartedMain] c.kabj.sistema_ot.SistemaOtApplication   : Starting SistemaOtApplication using Java 23.0.1 with PID 12056 (C:\Users\MELANY\OneDrive\Escritorio\pwa-gestion-ordenes-trabajo\backend\sistema-ot\target\classes started by MELANY in C:\Users\MELANY\OneDrive\Escritorio\pwa-gestion-ordenes-trabajo\backend\sistema-ot)
+2026-06-10T14:00:01.005-05:00  INFO 12056 --- [sistema-ot] [  restartedMain] c.kabj.sistema_ot.SistemaOtApplication   : No active profile set, falling back to 1 default profile: "default"
+2026-06-10T14:00:01.140-05:00  INFO 12056 --- [sistema-ot] [  restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2026-06-10T14:00:01.140-05:00  INFO 12056 --- [sistema-ot] [  restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2026-06-10T14:00:02.552-05:00  INFO 12056 --- [sistema-ot] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-06-10T14:00:02.718-05:00  INFO 12056 --- [sistema-ot] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 152 ms. Found 10 JPA repository interfaces.
+2026-06-10T14:00:04.096-05:00  INFO 12056 --- [sistema-ot] [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-06-10T14:00:04.118-05:00  INFO 12056 --- [sistema-ot] [  restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-06-10T14:00:04.118-05:00  INFO 12056 --- [sistema-ot] [  restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.54]
+2026-06-10T14:00:04.203-05:00  INFO 12056 --- [sistema-ot] [  restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-06-10T14:00:04.205-05:00  INFO 12056 --- [sistema-ot] [  restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 3063 ms
+2026-06-10T14:00:04.448-05:00  INFO 12056 --- [sistema-ot] [  restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-06-10T14:00:04.570-05:00  INFO 12056 --- [sistema-ot] [  restartedMain] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.49.Final
+2026-06-10T14:00:04.652-05:00  INFO 12056 --- [sistema-ot] [  restartedMain] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-06-10T14:00:05.238-05:00  INFO 12056 --- [sistema-ot] [  restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-06-10T14:00:05.307-05:00  INFO 12056 --- [sistema-ot] [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-06-10T14:00:05.803-05:00  INFO 12056 --- [sistema-ot] [  restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@83c7834
+2026-06-10T14:00:05.808-05:00  INFO 12056 --- [sistema-ot] [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-06-10T14:00:05.969-05:00  WARN 12056 --- [sistema-ot] [  restartedMain] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-06-10T14:00:06.032-05:00  INFO 12056 --- [sistema-ot] [  restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
 	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
 	Database driver: undefined/unknown
 	Database version: 18.4
@@ -62,438 +62,25 @@
 	Isolation level: undefined/unknown
 	Minimum pool size: undefined/unknown
 	Maximum pool size: undefined/unknown
-2026-05-17T23:44:00.714-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
-2026-05-17T23:44:00.717-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
-2026-05-17T23:44:01.042-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
-2026-05-17T23:44:02.193-05:00  WARN 29464 --- [sistema-ot] [  restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2026-05-17T23:44:03.395-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
-2026-05-17T23:44:03.452-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
-2026-05-17T23:44:03.462-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] c.kabj.sistema_ot.SistemaOtApplication   : Started SistemaOtApplication in 7.085 seconds (process running for 7.571)
-2026-05-17T23:44:31.813-05:00  INFO 29464 --- [sistema-ot] [nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
-2026-05-17T23:44:31.814-05:00  INFO 29464 --- [sistema-ot] [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
-2026-05-17T23:44:31.815-05:00  INFO 29464 --- [sistema-ot] [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
-2026-05-18T00:03:47.401-05:00  WARN 29464 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 42883
-2026-05-18T00:03:47.405-05:00 ERROR 29464 --- [sistema-ot] [nio-8080-exec-2] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: no existe la función month(timestamp without time zone)
-  Hint: Ninguna función coincide en el nombre y tipos de argumentos. Puede ser necesario agregar conversión explícita de tipos.
-  Position: 599
-2026-05-18T00:03:47.454-05:00  WARN 29464 --- [sistema-ot] [nio-8080-exec-2] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [org.springframework.dao.InvalidDataAccessResourceUsageException: JDBC exception executing SQL [select oot1_0.id_ot,oot1_0.activo,oot1_0.id_capataz,oot1_0.cerrada_at,oot1_0.created_at,oot1_0.direccion,oot1_0.distrito,oot1_0.id_estado_ot,oot1_0.estado_sincronizacion,oot1_0.estado_validacion_fotos,oot1_0.fecha_cierre,oot1_0.fecha_fin,oot1_0.fecha_inicio,oot1_0.fecha_programada,oot1_0.id_fila_importacion,oot1_0.id_jornada,oot1_0.latitud,oot1_0.longitud,oot1_0.id_lote,oot1_0.nis,oot1_0.observacion,oot1_0.id_punto_operativo,oot1_0.sector,oot1_0.sgio,oot1_0.id_subactividad,oot1_0.id_tipo_punto,oot1_0.updated_at,oot1_0.visible_en_mapa from op_orden_trabajo oot1_0 where oot1_0.activo=true and month(oot1_0.fecha_fin)=? and year(oot1_0.fecha_fin)=?] [ERROR: no existe la función month(timestamp without time zone)<EOL>  Hint: Ninguna función coincide en el nombre y tipos de argumentos. Puede ser necesario agregar conversión explícita de tipos.<EOL>  Position: 599] [n/a]; SQL [n/a]]
-2026-05-18T00:14:50.879-05:00  WARN 29464 --- [sistema-ot] [nio-8080-exec-3] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [com.kabj.sistema_ot.exception.AuthException: No autenticado]
-2026-05-18T00:16:09.818-05:00  WARN 29464 --- [sistema-ot] [nio-8080-exec-5] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [org.springframework.web.bind.MethodArgumentNotValidException: Validation failed for argument [0] in public org.springframework.http.ResponseEntity<com.kabj.sistema_ot.dto.LoginResponse> com.kabj.sistema_ot.controller.AuthController.login(com.kabj.sistema_ot.dto.LoginRequest): [Field error in object 'loginRequest' on field 'password': rejected value [bad]; codes [Size.loginRequest.password,Size.password,Size.java.lang.String,Size]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [loginRequest.password,password]; arguments []; default message [password],100,4]; default message [La contraseña debe tener entre 4 y 100 caracteres]] ]
-2026-05-18T00:16:09.872-05:00  WARN 29464 --- [sistema-ot] [io-8080-exec-10] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [com.kabj.sistema_ot.exception.AuthException: Credenciales incorrectas]
-2026-05-18T00:16:09.985-05:00  WARN 29464 --- [sistema-ot] [nio-8080-exec-4] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [com.kabj.sistema_ot.exception.AuthException: Credenciales incorrectas]
-2026-05-18T00:16:09.994-05:00  WARN 29464 --- [sistema-ot] [nio-8080-exec-9] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [com.kabj.sistema_ot.exception.AuthException: Credenciales incorrectas]
-2026-05-18T00:16:10.024-05:00  WARN 29464 --- [sistema-ot] [nio-8080-exec-7] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [org.springframework.web.bind.MethodArgumentNotValidException: Validation failed for argument [0] in public org.springframework.http.ResponseEntity<com.kabj.sistema_ot.dto.LoginResponse> com.kabj.sistema_ot.controller.AuthController.login(com.kabj.sistema_ot.dto.LoginRequest): [Field error in object 'loginRequest' on field 'password': rejected value [x]; codes [Size.loginRequest.password,Size.password,Size.java.lang.String,Size]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [loginRequest.password,password]; arguments []; default message [password],100,4]; default message [La contraseña debe tener entre 4 y 100 caracteres]] ]
-2026-05-18T00:16:10.029-05:00  WARN 29464 --- [sistema-ot] [nio-8080-exec-8] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [org.springframework.web.bind.MethodArgumentNotValidException: Validation failed for argument [0] in public org.springframework.http.ResponseEntity<com.kabj.sistema_ot.dto.LoginResponse> com.kabj.sistema_ot.controller.AuthController.login(com.kabj.sistema_ot.dto.LoginRequest): [Field error in object 'loginRequest' on field 'password': rejected value [x]; codes [Size.loginRequest.password,Size.password,Size.java.lang.String,Size]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [loginRequest.password,password]; arguments []; default message [password],100,4]; default message [La contraseña debe tener entre 4 y 100 caracteres]] ]
-2026-05-18T00:16:10.034-05:00  WARN 29464 --- [sistema-ot] [nio-8080-exec-1] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [org.springframework.web.bind.MethodArgumentNotValidException: Validation failed for argument [0] in public org.springframework.http.ResponseEntity<com.kabj.sistema_ot.dto.LoginResponse> com.kabj.sistema_ot.controller.AuthController.login(com.kabj.sistema_ot.dto.LoginRequest): [Field error in object 'loginRequest' on field 'password': rejected value [x]; codes [Size.loginRequest.password,Size.password,Size.java.lang.String,Size]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [loginRequest.password,password]; arguments []; default message [password],100,4]; default message [La contraseña debe tener entre 4 y 100 caracteres]] ]
-2026-05-18T00:16:10.039-05:00  WARN 29464 --- [sistema-ot] [nio-8080-exec-3] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [org.springframework.web.bind.MethodArgumentNotValidException: Validation failed for argument [0] in public org.springframework.http.ResponseEntity<com.kabj.sistema_ot.dto.LoginResponse> com.kabj.sistema_ot.controller.AuthController.login(com.kabj.sistema_ot.dto.LoginRequest): [Field error in object 'loginRequest' on field 'password': rejected value [x]; codes [Size.loginRequest.password,Size.password,Size.java.lang.String,Size]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [loginRequest.password,password]; arguments []; default message [password],100,4]; default message [La contraseña debe tener entre 4 y 100 caracteres]] ]
-2026-05-18T00:16:10.045-05:00  WARN 29464 --- [sistema-ot] [nio-8080-exec-6] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [org.springframework.web.bind.MethodArgumentNotValidException: Validation failed for argument [0] in public org.springframework.http.ResponseEntity<com.kabj.sistema_ot.dto.LoginResponse> com.kabj.sistema_ot.controller.AuthController.login(com.kabj.sistema_ot.dto.LoginRequest): [Field error in object 'loginRequest' on field 'password': rejected value [x]; codes [Size.loginRequest.password,Size.password,Size.java.lang.String,Size]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [loginRequest.password,password]; arguments []; default message [password],100,4]; default message [La contraseña debe tener entre 4 y 100 caracteres]] ]
-2026-05-18T00:16:10.051-05:00  WARN 29464 --- [sistema-ot] [nio-8080-exec-5] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [org.springframework.web.bind.MethodArgumentNotValidException: Validation failed for argument [0] in public org.springframework.http.ResponseEntity<com.kabj.sistema_ot.dto.LoginResponse> com.kabj.sistema_ot.controller.AuthController.login(com.kabj.sistema_ot.dto.LoginRequest): [Field error in object 'loginRequest' on field 'password': rejected value [x]; codes [Size.loginRequest.password,Size.password,Size.java.lang.String,Size]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [loginRequest.password,password]; arguments []; default message [password],100,4]; default message [La contraseña debe tener entre 4 y 100 caracteres]] ]
-2026-05-18T00:16:10.055-05:00  WARN 29464 --- [sistema-ot] [io-8080-exec-10] c.k.s.security.LoginRateLimitFilter      : Rate limit alcanzado para IP: 0:0:0:0:0:0:0:1
-2026-05-18T00:16:10.069-05:00  WARN 29464 --- [sistema-ot] [nio-8080-exec-4] c.k.s.security.LoginRateLimitFilter      : Rate limit alcanzado para IP: 0:0:0:0:0:0:0:1
-2026-05-18T00:16:10.084-05:00  WARN 29464 --- [sistema-ot] [nio-8080-exec-9] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [com.kabj.sistema_ot.exception.AuthException: No autenticado]
-2026-05-18T00:23:06.910-05:00  WARN 29464 --- [sistema-ot] [nio-8080-exec-7] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [com.kabj.sistema_ot.exception.AuthException: Credenciales incorrectas]
-2026-05-18T00:23:07.096-05:00  WARN 29464 --- [sistema-ot] [nio-8080-exec-8] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [com.kabj.sistema_ot.exception.AuthException: Credenciales incorrectas]
-2026-05-18T00:23:07.231-05:00  WARN 29464 --- [sistema-ot] [nio-8080-exec-1] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [com.kabj.sistema_ot.exception.AuthException: Credenciales incorrectas]
-2026-05-18T00:23:07.412-05:00  WARN 29464 --- [sistema-ot] [nio-8080-exec-3] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [com.kabj.sistema_ot.exception.AuthException: Credenciales incorrectas]
-2026-05-18T00:23:07.507-05:00  WARN 29464 --- [sistema-ot] [nio-8080-exec-6] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [com.kabj.sistema_ot.exception.AuthException: Credenciales incorrectas]
-2026-05-18T00:23:07.600-05:00  WARN 29464 --- [sistema-ot] [nio-8080-exec-5] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [com.kabj.sistema_ot.exception.AuthException: Credenciales incorrectas]
-2026-05-18T00:23:07.687-05:00  WARN 29464 --- [sistema-ot] [io-8080-exec-10] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [com.kabj.sistema_ot.exception.AuthException: Credenciales incorrectas]
-2026-05-18T00:23:07.793-05:00  WARN 29464 --- [sistema-ot] [nio-8080-exec-4] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [com.kabj.sistema_ot.exception.AuthException: Credenciales incorrectas]
-2026-05-18T00:24:28.772-05:00  WARN 29464 --- [sistema-ot] [nio-8080-exec-2] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [com.kabj.sistema_ot.exception.AuthException: Credenciales incorrectas]
-2026-05-18T00:28:43.140-05:00  WARN 29464 --- [sistema-ot] [nio-8080-exec-2] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [com.kabj.sistema_ot.exception.AuthException: No autenticado]
-2026-05-18T00:28:43.164-05:00  WARN 29464 --- [sistema-ot] [nio-8080-exec-7] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [com.kabj.sistema_ot.exception.AuthException: No autenticado]
-2026-05-18T00:28:43.604-05:00  WARN 29464 --- [sistema-ot] [nio-8080-exec-3] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 0, SQLState: 42883
-2026-05-18T00:28:43.604-05:00 ERROR 29464 --- [sistema-ot] [nio-8080-exec-3] o.h.engine.jdbc.spi.SqlExceptionHelper   : ERROR: no existe la función month(timestamp without time zone)
-  Hint: Ninguna función coincide en el nombre y tipos de argumentos. Puede ser necesario agregar conversión explícita de tipos.
-  Position: 599
-2026-05-18T00:28:43.607-05:00  WARN 29464 --- [sistema-ot] [nio-8080-exec-3] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [org.springframework.dao.InvalidDataAccessResourceUsageException: JDBC exception executing SQL [select oot1_0.id_ot,oot1_0.activo,oot1_0.id_capataz,oot1_0.cerrada_at,oot1_0.created_at,oot1_0.direccion,oot1_0.distrito,oot1_0.id_estado_ot,oot1_0.estado_sincronizacion,oot1_0.estado_validacion_fotos,oot1_0.fecha_cierre,oot1_0.fecha_fin,oot1_0.fecha_inicio,oot1_0.fecha_programada,oot1_0.id_fila_importacion,oot1_0.id_jornada,oot1_0.latitud,oot1_0.longitud,oot1_0.id_lote,oot1_0.nis,oot1_0.observacion,oot1_0.id_punto_operativo,oot1_0.sector,oot1_0.sgio,oot1_0.id_subactividad,oot1_0.id_tipo_punto,oot1_0.updated_at,oot1_0.visible_en_mapa from op_orden_trabajo oot1_0 where oot1_0.activo=true and month(oot1_0.fecha_fin)=? and year(oot1_0.fecha_fin)=?] [ERROR: no existe la función month(timestamp without time zone)<EOL>  Hint: Ninguna función coincide en el nombre y tipos de argumentos. Puede ser necesario agregar conversión explícita de tipos.<EOL>  Position: 599] [n/a]; SQL [n/a]]
-2026-05-18T00:28:43.642-05:00  WARN 29464 --- [sistema-ot] [io-8080-exec-10] .m.m.a.ExceptionHandlerExceptionResolver : Resolved [com.kabj.sistema_ot.exception.AuthException: No autenticado]
-2026-05-18T00:44:58.464-05:00  WARN 29464 --- [sistema-ot] [l-1:housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=13m28s123ms261µs800ns).
-2026-05-18T00:49:53.994-05:00  INFO 29464 --- [sistema-ot] [   File Watcher] rtingClassPathChangeChangedEventListener : Restarting due to 51 class path changes (0 additions, 3 deletions, 48 modifications)
-2026-05-18T00:49:54.065-05:00  INFO 29464 --- [sistema-ot] [       Thread-5] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
-2026-05-18T00:49:54.109-05:00  INFO 29464 --- [sistema-ot] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
-2026-05-18T00:49:54.168-05:00  INFO 29464 --- [sistema-ot] [       Thread-5] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
-2026-05-18T00:49:54.274-05:00  INFO 29464 --- [sistema-ot] [       Thread-5] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
-2026-05-18T00:49:54.323-05:00  INFO 29464 --- [sistema-ot] [       Thread-5] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
-
-  .   ____          _            __ _ _
- /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
-( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
- \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
-  '  |____| .__|_| |_|_| |_\__, | / / / /
- =========|_|==============|___/=/_/_/_/
-
- :: Spring Boot ::               (v3.5.14)
-
-2026-05-18T00:49:54.975-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] c.kabj.sistema_ot.SistemaOtApplication   : Starting SistemaOtApplication using Java 23.0.1 with PID 29464 (C:\Users\MELANY\OneDrive\Escritorio\pwa-gestion-ordenes-trabajo\backend\sistema-ot\target\classes started by MELANY in C:\Users\MELANY\OneDrive\Escritorio\pwa-gestion-ordenes-trabajo\backend\sistema-ot)
-2026-05-18T00:49:54.975-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] c.kabj.sistema_ot.SistemaOtApplication   : No active profile set, falling back to 1 default profile: "default"
-2026-05-18T00:49:55.584-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2026-05-18T00:49:55.661-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 76 ms. Found 10 JPA repository interfaces.
-2026-05-18T00:49:56.170-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
-2026-05-18T00:49:56.173-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
-2026-05-18T00:49:56.173-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.54]
-2026-05-18T00:49:56.221-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
-2026-05-18T00:49:56.222-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1241 ms
-2026-05-18T00:49:56.238-05:00 ERROR 29464 --- [sistema-ot] [  restartedMain] o.s.b.web.embedded.tomcat.TomcatStarter  : Error starting Tomcat context. Exception: org.springframework.beans.factory.UnsatisfiedDependencyException. Message: Error creating bean with name 'jwtFilter' defined in file [C:\Users\MELANY\OneDrive\Escritorio\pwa-gestion-ordenes-trabajo\backend\sistema-ot\target\classes\com\kabj\sistema_ot\security\JwtFilter.class]: Unsatisfied dependency expressed through constructor parameter 0: Error creating bean with name 'jwtUtil': Injection of autowired dependencies failed
-2026-05-18T00:49:56.251-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] o.apache.catalina.core.StandardService   : Stopping service [Tomcat]
-2026-05-18T00:49:56.255-05:00  WARN 29464 --- [sistema-ot] [  restartedMain] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.context.ApplicationContextException: Unable to start web server
-2026-05-18T00:49:56.281-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] .s.b.a.l.ConditionEvaluationReportLogger : 
-
-Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
-2026-05-18T00:49:56.328-05:00 ERROR 29464 --- [sistema-ot] [  restartedMain] o.s.boot.SpringApplication               : Application run failed
-
-org.springframework.context.ApplicationContextException: Unable to start web server
-	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.onRefresh(ServletWebServerApplicationContext.java:170) ~[spring-boot-3.5.14.jar:3.5.14]
-	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:622) ~[spring-context-6.2.18.jar:6.2.18]
-	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146) ~[spring-boot-3.5.14.jar:3.5.14]
-	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:752) ~[spring-boot-3.5.14.jar:3.5.14]
-	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:439) ~[spring-boot-3.5.14.jar:3.5.14]
-	at org.springframework.boot.SpringApplication.run(SpringApplication.java:318) ~[spring-boot-3.5.14.jar:3.5.14]
-	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1361) ~[spring-boot-3.5.14.jar:3.5.14]
-	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1350) ~[spring-boot-3.5.14.jar:3.5.14]
-	at com.kabj.sistema_ot.SistemaOtApplication.main(SistemaOtApplication.java:10) ~[classes/:na]
-	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103) ~[na:na]
-	at java.base/java.lang.reflect.Method.invoke(Method.java:580) ~[na:na]
-	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:50) ~[spring-boot-devtools-3.5.14.jar:3.5.14]
-Caused by: org.springframework.boot.web.server.WebServerException: Unable to start embedded Tomcat
-	at org.springframework.boot.web.embedded.tomcat.TomcatWebServer.initialize(TomcatWebServer.java:147) ~[spring-boot-3.5.14.jar:3.5.14]
-	at org.springframework.boot.web.embedded.tomcat.TomcatWebServer.<init>(TomcatWebServer.java:107) ~[spring-boot-3.5.14.jar:3.5.14]
-	at org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory.getTomcatWebServer(TomcatServletWebServerFactory.java:517) ~[spring-boot-3.5.14.jar:3.5.14]
-	at org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory.getWebServer(TomcatServletWebServerFactory.java:219) ~[spring-boot-3.5.14.jar:3.5.14]
-	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.createWebServer(ServletWebServerApplicationContext.java:193) ~[spring-boot-3.5.14.jar:3.5.14]
-	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.onRefresh(ServletWebServerApplicationContext.java:167) ~[spring-boot-3.5.14.jar:3.5.14]
-	... 11 common frames omitted
-Caused by: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'jwtFilter' defined in file [C:\Users\MELANY\OneDrive\Escritorio\pwa-gestion-ordenes-trabajo\backend\sistema-ot\target\classes\com\kabj\sistema_ot\security\JwtFilter.class]: Unsatisfied dependency expressed through constructor parameter 0: Error creating bean with name 'jwtUtil': Injection of autowired dependencies failed
-	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:804) ~[spring-beans-6.2.18.jar:6.2.18]
-	at org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:240) ~[spring-beans-6.2.18.jar:6.2.18]
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:1395) ~[spring-beans-6.2.18.jar:6.2.18]
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1232) ~[spring-beans-6.2.18.jar:6.2.18]
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:569) ~[spring-beans-6.2.18.jar:6.2.18]
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529) ~[spring-beans-6.2.18.jar:6.2.18]
-	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339) ~[spring-beans-6.2.18.jar:6.2.18]
-	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373) ~[spring-beans-6.2.18.jar:6.2.18]
-	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337) ~[spring-beans-6.2.18.jar:6.2.18]
-	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:207) ~[spring-beans-6.2.18.jar:6.2.18]
-	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.getOrderedBeansOfType(ServletContextInitializerBeans.java:230) ~[spring-boot-3.5.14.jar:3.5.14]
-	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.addAsRegistrationBean(ServletContextInitializerBeans.java:184) ~[spring-boot-3.5.14.jar:3.5.14]
-	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.addAsRegistrationBean(ServletContextInitializerBeans.java:179) ~[spring-boot-3.5.14.jar:3.5.14]
-	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.addAdaptableBeans(ServletContextInitializerBeans.java:164) ~[spring-boot-3.5.14.jar:3.5.14]
-	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.<init>(ServletContextInitializerBeans.java:96) ~[spring-boot-3.5.14.jar:3.5.14]
-	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.getServletContextInitializerBeans(ServletWebServerApplicationContext.java:271) ~[spring-boot-3.5.14.jar:3.5.14]
-	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.selfInitialize(ServletWebServerApplicationContext.java:245) ~[spring-boot-3.5.14.jar:3.5.14]
-	at org.springframework.boot.web.embedded.tomcat.TomcatStarter.onStartup(TomcatStarter.java:52) ~[spring-boot-3.5.14.jar:3.5.14]
-	at org.apache.catalina.core.StandardContext.startInternal(StandardContext.java:4452) ~[tomcat-embed-core-10.1.54.jar:10.1.54]
-	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:164) ~[tomcat-embed-core-10.1.54.jar:10.1.54]
-	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1201) ~[tomcat-embed-core-10.1.54.jar:10.1.54]
-	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1191) ~[tomcat-embed-core-10.1.54.jar:10.1.54]
-	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317) ~[na:na]
-	at org.apache.tomcat.util.threads.InlineExecutorService.execute(InlineExecutorService.java:81) ~[tomcat-embed-core-10.1.54.jar:10.1.54]
-	at java.base/java.util.concurrent.AbstractExecutorService.submit(AbstractExecutorService.java:148) ~[na:na]
-	at org.apache.catalina.core.ContainerBase.startInternal(ContainerBase.java:747) ~[tomcat-embed-core-10.1.54.jar:10.1.54]
-	at org.apache.catalina.core.StandardHost.startInternal(StandardHost.java:783) ~[tomcat-embed-core-10.1.54.jar:10.1.54]
-	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:164) ~[tomcat-embed-core-10.1.54.jar:10.1.54]
-	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1201) ~[tomcat-embed-core-10.1.54.jar:10.1.54]
-	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1191) ~[tomcat-embed-core-10.1.54.jar:10.1.54]
-	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317) ~[na:na]
-	at org.apache.tomcat.util.threads.InlineExecutorService.execute(InlineExecutorService.java:81) ~[tomcat-embed-core-10.1.54.jar:10.1.54]
-	at java.base/java.util.concurrent.AbstractExecutorService.submit(AbstractExecutorService.java:148) ~[na:na]
-	at org.apache.catalina.core.ContainerBase.startInternal(ContainerBase.java:747) ~[tomcat-embed-core-10.1.54.jar:10.1.54]
-	at org.apache.catalina.core.StandardEngine.startInternal(StandardEngine.java:201) ~[tomcat-embed-core-10.1.54.jar:10.1.54]
-	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:164) ~[tomcat-embed-core-10.1.54.jar:10.1.54]
-	at org.apache.catalina.core.StandardService.startInternal(StandardService.java:410) ~[tomcat-embed-core-10.1.54.jar:10.1.54]
-	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:164) ~[tomcat-embed-core-10.1.54.jar:10.1.54]
-	at org.apache.catalina.core.StandardServer.startInternal(StandardServer.java:868) ~[tomcat-embed-core-10.1.54.jar:10.1.54]
-	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:164) ~[tomcat-embed-core-10.1.54.jar:10.1.54]
-	at org.apache.catalina.startup.Tomcat.start(Tomcat.java:436) ~[tomcat-embed-core-10.1.54.jar:10.1.54]
-	at org.springframework.boot.web.embedded.tomcat.TomcatWebServer.initialize(TomcatWebServer.java:128) ~[spring-boot-3.5.14.jar:3.5.14]
-	... 16 common frames omitted
-Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'jwtUtil': Injection of autowired dependencies failed
-	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessProperties(AutowiredAnnotationBeanPostProcessor.java:515) ~[spring-beans-6.2.18.jar:6.2.18]
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1459) ~[spring-beans-6.2.18.jar:6.2.18]
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:606) ~[spring-beans-6.2.18.jar:6.2.18]
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529) ~[spring-beans-6.2.18.jar:6.2.18]
-	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339) ~[spring-beans-6.2.18.jar:6.2.18]
-	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373) ~[spring-beans-6.2.18.jar:6.2.18]
-	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337) ~[spring-beans-6.2.18.jar:6.2.18]
-	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202) ~[spring-beans-6.2.18.jar:6.2.18]
-	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1708) ~[spring-beans-6.2.18.jar:6.2.18]
-	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1653) ~[spring-beans-6.2.18.jar:6.2.18]
-	at org.springframework.beans.factory.support.ConstructorResolver.resolveAutowiredArgument(ConstructorResolver.java:913) ~[spring-beans-6.2.18.jar:6.2.18]
-	at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:791) ~[spring-beans-6.2.18.jar:6.2.18]
-	... 57 common frames omitted
-Caused by: org.springframework.util.PlaceholderResolutionException: Could not resolve placeholder 'jwt.secret' in value "${jwt.secret}"
-	at org.springframework.util.PlaceholderResolutionException.withValue(PlaceholderResolutionException.java:81) ~[spring-core-6.2.18.jar:6.2.18]
-	at org.springframework.util.PlaceholderParser$ParsedValue.resolve(PlaceholderParser.java:298) ~[spring-core-6.2.18.jar:6.2.18]
-	at org.springframework.util.PlaceholderParser.replacePlaceholders(PlaceholderParser.java:131) ~[spring-core-6.2.18.jar:6.2.18]
-	at org.springframework.util.PropertyPlaceholderHelper.replacePlaceholders(PropertyPlaceholderHelper.java:114) ~[spring-core-6.2.18.jar:6.2.18]
-	at org.springframework.core.env.AbstractPropertyResolver.doResolvePlaceholders(AbstractPropertyResolver.java:293) ~[spring-core-6.2.18.jar:6.2.18]
-	at org.springframework.core.env.AbstractPropertyResolver.resolveRequiredPlaceholders(AbstractPropertyResolver.java:264) ~[spring-core-6.2.18.jar:6.2.18]
-	at org.springframework.context.support.PropertySourcesPlaceholderConfigurer.lambda$processProperties$0(PropertySourcesPlaceholderConfigurer.java:186) ~[spring-context-6.2.18.jar:6.2.18]
-	at org.springframework.beans.factory.support.AbstractBeanFactory.resolveEmbeddedValue(AbstractBeanFactory.java:970) ~[spring-beans-6.2.18.jar:6.2.18]
-	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1675) ~[spring-beans-6.2.18.jar:6.2.18]
-	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1653) ~[spring-beans-6.2.18.jar:6.2.18]
-	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.resolveFieldValue(AutowiredAnnotationBeanPostProcessor.java:784) ~[spring-beans-6.2.18.jar:6.2.18]
-	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:767) ~[spring-beans-6.2.18.jar:6.2.18]
-	at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:146) ~[spring-beans-6.2.18.jar:6.2.18]
-	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessProperties(AutowiredAnnotationBeanPostProcessor.java:509) ~[spring-beans-6.2.18.jar:6.2.18]
-	... 68 common frames omitted
-
-
-  .   ____          _            __ _ _
- /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
-( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
- \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
-  '  |____| .__|_| |_|_| |_\__, | / / / /
- =========|_|==============|___/=/_/_/_/
-
- :: Spring Boot ::               (v3.5.14)
-
-2026-05-18T00:49:57.866-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] c.kabj.sistema_ot.SistemaOtApplication   : Starting SistemaOtApplication using Java 23.0.1 with PID 29464 (C:\Users\MELANY\OneDrive\Escritorio\pwa-gestion-ordenes-trabajo\backend\sistema-ot\target\classes started by MELANY in C:\Users\MELANY\OneDrive\Escritorio\pwa-gestion-ordenes-trabajo\backend\sistema-ot)
-2026-05-18T00:49:57.867-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] c.kabj.sistema_ot.SistemaOtApplication   : No active profile set, falling back to 1 default profile: "default"
-2026-05-18T00:49:58.148-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2026-05-18T00:49:58.196-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 46 ms. Found 10 JPA repository interfaces.
-2026-05-18T00:49:58.389-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
-2026-05-18T00:49:58.391-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
-2026-05-18T00:49:58.391-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.54]
-2026-05-18T00:49:58.422-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] o.a.c.c.C.[Tomcat-1].[localhost].[/]     : Initializing Spring embedded WebApplicationContext
-2026-05-18T00:49:58.422-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 553 ms
-2026-05-18T00:49:58.514-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
-2026-05-18T00:49:58.519-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
-2026-05-18T00:49:58.559-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
-2026-05-18T00:49:58.560-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Starting...
-2026-05-18T00:49:58.646-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-2 - Added connection org.postgresql.jdbc.PgConnection@5e526882
-2026-05-18T00:49:58.646-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Start completed.
-2026-05-18T00:49:58.674-05:00  WARN 29464 --- [sistema-ot] [  restartedMain] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
-2026-05-18T00:49:58.675-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
-	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-2)']
-	Database driver: undefined/unknown
-	Database version: 18.4
-	Autocommit mode: undefined/unknown
-	Isolation level: undefined/unknown
-	Minimum pool size: undefined/unknown
-	Maximum pool size: undefined/unknown
-2026-05-18T00:49:59.143-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
-2026-05-18T00:49:59.143-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
-2026-05-18T00:49:59.922-05:00  WARN 29464 --- [sistema-ot] [  restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2026-05-18T00:50:00.648-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
-2026-05-18T00:50:00.669-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
-2026-05-18T00:50:00.673-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] c.kabj.sistema_ot.SistemaOtApplication   : Started SistemaOtApplication in 2.843 seconds (process running for 3964.789)
-2026-05-18T00:50:00.692-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] .ConditionEvaluationDeltaLoggingListener : Condition evaluation unchanged
-2026-05-18T01:01:39.284-05:00  INFO 29464 --- [sistema-ot] [   File Watcher] rtingClassPathChangeChangedEventListener : Restarting due to 1 class path change (0 additions, 1 deletion, 0 modifications)
-2026-05-18T01:01:39.286-05:00  INFO 29464 --- [sistema-ot] [       Thread-7] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
-2026-05-18T01:01:39.294-05:00  INFO 29464 --- [sistema-ot] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
-2026-05-18T01:01:39.299-05:00  INFO 29464 --- [sistema-ot] [       Thread-7] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
-2026-05-18T01:01:39.302-05:00  INFO 29464 --- [sistema-ot] [       Thread-7] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Shutdown initiated...
-2026-05-18T01:01:39.309-05:00  INFO 29464 --- [sistema-ot] [       Thread-7] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Shutdown completed.
-
-  .   ____          _            __ _ _
- /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
-( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
- \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
-  '  |____| .__|_| |_|_| |_\__, | / / / /
- =========|_|==============|___/=/_/_/_/
-
- :: Spring Boot ::               (v3.5.14)
-
-2026-05-18T01:01:39.456-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] c.kabj.sistema_ot.SistemaOtApplication   : Starting SistemaOtApplication using Java 23.0.1 with PID 29464 (C:\Users\MELANY\OneDrive\Escritorio\pwa-gestion-ordenes-trabajo\backend\sistema-ot\target\classes started by MELANY in C:\Users\MELANY\OneDrive\Escritorio\pwa-gestion-ordenes-trabajo\backend\sistema-ot)
-2026-05-18T01:01:39.457-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] c.kabj.sistema_ot.SistemaOtApplication   : No active profile set, falling back to 1 default profile: "default"
-2026-05-18T01:01:40.003-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2026-05-18T01:01:40.066-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 60 ms. Found 10 JPA repository interfaces.
-2026-05-18T01:01:40.480-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
-2026-05-18T01:01:40.485-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
-2026-05-18T01:01:40.485-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.54]
-2026-05-18T01:01:40.535-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] o.a.c.c.C.[Tomcat-1].[localhost].[/]     : Initializing Spring embedded WebApplicationContext
-2026-05-18T01:01:40.535-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1074 ms
-2026-05-18T01:01:40.734-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
-2026-05-18T01:01:40.747-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
-2026-05-18T01:01:40.781-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
-2026-05-18T01:01:40.783-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-3 - Starting...
-2026-05-18T01:01:40.937-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-3 - Added connection org.postgresql.jdbc.PgConnection@6a341912
-2026-05-18T01:01:40.937-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-3 - Start completed.
-2026-05-18T01:01:40.957-05:00  WARN 29464 --- [sistema-ot] [  restartedMain] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
-2026-05-18T01:01:40.959-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
-	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-3)']
-	Database driver: undefined/unknown
-	Database version: 18.4
-	Autocommit mode: undefined/unknown
-	Isolation level: undefined/unknown
-	Minimum pool size: undefined/unknown
-	Maximum pool size: undefined/unknown
-2026-05-18T01:01:41.713-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
-2026-05-18T01:01:41.714-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
-2026-05-18T01:01:42.524-05:00  WARN 29464 --- [sistema-ot] [  restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2026-05-18T01:01:43.319-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
-2026-05-18T01:01:43.352-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
-2026-05-18T01:01:43.358-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] c.kabj.sistema_ot.SistemaOtApplication   : Started SistemaOtApplication in 3.955 seconds (process running for 4667.474)
-2026-05-18T01:01:43.384-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] .ConditionEvaluationDeltaLoggingListener : Condition evaluation unchanged
-2026-05-18T01:01:47.953-05:00  INFO 29464 --- [sistema-ot] [   File Watcher] rtingClassPathChangeChangedEventListener : Restarting due to 22 class path changes (0 additions, 22 deletions, 0 modifications)
-2026-05-18T01:01:47.992-05:00  INFO 29464 --- [sistema-ot] [      Thread-14] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
-2026-05-18T01:01:48.060-05:00  INFO 29464 --- [sistema-ot] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
-2026-05-18T01:01:48.066-05:00  INFO 29464 --- [sistema-ot] [      Thread-14] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
-2026-05-18T01:01:48.068-05:00  INFO 29464 --- [sistema-ot] [      Thread-14] com.zaxxer.hikari.HikariDataSource       : HikariPool-3 - Shutdown initiated...
-2026-05-18T01:01:48.085-05:00  INFO 29464 --- [sistema-ot] [      Thread-14] com.zaxxer.hikari.HikariDataSource       : HikariPool-3 - Shutdown completed.
-
-  .   ____          _            __ _ _
- /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
-( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
- \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
-  '  |____| .__|_| |_|_| |_\__, | / / / /
- =========|_|==============|___/=/_/_/_/
-
- :: Spring Boot ::               (v3.5.14)
-
-2026-05-18T01:01:48.301-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] c.kabj.sistema_ot.SistemaOtApplication   : Starting SistemaOtApplication using Java 23.0.1 with PID 29464 (C:\Users\MELANY\OneDrive\Escritorio\pwa-gestion-ordenes-trabajo\backend\sistema-ot\target\classes started by MELANY in C:\Users\MELANY\OneDrive\Escritorio\pwa-gestion-ordenes-trabajo\backend\sistema-ot)
-2026-05-18T01:01:48.302-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] c.kabj.sistema_ot.SistemaOtApplication   : No active profile set, falling back to 1 default profile: "default"
-2026-05-18T01:01:49.104-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2026-05-18T01:01:49.183-05:00  WARN 29464 --- [sistema-ot] [  restartedMain] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: java.lang.NoClassDefFoundError: com/kabj/sistema_ot/entity/Usuario
-2026-05-18T01:01:49.206-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] .s.b.a.l.ConditionEvaluationReportLogger : 
-
-Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
-2026-05-18T01:01:49.228-05:00 ERROR 29464 --- [sistema-ot] [  restartedMain] o.s.boot.SpringApplication               : Application run failed
-
-java.lang.NoClassDefFoundError: com/kabj/sistema_ot/entity/Usuario
-	at java.base/java.lang.Class.getDeclaredMethods0(Native Method) ~[na:na]
-	at java.base/java.lang.Class.privateGetDeclaredMethods(Class.java:3650) ~[na:na]
-	at java.base/java.lang.Class.privateGetPublicMethods(Class.java:3675) ~[na:na]
-	at java.base/java.lang.Class.getMethods(Class.java:2244) ~[na:na]
-	at org.springframework.data.util.ReactiveWrappers.usesReactiveType(ReactiveWrappers.java:141) ~[spring-data-commons-3.5.11.jar:3.5.11]
-	at org.springframework.data.repository.core.support.AbstractRepositoryMetadata.isReactiveRepository(AbstractRepositoryMetadata.java:135) ~[spring-data-commons-3.5.11.jar:3.5.11]
-	at org.springframework.data.repository.config.RepositoryConfigurationExtensionSupport.useRepositoryConfiguration(RepositoryConfigurationExtensionSupport.java:344) ~[spring-data-commons-3.5.11.jar:3.5.11]
-	at org.springframework.data.repository.config.RepositoryConfigurationExtensionSupport.getRepositoryConfigurations(RepositoryConfigurationExtensionSupport.java:98) ~[spring-data-commons-3.5.11.jar:3.5.11]
-	at org.springframework.data.repository.config.RepositoryConfigurationDelegate.registerRepositoriesIn(RepositoryConfigurationDelegate.java:170) ~[spring-data-commons-3.5.11.jar:3.5.11]
-	at org.springframework.boot.autoconfigure.data.AbstractRepositoryConfigurationSourceSupport.registerBeanDefinitions(AbstractRepositoryConfigurationSourceSupport.java:62) ~[spring-boot-autoconfigure-3.5.14.jar:3.5.14]
-	at org.springframework.context.annotation.ConfigurationClassBeanDefinitionReader.lambda$loadBeanDefinitionsFromRegistrars$1(ConfigurationClassBeanDefinitionReader.java:409) ~[spring-context-6.2.18.jar:6.2.18]
-	at java.base/java.util.LinkedHashMap.forEach(LinkedHashMap.java:987) ~[na:na]
-	at org.springframework.context.annotation.ConfigurationClassBeanDefinitionReader.loadBeanDefinitionsFromRegistrars(ConfigurationClassBeanDefinitionReader.java:408) ~[spring-context-6.2.18.jar:6.2.18]
-	at org.springframework.context.annotation.ConfigurationClassBeanDefinitionReader.loadBeanDefinitionsForConfigurationClass(ConfigurationClassBeanDefinitionReader.java:148) ~[spring-context-6.2.18.jar:6.2.18]
-	at org.springframework.context.annotation.ConfigurationClassBeanDefinitionReader.loadBeanDefinitions(ConfigurationClassBeanDefinitionReader.java:120) ~[spring-context-6.2.18.jar:6.2.18]
-	at org.springframework.context.annotation.ConfigurationClassPostProcessor.processConfigBeanDefinitions(ConfigurationClassPostProcessor.java:430) ~[spring-context-6.2.18.jar:6.2.18]
-	at org.springframework.context.annotation.ConfigurationClassPostProcessor.postProcessBeanDefinitionRegistry(ConfigurationClassPostProcessor.java:290) ~[spring-context-6.2.18.jar:6.2.18]
-	at org.springframework.context.support.PostProcessorRegistrationDelegate.invokeBeanDefinitionRegistryPostProcessors(PostProcessorRegistrationDelegate.java:349) ~[spring-context-6.2.18.jar:6.2.18]
-	at org.springframework.context.support.PostProcessorRegistrationDelegate.invokeBeanFactoryPostProcessors(PostProcessorRegistrationDelegate.java:118) ~[spring-context-6.2.18.jar:6.2.18]
-	at org.springframework.context.support.AbstractApplicationContext.invokeBeanFactoryPostProcessors(AbstractApplicationContext.java:792) ~[spring-context-6.2.18.jar:6.2.18]
-	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:610) ~[spring-context-6.2.18.jar:6.2.18]
-	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146) ~[spring-boot-3.5.14.jar:3.5.14]
-	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:752) ~[spring-boot-3.5.14.jar:3.5.14]
-	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:439) ~[spring-boot-3.5.14.jar:3.5.14]
-	at org.springframework.boot.SpringApplication.run(SpringApplication.java:318) ~[spring-boot-3.5.14.jar:3.5.14]
-	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1361) ~[spring-boot-3.5.14.jar:3.5.14]
-	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1350) ~[spring-boot-3.5.14.jar:3.5.14]
-	at com.kabj.sistema_ot.SistemaOtApplication.main(SistemaOtApplication.java:10) ~[classes/:na]
-	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103) ~[na:na]
-	at java.base/java.lang.reflect.Method.invoke(Method.java:580) ~[na:na]
-	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:50) ~[spring-boot-devtools-3.5.14.jar:3.5.14]
-Caused by: java.lang.ClassNotFoundException: com.kabj.sistema_ot.entity.Usuario
-	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClass(BuiltinClassLoader.java:641) ~[na:na]
-	at java.base/jdk.internal.loader.ClassLoaders$AppClassLoader.loadClass(ClassLoaders.java:188) ~[na:na]
-	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:528) ~[na:na]
-	at java.base/java.lang.Class.forName0(Native Method) ~[na:na]
-	at java.base/java.lang.Class.forName(Class.java:578) ~[na:na]
-	at java.base/java.lang.Class.forName(Class.java:557) ~[na:na]
-	at org.springframework.boot.devtools.restart.classloader.RestartClassLoader.loadClass(RestartClassLoader.java:121) ~[spring-boot-devtools-3.5.14.jar:3.5.14]
-	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:528) ~[na:na]
-	... 31 common frames omitted
-
-Exception in thread "restartedMain" java.lang.reflect.InvocationTargetException
-	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:118)
-	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
-	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:50)
-Caused by: java.lang.IllegalStateException: java.lang.NoClassDefFoundError: com/kabj/sistema_ot/entity/Usuario
-	at org.springframework.boot.SpringApplication.handleRunFailure(SpringApplication.java:823)
-	at org.springframework.boot.SpringApplication.run(SpringApplication.java:328)
-	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1361)
-	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1350)
-	at com.kabj.sistema_ot.SistemaOtApplication.main(SistemaOtApplication.java:10)
-	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
-	... 2 more
-Caused by: java.lang.NoClassDefFoundError: com/kabj/sistema_ot/entity/Usuario
-	at java.base/java.lang.Class.getDeclaredMethods0(Native Method)
-	at java.base/java.lang.Class.privateGetDeclaredMethods(Class.java:3650)
-	at java.base/java.lang.Class.privateGetPublicMethods(Class.java:3675)
-	at java.base/java.lang.Class.getMethods(Class.java:2244)
-	at org.springframework.data.util.ReactiveWrappers.usesReactiveType(ReactiveWrappers.java:141)
-	at org.springframework.data.repository.core.support.AbstractRepositoryMetadata.isReactiveRepository(AbstractRepositoryMetadata.java:135)
-	at org.springframework.data.repository.config.RepositoryConfigurationExtensionSupport.useRepositoryConfiguration(RepositoryConfigurationExtensionSupport.java:344)
-	at org.springframework.data.repository.config.RepositoryConfigurationExtensionSupport.getRepositoryConfigurations(RepositoryConfigurationExtensionSupport.java:98)
-	at org.springframework.data.repository.config.RepositoryConfigurationDelegate.registerRepositoriesIn(RepositoryConfigurationDelegate.java:170)
-	at org.springframework.boot.autoconfigure.data.AbstractRepositoryConfigurationSourceSupport.registerBeanDefinitions(AbstractRepositoryConfigurationSourceSupport.java:62)
-	at org.springframework.context.annotation.ConfigurationClassBeanDefinitionReader.lambda$loadBeanDefinitionsFromRegistrars$1(ConfigurationClassBeanDefinitionReader.java:409)
-	at java.base/java.util.LinkedHashMap.forEach(LinkedHashMap.java:987)
-	at org.springframework.context.annotation.ConfigurationClassBeanDefinitionReader.loadBeanDefinitionsFromRegistrars(ConfigurationClassBeanDefinitionReader.java:408)
-	at org.springframework.context.annotation.ConfigurationClassBeanDefinitionReader.loadBeanDefinitionsForConfigurationClass(ConfigurationClassBeanDefinitionReader.java:148)
-	at org.springframework.context.annotation.ConfigurationClassBeanDefinitionReader.loadBeanDefinitions(ConfigurationClassBeanDefinitionReader.java:120)
-	at org.springframework.context.annotation.ConfigurationClassPostProcessor.processConfigBeanDefinitions(ConfigurationClassPostProcessor.java:430)
-	at org.springframework.context.annotation.ConfigurationClassPostProcessor.postProcessBeanDefinitionRegistry(ConfigurationClassPostProcessor.java:290)
-	at org.springframework.context.support.PostProcessorRegistrationDelegate.invokeBeanDefinitionRegistryPostProcessors(PostProcessorRegistrationDelegate.java:349)
-	at org.springframework.context.support.PostProcessorRegistrationDelegate.invokeBeanFactoryPostProcessors(PostProcessorRegistrationDelegate.java:118)
-	at org.springframework.context.support.AbstractApplicationContext.invokeBeanFactoryPostProcessors(AbstractApplicationContext.java:792)
-	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:610)
-	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146)
-	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:752)
-	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:439)
-	at org.springframework.boot.SpringApplication.run(SpringApplication.java:318)
-	... 6 more
-Caused by: java.lang.ClassNotFoundException: com.kabj.sistema_ot.entity.Usuario
-	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClass(BuiltinClassLoader.java:641)
-	at java.base/jdk.internal.loader.ClassLoaders$AppClassLoader.loadClass(ClassLoaders.java:188)
-	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:528)
-	at java.base/java.lang.Class.forName0(Native Method)
-	at java.base/java.lang.Class.forName(Class.java:578)
-	at java.base/java.lang.Class.forName(Class.java:557)
-	at org.springframework.boot.devtools.restart.classloader.RestartClassLoader.loadClass(RestartClassLoader.java:121)
-	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:528)
-	... 31 more
-
-  .   ____          _            __ _ _
- /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
-( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
- \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
-  '  |____| .__|_| |_|_| |_\__, | / / / /
- =========|_|==============|___/=/_/_/_/
-
- :: Spring Boot ::               (v3.5.14)
-
-2026-05-18T01:01:56.675-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] c.kabj.sistema_ot.SistemaOtApplication   : Starting SistemaOtApplication using Java 23.0.1 with PID 29464 (C:\Users\MELANY\OneDrive\Escritorio\pwa-gestion-ordenes-trabajo\backend\sistema-ot\target\classes started by MELANY in C:\Users\MELANY\OneDrive\Escritorio\pwa-gestion-ordenes-trabajo\backend\sistema-ot)
-2026-05-18T01:01:56.676-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] c.kabj.sistema_ot.SistemaOtApplication   : No active profile set, falling back to 1 default profile: "default"
-2026-05-18T01:01:57.143-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2026-05-18T01:01:57.210-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 64 ms. Found 10 JPA repository interfaces.
-2026-05-18T01:01:57.480-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
-2026-05-18T01:01:57.483-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
-2026-05-18T01:01:57.484-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.54]
-2026-05-18T01:01:57.513-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] o.a.c.c.C.[Tomcat-1].[localhost].[/]     : Initializing Spring embedded WebApplicationContext
-2026-05-18T01:01:57.513-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 836 ms
-2026-05-18T01:01:57.602-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
-2026-05-18T01:01:57.607-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
-2026-05-18T01:01:57.621-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
-2026-05-18T01:01:57.622-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-4 - Starting...
-2026-05-18T01:01:57.722-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-4 - Added connection org.postgresql.jdbc.PgConnection@55c8d04e
-2026-05-18T01:01:57.722-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-4 - Start completed.
-2026-05-18T01:01:57.740-05:00  WARN 29464 --- [sistema-ot] [  restartedMain] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
-2026-05-18T01:01:57.742-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
-	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-4)']
-	Database driver: undefined/unknown
-	Database version: 18.4
-	Autocommit mode: undefined/unknown
-	Isolation level: undefined/unknown
-	Minimum pool size: undefined/unknown
-	Maximum pool size: undefined/unknown
-2026-05-18T01:01:58.302-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
-2026-05-18T01:01:58.302-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
-2026-05-18T01:01:59.129-05:00  WARN 29464 --- [sistema-ot] [  restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2026-05-18T01:01:59.707-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
-2026-05-18T01:01:59.730-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
-2026-05-18T01:01:59.737-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] c.kabj.sistema_ot.SistemaOtApplication   : Started SistemaOtApplication in 3.104 seconds (process running for 4683.852)
-2026-05-18T01:01:59.756-05:00  INFO 29464 --- [sistema-ot] [  restartedMain] .ConditionEvaluationDeltaLoggingListener : Condition evaluation unchanged
+2026-06-10T14:00:09.195-05:00  INFO 12056 --- [sistema-ot] [  restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-06-10T14:00:09.207-05:00  INFO 12056 --- [sistema-ot] [  restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-06-10T14:00:10.009-05:00  INFO 12056 --- [sistema-ot] [  restartedMain] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-06-10T14:00:12.882-05:00  WARN 12056 --- [sistema-ot] [  restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-06-10T14:00:14.312-05:00  INFO 12056 --- [sistema-ot] [  restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2026-06-10T14:00:14.368-05:00  INFO 12056 --- [sistema-ot] [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2026-06-10T14:00:14.384-05:00  INFO 12056 --- [sistema-ot] [  restartedMain] c.kabj.sistema_ot.SistemaOtApplication   : Started SistemaOtApplication in 14.388 seconds (process running for 15.332)
+2026-06-10T14:00:57.255-05:00  INFO 12056 --- [sistema-ot] [nio-8080-exec-4] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-06-10T14:00:57.256-05:00  INFO 12056 --- [sistema-ot] [nio-8080-exec-4] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-06-10T14:00:57.259-05:00  INFO 12056 --- [sistema-ot] [nio-8080-exec-4] o.s.web.servlet.DispatcherServlet        : Completed initialization in 3 ms
+^C¨Desea terminar el trabajo por lotes (S/N)? 
+2026-06-10T14:18:22.841-05:00  INFO 12056 --- [sistema-ot] [ionShutdownHook] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2026-06-10T14:18:22.874-05:00  INFO 12056 --- [sistema-ot] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2026-06-10T14:18:22.905-05:00  INFO 12056 --- [sistema-ot] [ionShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-06-10T14:18:22.932-05:00  INFO 12056 --- [sistema-ot] [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2026-06-10T14:18:22.960-05:00  INFO 12056 --- [sistema-ot] [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
 [INFO] ------------------------------------------------------------------------
-[INFO] BUILD FAILURE
+[INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time:  01:18 h
-[INFO] Finished at: 2026-05-18T01:02:12-05:00
+[INFO] Total time:  18:30 min
+[INFO] Finished at: 2026-06-10T14:18:23-05:00
 [INFO] ------------------------------------------------------------------------
-[ERROR] Failed to execute goal org.springframework.boot:spring-boot-maven-plugin:3.5.14:run (default-cli) on project sistema-ot: Process terminated with exit code: -1 -> [Help 1]
-[ERROR] 
-[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
-[ERROR] Re-run Maven using the -X switch to enable full debug logging.
-[ERROR] 
-[ERROR] For more information about the errors and possible solutions, please read the following articles:
-[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoExecutionException
