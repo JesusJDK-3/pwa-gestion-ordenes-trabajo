@@ -50,6 +50,40 @@ public class OrdenTrabajoController {
         }
     }
 
+    /**
+     * Endpoint para que Admin cargue el Excel de VPA
+     * POST /api/admin/vpa/carga-excel
+     */
+    @PostMapping("/admin/vpa/carga-excel")
+    public ResponseEntity<ApiResponse<Map<String, Object>>> cargarVpaExcel(
+            @RequestParam("file") MultipartFile file) {
+        try {
+            Map<String, Object> resultado = excelCargaService.cargarVpaExcel(file);
+            return ResponseEntity.ok(new ApiResponse<>(true,
+                    resultado.get("message").toString(), resultado));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest()
+                    .body(new ApiResponse<>(false, "Error al procesar Excel VPA: " + e.getMessage(), null));
+        }
+    }
+
+    /**
+     * Endpoint para que Admin cargue el Excel de Hidrantes
+     * POST /api/admin/hidrantes/carga-excel
+     */
+    @PostMapping("/admin/hidrantes/carga-excel")
+    public ResponseEntity<ApiResponse<Map<String, Object>>> cargarHidranteExcel(
+            @RequestParam("file") MultipartFile file) {
+        try {
+            Map<String, Object> resultado = excelCargaService.cargarHidranteExcel(file);
+            return ResponseEntity.ok(new ApiResponse<>(true,
+                    resultado.get("message").toString(), resultado));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest()
+                    .body(new ApiResponse<>(false, "Error al procesar Excel Hidrantes: " + e.getMessage(), null));
+        }
+    }
+
     @GetMapping("/ordenes/{id}")
     public ResponseEntity<OrdenTrabajoResponse> detalle(@PathVariable Long id) {
         return ResponseEntity.ok(ordenService.detalle(id));

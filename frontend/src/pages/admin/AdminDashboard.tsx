@@ -5,16 +5,18 @@ import type { OrdenTrabajo } from '../../types'
 import {
   Activity, BarChart2, ClipboardList, Download,
   Loader2, Users, Briefcase, CheckCircle2, RefreshCw,
-  Calendar, AlertTriangle, Eye,
+  Calendar, AlertTriangle, Eye, Upload,
 } from 'lucide-react'
+import CargarDatosGeograficos from './CargarDatosGeograficos'
 
-type Tab = 'actividades' | 'diario' | 'mensual' | 'auditoria'
+type Tab = 'actividades' | 'diario' | 'mensual' | 'auditoria' | 'cargar'
 
 const TABS: { id: Tab; label: string; icon: typeof Activity }[] = [
-  { id: 'actividades', label: 'Órdenes',       icon: Activity      },
-  { id: 'diario',      label: 'Reporte diario', icon: BarChart2     },
-  { id: 'mensual',     label: 'Mensual',        icon: Calendar      },
-  { id: 'auditoria',   label: 'Auditoría',      icon: ClipboardList },
+  { id: 'actividades', label: 'Órdenes',           icon: Activity      },
+  { id: 'cargar',      label: 'Cargar Datos',      icon: Upload        },
+  { id: 'diario',      label: 'Reporte diario',    icon: BarChart2     },
+  { id: 'mensual',     label: 'Mensual',           icon: Calendar      },
+  { id: 'auditoria',   label: 'Auditoría',         icon: ClipboardList },
 ]
 
 interface AuditoriaStats {
@@ -323,6 +325,11 @@ export default function AdminDashboard() {
             </div>
           </div>
         </div>
+      )}
+
+      {/* ── Cargar Datos Geográficos ────────────────────────────────── */}
+      {tab === 'cargar' && (
+        <CargarDatosGeograficos />
       )}
     </div>
   )

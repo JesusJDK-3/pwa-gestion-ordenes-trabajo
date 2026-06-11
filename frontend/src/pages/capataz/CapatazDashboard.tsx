@@ -1,20 +1,27 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { puntoService } from '../../services/api'
+import { puntoService, puntoExtraService } from '../../services/api'
 import { useOfflineSync } from '../../hooks/useOfflineSync'
 import type { OrdenTrabajo } from '../../types'
 import { Clock3, CheckCircle2, AlertCircle, Map, WifiOff, ArrowRight } from 'lucide-react'
 
 export default function CapatazDashboard() {
   const [ordenes,  setOrdenes]  = useState<OrdenTrabajo[]>([])
+  const [completadasCount, setCompletadasCount] = useState(0)
   const [loading, setLoading] = useState(true)
   const { isOnline, pendingCount } = useOfflineSync()
 
   useEffect(() => {
-    puntoService.misPuntos()
-      .then(r => {
-        const data = (r.data as any)
+    setLoading(true)
+    // Solicitar puntos activos y también el historial de completadas para mostrar el contador
+    Promise.all([puntoService.misPuntos(), puntoExtraService.misCompletadas()])
+      .then(([r1, r2]) => {
+        const data = (r1.data as any)
         setOrdenes(Array.isArray(data) ? data : (data?.data ?? []))
+
+        const d2 = (r2.data as any)
+        const arr = Array.isArray(d2) ? d2 : (d2?.data ?? [])
+        setCompletadasCount(Array.isArray(arr) ? arr.length : 0)
       })
       .finally(() => setLoading(false))
   }, [])
@@ -28,7 +35,7 @@ export default function CapatazDashboard() {
   const stats = [
     { label: 'Pendientes',  value: pendientes.length,  icon: Clock3,        bg: 'bg-gray-50',    text: 'text-gray-700',    icon_c: 'text-gray-400' },
     { label: 'En progreso', value: enProgreso.length,  icon: AlertCircle,   bg: 'bg-orange-50',  text: 'text-orange-700',  icon_c: 'text-orange-500' },
-    { label: 'Completados', value: completados.length, icon: CheckCircle2,  bg: 'bg-emerald-50', text: 'text-emerald-700', icon_c: 'text-emerald-500' },
+    { label: 'Completados', value: completadasCount || completados.length, icon: CheckCircle2,  bg: 'bg-emerald-50', text: 'text-emerald-700', icon_c: 'text-emerald-500' },
   ]
 
   return (

@@ -82,8 +82,6 @@ export default function AsignarPuntos() {
     }
   }
 
-  const selectClass = 'border border-gray-200 rounded-xl px-3 py-2.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#CC1111]/20 focus:border-[#CC1111] transition-all'
-
   // Contadores rápidos para los filtros
   const conteo: Record<string, number> = {}
   for (const ot of todas) {

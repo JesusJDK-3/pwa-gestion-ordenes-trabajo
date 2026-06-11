@@ -41,9 +41,26 @@ public class OpOrdenTrabajo {
     @Column(length = 30)
     private String nis;
 
+    @Column(length = 50)
+    private String hia;
+
+    @Column(length = 50)
+    private String vca;
+
+    @Column(length = 50)
+    private String suministro;
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_capataz", nullable = false)
+    @JoinColumn(name = "id_capataz", nullable = true)
     private RrhhCapataz capataz;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_cuadrilla")
+    private OpCuadrilla cuadrilla;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_asistente")
+    private RrhhTrabajador asistente;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_jornada")
@@ -66,6 +83,9 @@ public class OpOrdenTrabajo {
     private LocalDate fechaCierre;
 
     private String direccion;
+
+    @Column(length = 100)
+    private String localidad;
 
     @Column(length = 100)
     private String distrito;

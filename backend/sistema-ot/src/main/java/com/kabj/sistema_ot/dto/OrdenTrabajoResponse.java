@@ -26,6 +26,8 @@ public class OrdenTrabajoResponse {
     private LocalDateTime fechaFin;
     private String capatazNombre;
     private Long capatazId;
+    private String cuadrillaNombre;
+    private String asistenteNombre;
     private String estadoSincronizacion;
     private String observacion;
     private LocalDateTime createdAt;
@@ -55,6 +57,13 @@ public class OrdenTrabajoResponse {
                 r.setCapatazNombre(ot.getCapataz().getTrabajador().getNombres()
                         + " " + ot.getCapataz().getTrabajador().getApellidos());
             }
+        }
+        if (ot.getCuadrilla() != null) {
+            r.setCuadrillaNombre(ot.getCuadrilla().getNombre());
+        }
+        if (ot.getAsistente() != null) {
+            r.setAsistenteNombre(ot.getAsistente().getNombres()
+                    + " " + ot.getAsistente().getApellidos());
         }
         r.setEstadoSincronizacion(ot.getEstadoSincronizacion());
         r.setObservacion(ot.getObservacion());

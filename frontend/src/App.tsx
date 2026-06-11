@@ -8,7 +8,7 @@ import { useAuth } from './context/AuthContext'
 function SmartRedirect() {
   const { isAuthenticated, user } = useAuth()
   if (!isAuthenticated || !user) return <Navigate to="/login" replace />
-  if (user.rol === 'capataz')    return <Navigate to="/dashboard"  replace />
+  if (user.rol === 'capataz')    return <Navigate to="/capataz" replace />
   if (user.rol === 'supervisor') return <Navigate to="/supervisor" replace />
   return <Navigate to="/admin" replace />
 }
@@ -25,6 +25,7 @@ import AdminDashboard     from './pages/admin/AdminDashboard'
 import CapatazDashboard   from './pages/capataz/CapatazDashboard'
 import MapaPuntos         from './pages/capataz/MapaPuntos'
 import FormularioActividad from './pages/capataz/FormularioActividad'
+import AyudantesPage      from './pages/capataz/AyudantesPage'
 
 // ── KABJ field-tech interface ──────────────────────────────────
 import DashboardPage  from './pages/kabj/DashboardPage'
@@ -35,15 +36,7 @@ import HistorialPage  from './pages/kabj/HistorialPage'
 const router = createBrowserRouter([
   { path: '/login', element: <LoginPage /> },
 
-  // ── KABJ field-tech routes (own Navbar, no sidebar) ────────
-  {
-    path: '/dashboard',
-    element: (
-      <PrivateRoute roles={['capataz']}>
-        <DashboardPage />
-      </PrivateRoute>
-    ),
-  },
+  // ── KABJ field-tech routes (special pages) ────────────────
   {
     path: '/actividad/:id',
     element: (
@@ -108,8 +101,16 @@ const router = createBrowserRouter([
         element: <PrivateRoute roles={['capataz']}><MapaPuntos /></PrivateRoute>,
       },
       {
+        path: 'dashboard',
+        element: <PrivateRoute roles={['capataz']}><DashboardPage /></PrivateRoute>,
+      },
+      {
         path: 'capataz/registrar/:puntoId',
         element: <PrivateRoute roles={['capataz']}><FormularioActividad /></PrivateRoute>,
+      },
+      {
+        path: 'capataz/ayudantes',
+        element: <PrivateRoute roles={['capataz']}><AyudantesPage /></PrivateRoute>,
       },
 
       // Admin
