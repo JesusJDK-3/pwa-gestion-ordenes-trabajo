@@ -5,11 +5,20 @@ frontend/.env
 frontend/.env.local
 
 # ─── BACKEND ────────────────────────────
-backend/target/
+backend/sistema-ot/target/
 backend/.env
 
-# ─── IDE / OS ────────────────────────────
-.vscode/settings.json
+# ─── ROOT (no dependencias en raíz) ───
+node_modules/
+package-lock.json
+
+# ─── LOGS Y RUNTIME ─────────────────────
+*.log
+*.pid
+backend-err.log
+frontend-err.log
+
+# ─── IDE / OS ───────────────────────────
 .idea/
 *.iml
 .DS_Store

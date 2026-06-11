@@ -31,12 +31,12 @@ CREATE TABLE op_ot_acompanante (
     activo              BOOLEAN      NOT NULL DEFAULT TRUE,
     created_at          TIMESTAMP    NOT NULL DEFAULT NOW(),
     updated_at          TIMESTAMP    NOT NULL DEFAULT NOW(),
-    -- Índices
-    UNIQUE (id_ot, id_trabajador) WHERE id_trabajador IS NOT NULL,
-    -- Un trabajador no puede aparecer dos veces en la misma OT
     CHECK (id_trabajador IS NOT NULL OR dni IS NOT NULL)
-    -- O bien tiene FK a trabajador, o bien un DNI para crear nuevo
 );
+
+CREATE UNIQUE INDEX uq_ot_acompanante_trabajador
+    ON op_ot_acompanante(id_ot, id_trabajador)
+    WHERE id_trabajador IS NOT NULL;
 
 CREATE INDEX idx_ot_acompanante_ot        ON op_ot_acompanante(id_ot);
 CREATE INDEX idx_ot_acompanante_trabajador ON op_ot_acompanante(id_trabajador);
