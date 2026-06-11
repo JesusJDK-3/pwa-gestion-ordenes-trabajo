@@ -38,4 +38,17 @@ public interface OpOrdenTrabajoRepository extends JpaRepository<OpOrdenTrabajo, 
 
     @Query("SELECT COUNT(ot) FROM OpOrdenTrabajo ot WHERE ot.capataz = :capataz AND ot.estadoOt.codigo = :estado AND ot.activo = true")
     long countByCapatazAndEstado(@Param("capataz") RrhhCapataz capataz, @Param("estado") String estado);
+
+    @Query("""
+            SELECT ot FROM OpOrdenTrabajo ot
+            WHERE ot.activo = true
+            AND ot.estadoOt.codigo NOT IN ('COMPLETADA', 'ANULADA')
+            AND (
+                ot.latitud IS NULL OR ot.longitud IS NULL
+                OR ot.visibleEnMapa = false
+                OR (ot.filaImportacion IS NOT NULL AND ot.filaImportacion.requiereCoordenadaManual = true)
+            )
+            ORDER BY ot.createdAt DESC
+            """)
+    List<OpOrdenTrabajo> findConCoordenadasPendientes();
 }

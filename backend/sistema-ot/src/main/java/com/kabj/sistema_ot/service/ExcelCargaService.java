@@ -2,6 +2,7 @@ package com.kabj.sistema_ot.service;
 
 import com.kabj.sistema_ot.entity.*;
 import com.kabj.sistema_ot.repository.*;
+import com.kabj.sistema_ot.util.CoordenadaValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.*;
@@ -33,6 +34,13 @@ public class ExcelCargaService {
     private final UsuarioRepository usuarioRepo;
     private final GisVpaRepository vpaRepo;
     private final GisHidranteRepository hidranteRepo;
+
+    private static final class CoordenadaStats {
+        int invalidas = 0;
+        int validas = 0;
+        int revisar = 0;
+        final List<Map<String, String>> detalle = new ArrayList<>();
+    }
 
     // ─────────────────────────────────────────────────────────────────────────
     // CARGA VPA
@@ -186,6 +194,7 @@ public class ExcelCargaService {
 
         int creadas = 0, duplicadas = 0, errores = 0;
         List<String> erroresList = new ArrayList<>();
+        CoordenadaStats coordStats = new CoordenadaStats();
 
         try (Workbook wb = WorkbookFactory.create(file.getInputStream())) {
             Sheet sheet = wb.getSheetAt(0);
@@ -216,9 +225,9 @@ public class ExcelCargaService {
                 }
                 try {
                     if (isMnttoPrevVpa) {
-                        guardarOtFilaPreventivoVpa(row, rowIdx, estadoPendiente, tipoDefault, headerIndex, lote);
+                        guardarOtFilaPreventivoVpa(row, rowIdx, estadoPendiente, tipoDefault, headerIndex, lote, coordStats);
                     } else {
-                        guardarOtFila(sgio, row, rowIdx, estadoPendiente, subDefault, tipoDefault, lote);
+                        guardarOtFila(sgio, row, rowIdx, estadoPendiente, subDefault, tipoDefault, lote, headerIndex, coordStats);
                     }
                     creadas++;
                 } catch (Exception e) {
@@ -237,12 +246,20 @@ public class ExcelCargaService {
         lote.setUpdatedAt(LocalDateTime.now());
         loteRepo.save(lote);
 
+        String msg = "Carga completada: " + creadas + " OTs creadas";
+        if (coordStats.invalidas > 0) {
+            msg += ". " + coordStats.invalidas + " con coordenadas inválidas (corregir en el sistema)";
+        }
         return Map.of(
-                "message", "Carga completada: " + creadas + " OTs creadas",
+                "message", msg,
                 "creadas", creadas,
                 "duplicadas", duplicadas,
                 "errores", errores,
-                "detalle", erroresList
+                "detalle", erroresList,
+                "coordenadasValidas", coordStats.validas,
+                "coordenadasInvalidas", coordStats.invalidas,
+                "coordenadasRevisar", coordStats.revisar,
+                "detalleCoordenadas", coordStats.detalle
         );
     }
 
@@ -251,7 +268,9 @@ public class ExcelCargaService {
                                CatEstadoOt estadoPendiente,
                                CatSubactividad subDefault,
                                CatTipoPuntoOperativo tipoDefault,
-                               ImpOtLote lote) {
+                               ImpOtLote lote,
+                               Map<String, Integer> headerIndex,
+                               CoordenadaStats coordStats) {
 
         // Leer solo columnas A–I (índices 0–8). El resto se ignora.
         String gisCol     = cellStr(row, 0); // A: (GIS) = HIA o "FALTA"
@@ -331,8 +350,17 @@ public class ExcelCargaService {
             ot.setLocalidad(localidad);
             ot.setDistrito(distrito);
             ot.setSector(sector != null ? sector : "");
+        }
+
+        BigDecimal[] excelCoords = readLatLngFromRow(row, headerIndex);
+        if (excelCoords != null) {
+            ot.setLatitud(excelCoords[0]);
+            ot.setLongitud(excelCoords[1]);
+            coordenadasEncontradas = true;
+            log.debug("OT {} → coords desde Excel", sgio);
+        } else if (!coordenadasEncontradas) {
             validacionMsg.append("Coordenadas no resueltas automáticamente");
-            log.debug("OT {} sin coordenadas — fallback Excel", sgio);
+            log.debug("OT {} sin coordenadas — requiere corrección", sgio);
         }
 
         if (isFalta(gisCol)) {
@@ -340,7 +368,6 @@ public class ExcelCargaService {
             validacionMsg.append("GIS marcado como FALTA");
         }
 
-        // Parsear fecha (columna I)
         if (fechaStr != null && !fechaStr.isBlank()) {
             try {
                 ot.setFechaProgramada(LocalDate.parse(fechaStr.trim()));
@@ -349,12 +376,6 @@ public class ExcelCargaService {
             }
         }
 
-        ot.setActivo(true);
-        ot.setCreatedAt(LocalDateTime.now());
-        ot.setUpdatedAt(LocalDateTime.now());
-        ot = ordenRepo.save(ot);
-
-        // Guardar fila de importación
         ImpOtFila fila = new ImpOtFila();
         fila.setLote(lote);
         fila.setNumeroFilaExcel(rowIdx);
@@ -365,21 +386,18 @@ public class ExcelCargaService {
         fila.setLocalidadExcel(localidad);
         fila.setDistritoExcel(distrito);
         fila.setSectorExcel(sector != null ? sector : "");
-
         if (fechaStr != null && !fechaStr.isBlank()) {
             try {
                 fila.setFechaProgramada(LocalDate.parse(fechaStr.trim()));
             } catch (Exception ignored) {}
         }
 
-        if (validacionMsg.length() > 0) {
-            fila.setEstadoValidacion("PENDIENTE");
-            fila.setRequiereRevision(true);
-            fila.setMensajeValidacion(validacionMsg.toString());
-        } else {
-            fila.setEstadoValidacion("APROBADO");
-            fila.setRequiereRevision(false);
-        }
+        aplicarValidacionCoordenadas(ot, fila, validacionMsg, coordStats, sgio);
+
+        ot.setActivo(true);
+        ot.setCreatedAt(LocalDateTime.now());
+        ot.setUpdatedAt(LocalDateTime.now());
+        ot = ordenRepo.save(ot);
 
         fila.setCreatedAt(LocalDateTime.now());
         fila.setUpdatedAt(LocalDateTime.now());
@@ -394,7 +412,8 @@ public class ExcelCargaService {
                                            CatEstadoOt estadoPendiente,
                                            CatTipoPuntoOperativo tipoDefault,
                                            Map<String, Integer> headerIndex,
-                                           ImpOtLote lote) {
+                                           ImpOtLote lote,
+                                           CoordenadaStats coordStats) {
 
         String sgio            = cellStr(row, headerIndex.getOrDefault("NRO_OT", -1));
         String nis             = cellStr(row, headerIndex.getOrDefault("NIS_RAD", -1));
@@ -439,9 +458,15 @@ public class ExcelCargaService {
             }
         }
 
-        if (!coordenadasEncontradas) {
+        BigDecimal[] excelCoords = readLatLngFromRow(row, headerIndex);
+        if (excelCoords != null) {
+            ot.setLatitud(excelCoords[0]);
+            ot.setLongitud(excelCoords[1]);
+            coordenadasEncontradas = true;
+            log.debug("OT {} → coords desde Excel (VPA)", sgio);
+        } else if (!coordenadasEncontradas) {
             validacionMsg.append("Coordenadas no resueltas automáticamente");
-            log.debug("OT {} sin coordenadas — fallback Excel", sgio);
+            log.debug("OT {} sin coordenadas — requiere corrección", sgio);
         }
 
         if (fechaStr != null && !fechaStr.isBlank()) {
@@ -455,11 +480,6 @@ public class ExcelCargaService {
         if (observacion != null && !observacion.isBlank()) {
             ot.setObservacion(observacion);
         }
-
-        ot.setActivo(true);
-        ot.setCreatedAt(LocalDateTime.now());
-        ot.setUpdatedAt(LocalDateTime.now());
-        ot = ordenRepo.save(ot);
 
         ImpOtFila fila = new ImpOtFila();
         fila.setLote(lote);
@@ -477,20 +497,82 @@ public class ExcelCargaService {
                 fila.setFechaProgramada(LocalDate.parse(fechaStr.trim()));
             } catch (Exception ignored) {}
         }
-        if (validacionMsg.length() > 0) {
-            fila.setEstadoValidacion("PENDIENTE");
-            fila.setRequiereRevision(true);
-            fila.setMensajeValidacion(validacionMsg.toString());
-        } else {
-            fila.setEstadoValidacion("APROBADO");
-            fila.setRequiereRevision(false);
-        }
+
+        aplicarValidacionCoordenadas(ot, fila, validacionMsg, coordStats, sgio);
+
+        ot.setActivo(true);
+        ot.setCreatedAt(LocalDateTime.now());
+        ot.setUpdatedAt(LocalDateTime.now());
+        ot = ordenRepo.save(ot);
+
         fila.setCreatedAt(LocalDateTime.now());
         fila.setUpdatedAt(LocalDateTime.now());
         fila = filaRepo.save(fila);
 
         ot.setFilaImportacion(fila);
         ordenRepo.save(ot);
+    }
+
+    private void aplicarValidacionCoordenadas(OpOrdenTrabajo ot, ImpOtFila fila,
+                                              StringBuilder validacionMsg,
+                                              CoordenadaStats stats, String sgio) {
+        CoordenadaValidator.Resultado res = CoordenadaValidator.validar(ot.getLatitud(), ot.getLongitud());
+        if (!res.valida()) {
+            ot.setLatitud(null);
+            ot.setLongitud(null);
+            ot.setVisibleEnMapa(false);
+            fila.setRequiereCoordenadaManual(true);
+            fila.setEstadoValidacion("COORD_INVALIDA");
+            fila.setRequiereRevision(true);
+            appendMensaje(validacionMsg, res.mensaje());
+            fila.setMensajeValidacion(validacionMsg.toString());
+            stats.invalidas++;
+            stats.detalle.add(Map.of("sgio", sgio, "mensaje", res.mensaje()));
+        } else if (res.requiereCorreccion()) {
+            ot.setVisibleEnMapa(true);
+            fila.setRequiereCoordenadaManual(true);
+            fila.setEstadoValidacion("PENDIENTE");
+            fila.setRequiereRevision(true);
+            appendMensaje(validacionMsg, res.mensaje());
+            fila.setMensajeValidacion(validacionMsg.toString());
+            stats.revisar++;
+            stats.detalle.add(Map.of("sgio", sgio, "mensaje", res.mensaje()));
+        } else {
+            ot.setVisibleEnMapa(true);
+            fila.setRequiereCoordenadaManual(false);
+            if (validacionMsg.length() > 0) {
+                fila.setEstadoValidacion("PENDIENTE");
+                fila.setRequiereRevision(true);
+                fila.setMensajeValidacion(validacionMsg.toString());
+            } else {
+                fila.setEstadoValidacion("APROBADO");
+                fila.setRequiereRevision(false);
+            }
+            stats.validas++;
+        }
+    }
+
+    private void appendMensaje(StringBuilder sb, String msg) {
+        if (sb.length() > 0) sb.append(" - ");
+        sb.append(msg);
+    }
+
+    private BigDecimal[] readLatLngFromRow(Row row, Map<String, Integer> headerIndex) {
+        Integer latCol = firstHeaderCol(headerIndex, "LATITUD", "LAT", "Y");
+        Integer lngCol = firstHeaderCol(headerIndex, "LONGITUD", "LON", "LNG", "LONG", "X");
+        Double lat = latCol != null ? cellNum(row, latCol) : null;
+        Double lng = lngCol != null ? cellNum(row, lngCol) : null;
+        if (lat == null) lat = cellNum(row, 9);
+        if (lng == null) lng = cellNum(row, 10);
+        if (lat == null || lng == null) return null;
+        return new BigDecimal[]{BigDecimal.valueOf(lat), BigDecimal.valueOf(lng)};
+    }
+
+    private Integer firstHeaderCol(Map<String, Integer> headerIndex, String... keys) {
+        for (String key : keys) {
+            if (headerIndex.containsKey(key)) return headerIndex.get(key);
+        }
+        return null;
     }
 
     private Map<String, Integer> buildHeaderIndex(Row row) {

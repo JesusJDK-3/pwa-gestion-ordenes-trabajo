@@ -41,6 +41,10 @@ export interface OrdenTrabajo {
   estadoSincronizacion?: string
   observacion?: string
   createdAt?: string
+  visibleEnMapa?: boolean
+  requiereCorreccionCoordenadas?: boolean
+  mensajeCoordenadas?: string
+  localidad?: string
   // aliases for backwards compatibility with frontend components
   id?: number
   descripcion?: string

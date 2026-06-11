@@ -57,14 +57,13 @@ export default function AyudantesPage() {
         dni: data.dni,
         nombres: data.nombres ?? nombres,
         apellidos: data.apellidos ?? apellidos,
-        cargo: data.cargo ?? cargo,
+        cargo: data.cargo ?? 'Ayudante',
       }
       setMiembros(prev => [...prev, nuevoMiembro])
       setMessage('Ayudante registrado correctamente.')
       setDni('')
       setNombres('')
       setApellidos('')
-      setCargo('')
     } catch (err: any) {
       const msg = err?.response?.data?.message ?? 'Error al registrar el ayudante.'
       setError(msg)

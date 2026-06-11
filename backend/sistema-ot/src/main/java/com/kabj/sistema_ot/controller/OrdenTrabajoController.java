@@ -15,6 +15,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -87,6 +88,32 @@ public class OrdenTrabajoController {
     @GetMapping("/ordenes/{id}")
     public ResponseEntity<OrdenTrabajoResponse> detalle(@PathVariable Long id) {
         return ResponseEntity.ok(ordenService.detalle(id));
+    }
+
+    @GetMapping("/ordenes/coordenadas-pendientes")
+    public ResponseEntity<List<OrdenTrabajoResponse>> coordenadasPendientes() {
+        return ResponseEntity.ok(ordenService.listarCoordenadasPendientes());
+    }
+
+    @PutMapping("/puntos/{id}/coordenadas")
+    public ResponseEntity<ApiResponse<OrdenTrabajoResponse>> corregirCoordenadas(
+            @PathVariable Long id,
+            @RequestBody Map<String, Object> body) {
+        try {
+            BigDecimal lat = body.get("latitud") != null
+                    ? new BigDecimal(body.get("latitud").toString()) : null;
+            BigDecimal lng = body.get("longitud") != null
+                    ? new BigDecimal(body.get("longitud").toString()) : null;
+            if (lat == null || lng == null) {
+                return ResponseEntity.badRequest()
+                        .body(new ApiResponse<>(false, "latitud y longitud son requeridas", null));
+            }
+            OrdenTrabajoResponse actualizada = ordenService.corregirCoordenadas(id, lat, lng);
+            return ResponseEntity.ok(new ApiResponse<>(true, "Coordenadas actualizadas", actualizada));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest()
+                    .body(new ApiResponse<>(false, e.getMessage(), null));
+        }
     }
 
     @GetMapping("/puntos/mis-puntos")
