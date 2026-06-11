@@ -17,6 +17,7 @@ function SmartRedirect() {
 import LoginPage          from './pages/LoginPage'
 import SupervisorDashboard from './pages/supervisor/SupervisorDashboard'
 import CargarOT           from './pages/supervisor/CargarOT'
+import CorregirCoordenadas from './pages/supervisor/CorregirCoordenadas'
 import AsignarPuntos      from './pages/supervisor/AsignarPuntos'
 import SeguimientoPage    from './pages/supervisor/SeguimientoPage'
 import AdminDashboard     from './pages/admin/AdminDashboard'
@@ -81,6 +82,10 @@ const router = createBrowserRouter([
       {
         path: 'supervisor/cargar-ot',
         element: <PrivateRoute roles={['supervisor', 'admin']}><CargarOT /></PrivateRoute>,
+      },
+      {
+        path: 'supervisor/coordenadas',
+        element: <PrivateRoute roles={['supervisor', 'admin']}><CorregirCoordenadas /></PrivateRoute>,
       },
       {
         path: 'supervisor/asignar',

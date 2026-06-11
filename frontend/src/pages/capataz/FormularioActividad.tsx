@@ -1,12 +1,12 @@
 import { type FormEvent, useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { puntoService, registroService, safeInput, trabajadorService } from '../../services/api'
+import { configService, puntoService, registroService, safeInput, trabajadorService, VALIDACION_FOTOS_URL } from '../../services/api'
 import { offlineDB } from '../../services/offlineDB'
 import { useOfflineSync } from '../../hooks/useOfflineSync'
 import { ACTIVIDADES } from '../../data/actividades'
 import type { Actividad } from '../../types/kabj'
 import type { EstadoOt, OrdenTrabajo } from '../../types'
-import { ArrowLeft, WifiOff, CheckCircle2, AlertCircle, Loader2, Save, Info } from 'lucide-react'
+import { ArrowLeft, WifiOff, CheckCircle2, AlertCircle, Loader2, Save, Info, ExternalLink, Camera } from 'lucide-react'
 
 const ACTIVIDADES_CAPATAZ: Actividad[] = ACTIVIDADES.filter(a => ['A1', 'A2'].includes(a.id))
 const ACTIVIDADES_OPCIONES = ACTIVIDADES_CAPATAZ.length > 0 ? ACTIVIDADES_CAPATAZ : ACTIVIDADES
@@ -40,11 +40,23 @@ export default function FormularioActividad() {
   const [subactividadId,    setSubactividadId] = useState<string>(ACTIVIDADES_OPCIONES[0]?.subactividades[0]?.id ?? '')
   const [nuevoEstado,       setEstado]    = useState('SIN_CAMBIO')
   const [observaciones,     setObs]       = useState('')
-  const [hasLocalStorageData, setHasLocalStorageData] = useState(false)
   const [fecha,             setFecha]     = useState(new Date().toISOString().slice(0, 10))
   const [loading,           setLoading]   = useState(false)
   const [loadingPunto,      setLoadingPunto] = useState(true)
   const [resultado,         setResultado] = useState<{ ok: boolean; msg: string; estadoActual?: string } | null>(null)
+  const [validacionFotosUrl, setValidacionFotosUrl] = useState(VALIDACION_FOTOS_URL)
+
+  useEffect(() => {
+    configService.publica()
+      .then(r => {
+        if (r.data?.validacionFotosUrl) setValidacionFotosUrl(r.data.validacionFotosUrl)
+      })
+      .catch(() => {})
+  }, [])
+
+  const irValidacionFotos = () => {
+    window.open(validacionFotosUrl, '_blank', 'noopener,noreferrer')
+  }
 
   useEffect(() => {
     if (!puntoId) return
@@ -142,6 +154,10 @@ export default function FormularioActividad() {
       setResultado({ ok: false, msg: 'Las observaciones son obligatorias cuando el estado es OBSERVADA.' })
       return
     }
+    if (nuevoEstado === 'COMPLETADA') {
+      irValidacionFotos()
+    }
+
     setLoading(true)
     setResultado(null)
 
@@ -274,8 +290,32 @@ export default function FormularioActividad() {
         </div>
       )}
 
+      {/* Validación de fotos — portal externo S COMAS */}
+      <div className="corp-card p-4 border-l-4 border-l-[#0F4C81]">
+        <div className="flex items-start gap-3">
+          <div className="w-9 h-9 rounded bg-[#0F4C81]/10 flex items-center justify-center flex-shrink-0">
+            <Camera size={18} className="text-[#0F4C81]" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-semibold text-slate-800">Validación de fotos</p>
+            <p className="text-xs text-slate-500 mt-0.5 leading-relaxed">
+              Las evidencias fotográficas se validan en el portal corporativo S COMAS.
+              Al marcar la OT como completada se abrirá automáticamente.
+            </p>
+            <button
+              type="button"
+              onClick={irValidacionFotos}
+              className="mt-3 inline-flex items-center gap-2 text-xs font-semibold text-[#0F4C81] hover:text-[#0D3F6B] border border-[#0F4C81]/30 hover:border-[#0F4C81] px-3 py-2 rounded transition-colors"
+            >
+              <ExternalLink size={14} />
+              Ir a validación de fotos
+            </button>
+          </div>
+        </div>
+      </div>
+
       {/* Formulario */}
-      <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-card p-6 space-y-5">
+      <form onSubmit={handleSubmit} className="corp-card p-6 space-y-5">
 
         {/* Ayudante */}
         <div className="space-y-3">
@@ -397,10 +437,13 @@ export default function FormularioActividad() {
             ))}
           </select>
           {nuevoEstado === 'COMPLETADA' && (
-            <div className="mt-1.5 text-xs text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-lg px-3 py-2 space-y-0.5">
+            <div className="mt-1.5 text-xs text-emerald-700 bg-emerald-50 border border-emerald-200 rounded px-3 py-2 space-y-1">
               <p className="flex items-center gap-1 font-semibold"><CheckCircle2 size={12} /> Cierre de OT</p>
-              <p>Se validará que tengas observaciones registradas y que la OT esté en progreso.</p>
-              <p>Al completar: desaparecerá del mapa operativo.</p>
+              <p>Al guardar se abrirá el portal de validación de fotos (S COMAS).</p>
+              <p>La OT desaparecerá del mapa operativo al completarse.</p>
+              <button type="button" onClick={irValidacionFotos} className="text-[#0F4C81] font-semibold underline">
+                Abrir portal ahora
+              </button>
             </div>
           )}
           {nuevoEstado === 'OBSERVADA' && (

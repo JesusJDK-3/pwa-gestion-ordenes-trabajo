@@ -31,6 +31,9 @@ public class OrdenTrabajoResponse {
     private String estadoSincronizacion;
     private String observacion;
     private LocalDateTime createdAt;
+    private Boolean visibleEnMapa;
+    private Boolean requiereCorreccionCoordenadas;
+    private String mensajeCoordenadas;
 
     public static OrdenTrabajoResponse from(OpOrdenTrabajo ot) {
         OrdenTrabajoResponse r = new OrdenTrabajoResponse();
@@ -68,6 +71,14 @@ public class OrdenTrabajoResponse {
         r.setEstadoSincronizacion(ot.getEstadoSincronizacion());
         r.setObservacion(ot.getObservacion());
         r.setCreatedAt(ot.getCreatedAt());
+        r.setVisibleEnMapa(ot.getVisibleEnMapa());
+        if (ot.getFilaImportacion() != null) {
+            r.setRequiereCorreccionCoordenadas(ot.getFilaImportacion().getRequiereCoordenadaManual());
+            r.setMensajeCoordenadas(ot.getFilaImportacion().getMensajeValidacion());
+        } else if (ot.getLatitud() == null || ot.getLongitud() == null) {
+            r.setRequiereCorreccionCoordenadas(true);
+            r.setMensajeCoordenadas("Sin coordenadas — debe corregirse en el sistema");
+        }
         return r;
     }
 }

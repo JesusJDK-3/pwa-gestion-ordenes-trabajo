@@ -52,6 +52,17 @@ export const authService = {
   me:     () => api.get('/auth/me'),
 }
 
+export interface CargaExcelResult {
+  message: string
+  creadas?: number
+  duplicadas?: number
+  errores?: number
+  coordenadasValidas?: number
+  coordenadasInvalidas?: number
+  coordenadasRevisar?: number
+  detalleCoordenadas?: Array<{ sgio: string; mensaje: string }>
+}
+
 export const ordenService = {
   cargarExcel: (file: File) => {
     const form = new FormData()
@@ -62,6 +73,13 @@ export const ordenService = {
   },
   listar:  () => api.get('/ordenes'),
   detalle: (id: number) => api.get(`/ordenes/${id}`),
+  coordenadasPendientes: () => api.get('/ordenes/coordenadas-pendientes'),
+  corregirCoordenadas: (id: number, latitud: number, longitud: number) =>
+    api.put(`/puntos/${id}/coordenadas`, { latitud, longitud }),
+}
+
+export const configService = {
+  publica: () => api.get<{ validacionFotosUrl: string }>('/config/public'),
 }
 
 export const puntoService = {
@@ -71,6 +89,9 @@ export const puntoService = {
   cambiarEstado:(id: number, estado: string) => api.put(`/puntos/${id}/estado`, { estado }),
   seguimiento:  () => api.get('/puntos/seguimiento'),
 }
+
+export const VALIDACION_FOTOS_URL =
+  import.meta.env.VITE_VALIDACION_FOTOS_URL || 'http://45.71.33.77/proyecto_lima/'
 
 export const registroService = {
   crear:    (data: object) => api.post('/registros', data),
