@@ -8,9 +8,9 @@ name: CI
 
 on:
   push:
-    branches: [main, master]
+    branches: [main, master, melany]
   pull_request:
-    branches: [main, master]
+    branches: [main, master, melany]
 
 # Cancela ejecuciones anteriores del mismo PR para ahorrar minutos de CI
 concurrency:
@@ -36,10 +36,12 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
+      - name: Permisos Maven Wrapper
+        run: chmod +x mvnw
+
       - name: Ejecutar tests
-        run: ./mvnw -B test
+        run: mvn -B test
         env:
-          # Evita seed pesado en CI; los tests usan H2 vía @TestPropertySource
           SEED_DEMO_DATA: 'false'
 
   frontend:
