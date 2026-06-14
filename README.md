@@ -253,7 +253,7 @@ export PATH="$JAVA_HOME/bin:$PATH"
 
 ---
 
-## Documentación técnica (desarrolladores)
+## Markdown
 
 Guía completa de arquitectura, módulos y convenciones: **[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)**.
 
