@@ -1,0 +1,56 @@
+
+
+services:
+
+  db:
+    image: postgis/postgis:15-3.3
+    container_name: sistema-ot-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: sistema_ot
+      POSTGRES_USER: kabj_app
+      POSTGRES_PASSWORD: kabj2026
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/bootstrap.sql:/docker-entrypoint-initdb.d/01_bootstrap.sql
+      - ./database/add_gis_vpa_hidrante.sql:/docker-entrypoint-initdb.d/02_add_gis_vpa_hidrante.sql
+      - ./database/add_acompanantes_purgado.sql:/docker-entrypoint-initdb.d/03_add_acompanantes_purgado.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U kabj_app -d sistema_ot"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend/sistema-ot
+      dockerfile: Dockerfile
+    container_name: sistema-ot-backend
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/sistema_ot
+      SPRING_DATASOURCE_USERNAME: kabj_app
+      SPRING_DATASOURCE_PASSWORD: kabj2026
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+    depends_on:
+      db:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: sistema-ot-frontend
+    restart: unless-stopped
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
+    driver: local
