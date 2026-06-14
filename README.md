@@ -2,7 +2,6 @@
 > PWA para gestión de órdenes de trabajo de campo · SEDAPAL · Mantenimiento de Redes  
 > Consultores & Constructores K.A.B.J. S.A.C.
 
-[![CI](https://github.com/TU_USUARIO/pwa-gestion-ordenes-trabajo/actions/workflows/ci.yml/badge.svg)](https://github.com/TU_USUARIO/pwa-gestion-ordenes-trabajo/actions/workflows/ci.yml)
 
 > Reemplaza `TU_USUARIO` en el badge con el owner real del repositorio en GitHub.
 
