@@ -11,7 +11,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -27,6 +30,25 @@ public class OpOtAcompananteService {
     public OpOtAcompanante crearAcompanante(Long idOt, OpOtAcompanante acompanante) {
         OpOrdenTrabajo ordenTrabajo = ordenTrabajoRepository.findById(idOt)
                 .orElseThrow(() -> new RuntimeException("Orden de trabajo no encontrada"));
+
+        if (acompanante.getTrabajador() != null) {
+            Long idTrab = acompanante.getTrabajador().getIdTrabajador();
+            for (OpOtAcompanante existente : acompananteRepository
+                    .findByOrdenTrabajoAndActivoTrueOrderByOrdenEnLista(ordenTrabajo)) {
+                if (existente.getTrabajador() != null
+                        && idTrab.equals(existente.getTrabajador().getIdTrabajador())) {
+                    return existente;
+                }
+            }
+        } else if (acompanante.getDni() != null && !acompanante.getDni().isBlank()) {
+            String dni = acompanante.getDni().trim();
+            for (OpOtAcompanante existente : acompananteRepository
+                    .findByOrdenTrabajoAndActivoTrueOrderByOrdenEnLista(ordenTrabajo)) {
+                if (dni.equalsIgnoreCase(existente.getDni() != null ? existente.getDni().trim() : "")) {
+                    return existente;
+                }
+            }
+        }
 
         long countActuales = acompananteRepository.countByOrdenTrabajoActivo(ordenTrabajo);
         if (countActuales >= MAX_ACOMPANANTES) {
@@ -75,5 +97,29 @@ public class OpOtAcompananteService {
 
         acompanante.setUpdatedAt(LocalDateTime.now());
         return acompananteRepository.save(acompanante);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Map<String, Object>> historialPorCapataz(Long idCapataz) {
+        List<Map<String, Object>> filas = new ArrayList<>();
+        for (OpOtAcompanante a : acompananteRepository.findActivosPorCapataz(idCapataz)) {
+            OpOrdenTrabajo ot = a.getOrdenTrabajo();
+            Map<String, Object> fila = new HashMap<>();
+            fila.put("idOt", ot.getIdOt());
+            fila.put("sgio", ot.getSgio());
+            fila.put("estado", ot.getEstadoOt() != null ? ot.getEstadoOt().getCodigo() : "PENDIENTE");
+            fila.put("subactividad", ot.getSubactividad() != null ? ot.getSubactividad().getNombre() : "");
+            LocalDateTime ref = ot.getFechaFin() != null ? ot.getFechaFin()
+                    : ot.getFechaInicio() != null ? ot.getFechaInicio() : a.getCreatedAt();
+            fila.put("fecha", ref != null ? ref.toLocalDate().toString() : "");
+            fila.put("dni", a.getDni());
+            fila.put("nombres", a.getNombres());
+            fila.put("apellidos", a.getApellidos());
+            String nombre = ((a.getNombres() != null ? a.getNombres().trim() : "")
+                    + " " + (a.getApellidos() != null ? a.getApellidos().trim() : "")).trim();
+            fila.put("ayudante", nombre);
+            filas.add(fila);
+        }
+        return filas;
     }
 }

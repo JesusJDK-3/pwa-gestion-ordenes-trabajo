@@ -2,6 +2,7 @@ package com.kabj.sistema_ot.controller;
 import java.util.stream.Collectors;
 import com.kabj.sistema_ot.dto.ApiResponse;
 import com.kabj.sistema_ot.entity.OpCuadrilla;
+import com.kabj.sistema_ot.entity.OpOrdenTrabajo;
 import com.kabj.sistema_ot.entity.OpOtAcompanante;
 import com.kabj.sistema_ot.entity.RrhhCapataz;
 import com.kabj.sistema_ot.entity.RrhhTrabajador;
@@ -10,14 +11,23 @@ import com.kabj.sistema_ot.repository.OpOrdenTrabajoRepository;
 import com.kabj.sistema_ot.repository.RrhhCapatazRepository;
 import com.kabj.sistema_ot.repository.UsuarioRepository;
 import com.kabj.sistema_ot.service.CuadrillaService;
+import com.kabj.sistema_ot.service.EventoService;
 import com.kabj.sistema_ot.service.OpOtAcompananteService;
+import com.kabj.sistema_ot.service.OpOtFormularioService;
+import com.kabj.sistema_ot.service.OpOtPurgadoHidranteService;
+import com.kabj.sistema_ot.service.OrdenTrabajoService;
+import com.kabj.sistema_ot.service.SyncService;
+import com.kabj.sistema_ot.entity.OpOtPurgadoHidrante;
+import com.kabj.sistema_ot.entity.Usuario;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -34,6 +44,11 @@ public class RegistroController {
     private final RrhhCapatazRepository capatazRepository;
     private final CuadrillaService cuadrillaService;
     private final OpOtAcompananteService acompananteService;
+    private final SyncService syncService;
+    private final EventoService eventoService;
+    private final OrdenTrabajoService ordenService;
+    private final OpOtFormularioService formularioService;
+    private final OpOtPurgadoHidranteService purgadoService;
 
     /**
      * Registra actividad de campo del capataz.
@@ -47,6 +62,7 @@ public class RegistroController {
      *   creadoOffline (Boolean)
      */
     @PostMapping("/registros")
+    @PreAuthorize("hasRole('CAPATAZ')")
     public ResponseEntity<ApiResponse<Map<String, Object>>> crear(@RequestBody Map<String, Object> body,
                                                                    Authentication auth) {
         Long idOt          = parseLong(body.get("puntoId"));
@@ -66,6 +82,14 @@ public class RegistroController {
         }
 
         var ot = otOpt.get();
+        RrhhCapataz capatazAuth = getCapataz(auth);
+        try {
+            ordenService.validarPropiedadCapataz(ot, capatazAuth);
+        } catch (RuntimeException ex) {
+            return ResponseEntity.badRequest()
+                    .body(new ApiResponse<>(false, ex.getMessage(), null));
+        }
+
         String estadoAnterior = ot.getEstadoOt() != null ? ot.getEstadoOt().getCodigo() : "PENDIENTE";
 
         // Guardar observación y tipo en la OT
@@ -85,7 +109,7 @@ public class RegistroController {
         String asistenteCargo = str(body.get("asistenteCargo"));
         String cargoEnCuadrilla = str(body.get("cargoEnCuadrilla"));
 
-        RrhhCapataz capataz = getCapataz(auth);
+        RrhhCapataz capataz = capatazAuth;
         OpCuadrilla cuadrilla = null;
         if (cuadrillaId != null) {
             var cuadrillaOpt = cuadrillaService.buscarPorIdYCapataz(cuadrillaId, capataz);
@@ -161,9 +185,21 @@ public class RegistroController {
                         .body(new ApiResponse<>(false, "El capataz no puede anular una OT", null));
             }
 
+            if ("OBSERVADA".equals(nuevoEstado) && (obs == null || obs.isBlank())) {
+                return ResponseEntity.badRequest()
+                        .body(new ApiResponse<>(false,
+                                "Las observaciones son obligatorias para estado OBSERVADA", null));
+            }
+
             // HU10/HU11: Validación simulada antes de COMPLETAR
             // El sistema valida que el punto tenga observaciones antes de cerrar
             if ("COMPLETADA".equals(nuevoEstado)) {
+                try {
+                    syncService.validarNoBloqueada(idOt);
+                } catch (RuntimeException ex) {
+                    return ResponseEntity.badRequest()
+                            .body(new ApiResponse<>(false, ex.getMessage(), null));
+                }
                 boolean tieneObservaciones = (obs != null && !obs.isBlank())
                         || (ot.getObservacion() != null && !ot.getObservacion().isBlank());
                 if (!tieneObservaciones) {
@@ -172,15 +208,12 @@ public class RegistroController {
                                     "Validación fallida: debe registrar observaciones antes de completar la OT. " +
                                     "Documente el trabajo realizado para cerrar el punto.", null));
                 }
-                // HU09: Validación simulada de evidencias externas — verifica que la OT esté en estado correcto
                 if (!"EN_PROGRESO".equals(estadoAnterior) && !"OBSERVADA".equals(estadoAnterior)) {
                     return ResponseEntity.badRequest()
                             .body(new ApiResponse<>(false,
                                     "Validación fallida: la OT debe estar EN PROGRESO u OBSERVADA antes de completarse. " +
                                     "Actualice primero el estado de avance.", null));
                 }
-                log.info("Validación OK — OT-{} apta para COMPLETAR (obs={} chars)", idOt,
-                        obs != null ? obs.length() : 0);
             }
 
             var estOpt = estadoRepo.findByCodigo(nuevoEstado);
@@ -206,6 +239,22 @@ public class RegistroController {
         ot.setUpdatedAt(LocalDateTime.now());
         ordenRepo.save(ot);
 
+        try {
+            var usuario = usuarioRepository.findByUsername(auth.getName()).orElse(null);
+            guardarPurgadoSiAplica(ot, body, usuario);
+        } catch (RuntimeException ex) {
+            return ResponseEntity.badRequest()
+                    .body(new ApiResponse<>(false, ex.getMessage(), null));
+        }
+
+        if (estadoCambiado) {
+            var usuario = usuarioRepository.findByUsername(auth.getName()).orElse(null);
+            String origen = Boolean.TRUE.equals(body.get("creadoOffline")) ? "MOVIL" : "WEB";
+            eventoService.registrar(ot, "CAMBIO_ESTADO", estadoAnterior,
+                    ot.getEstadoOt() != null ? ot.getEstadoOt().getCodigo() : estadoAnterior,
+                    obs, usuario, origen);
+        }
+
         String estadoFinal = ot.getEstadoOt() != null ? ot.getEstadoOt().getCodigo() : "PENDIENTE";
         String mensaje = estadoCambiado
                 ? "Actividad registrada — OT actualizada a " + estadoFinal
@@ -221,26 +270,29 @@ public class RegistroController {
         )));
     }
 
-    @PostMapping("/registros/sync")
-    public ResponseEntity<ApiResponse<Map<String, Object>>> sync(@RequestBody List<Map<String, Object>> registros,
-                                                                  Authentication auth) {
-        int ok = 0;
-        for (Map<String, Object> reg : registros) {
-            try { crear(reg, auth); ok++; } catch (Exception e) {
-                log.warn("Error en sync registro: {}", e.getMessage());
-            }
-        }
-        return ResponseEntity.ok(new ApiResponse<>(true, "Sync completado",
-                Map.of("procesados", ok, "total", registros.size())));
+    @GetMapping("/registros/historial-apoyo")
+    @PreAuthorize("hasRole('CAPATAZ')")
+    public ResponseEntity<ApiResponse<List<Map<String, Object>>>> historialApoyo(Authentication auth) {
+        RrhhCapataz capataz = getCapataz(auth);
+        return ResponseEntity.ok(new ApiResponse<>(true, null,
+                acompananteService.historialPorCapataz(capataz.getIdCapataz())));
     }
 
     @GetMapping("/registros/punto/{puntoId}")
-    public ResponseEntity<ApiResponse<Map<String, Object>>> porPunto(@PathVariable Long puntoId) {
+    @PreAuthorize("hasRole('CAPATAZ')")
+    public ResponseEntity<ApiResponse<Map<String, Object>>> porPunto(@PathVariable Long puntoId,
+                                                                      Authentication auth) {
         var ot = ordenRepo.findById(puntoId);
         if (ot.isEmpty()) {
             return ResponseEntity.ok(new ApiResponse<>(false, "OT no encontrada", null));
         }
         var o = ot.get();
+        try {
+            ordenService.validarPropiedadCapataz(o, getCapataz(auth));
+        } catch (RuntimeException ex) {
+            return ResponseEntity.status(403)
+                    .body(new ApiResponse<>(false, ex.getMessage(), null));
+        }
         var acompanantes = acompananteService.listarPorOT(puntoId);
         var asistentes = acompanantes.stream()
                 .map(a -> {
@@ -262,11 +314,6 @@ public class RegistroController {
                 "fechaFin",     o.getFechaFin()    != null ? o.getFechaFin().toString()    : "",
                 "asistentes",   asistentes
         )));
-    }
-
-    @PutMapping("/alertas/{id}/leer")
-    public ResponseEntity<ApiResponse<Void>> marcarLeida(@PathVariable Long id) {
-        return ResponseEntity.ok(new ApiResponse<>(true, "OK", null));
     }
 
     // ── Helpers ───────────────────────────────────────────────────
@@ -299,5 +346,61 @@ public class RegistroController {
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
         return capatazRepository.findByUsuario(usuario)
                 .orElseThrow(() -> new RuntimeException("No existe registro de capataz para este usuario"));
+    }
+
+    @SuppressWarnings("unchecked")
+    private void guardarPurgadoSiAplica(OpOrdenTrabajo ot, Map<String, Object> body, Usuario usuario) {
+        Object raw = body.get("purgado");
+        if (!(raw instanceof Map<?, ?> purgadoMap) || purgadoMap.isEmpty()) {
+            return;
+        }
+
+        Long idFormulario = formularioService.idFormularioPurgadoRedes();
+        var formulario = formularioService.asegurar(ot, idFormulario, usuario);
+
+        OpOtPurgadoHidrante purgado = new OpOtPurgadoHidrante();
+        purgado.setFormulario(formulario);
+        purgado.setMarcaHidrante(str(purgadoMap.get("marcaHidrante")));
+        purgado.setNumeroBocamazas(parseInteger(purgadoMap.get("numeroBocamazas")));
+        purgado.setPresionPsiHidrante(parseDecimal(purgadoMap.get("presionPsiHidrante")));
+        purgado.setTiempoInicioPurgado(parseDateTime(purgadoMap.get("tiempoInicioPurgado")));
+        purgado.setTiempoFinPurgado(parseDateTime(purgadoMap.get("tiempoFinPurgado")));
+        purgado.setMedicionCloroPpm(parseDecimal(purgadoMap.get("medicionCloroPpm")));
+        purgado.setObservaciones(str(purgadoMap.get("observaciones")));
+
+        purgadoService.crearOActualizarPurgado(ot.getIdOt(), purgado);
+    }
+
+    private Integer parseInteger(Object o) {
+        if (o == null) return null;
+        try {
+            return Integer.valueOf(o.toString());
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    private BigDecimal parseDecimal(Object o) {
+        if (o == null) return null;
+        try {
+            return new BigDecimal(o.toString());
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    private LocalDateTime parseDateTime(Object o) {
+        if (o == null) return null;
+        String s = o.toString().trim();
+        if (s.isEmpty()) return null;
+        try {
+            return LocalDateTime.parse(s);
+        } catch (Exception e) {
+            try {
+                return java.time.LocalDate.parse(s).atStartOfDay();
+            } catch (Exception ignored) {
+                return null;
+            }
+        }
     }
 }

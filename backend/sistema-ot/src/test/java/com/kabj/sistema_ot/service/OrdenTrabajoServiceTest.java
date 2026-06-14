@@ -7,6 +7,7 @@ package com.kabj.sistema_ot.service;
 import com.kabj.sistema_ot.dto.OrdenTrabajoResponse;
 import com.kabj.sistema_ot.entity.CatEstadoOt;
 import com.kabj.sistema_ot.entity.OpOrdenTrabajo;
+import com.kabj.sistema_ot.repository.CatEstadoOtRepository;
 import com.kabj.sistema_ot.repository.OpOrdenTrabajoRepository;
 import com.kabj.sistema_ot.repository.RrhhCapatazRepository;
 import com.kabj.sistema_ot.repository.UsuarioRepository;
@@ -53,6 +54,15 @@ class OrdenTrabajoServiceTest {
 
     @Mock
     private RrhhCapatazRepository capatazRepository;
+
+    @Mock
+    private ValidacionFotoService validacionFotoService;
+
+    @Mock
+    private CatEstadoOtRepository estadoRepo;
+
+    @Mock
+    private EventoService eventoService;
 
     // ── Objeto bajo prueba ────────────────────────────────────────────────────
     @InjectMocks

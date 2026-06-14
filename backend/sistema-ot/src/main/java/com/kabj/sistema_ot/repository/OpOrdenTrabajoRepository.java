@@ -12,7 +12,16 @@ public interface OpOrdenTrabajoRepository extends JpaRepository<OpOrdenTrabajo, 
 
     Optional<OpOrdenTrabajo> findBySgio(String sgio);
 
-    // Solo OTs visibles en mapa (operativas: no completadas ni anuladas)
+    // OTs activas del capataz (incluye las que aún esperan corrección de coordenadas)
+    @Query("""
+            SELECT ot FROM OpOrdenTrabajo ot
+            WHERE ot.capataz = :capataz AND ot.activo = true
+            AND ot.estadoOt.codigo NOT IN ('COMPLETADA', 'ANULADA')
+            ORDER BY ot.fechaProgramada ASC NULLS LAST
+            """)
+    List<OpOrdenTrabajo> findByCapatazActivas(@Param("capataz") RrhhCapataz capataz);
+
+    // Solo OTs visibles en mapa (operativas con ubicación lista)
     @Query("SELECT ot FROM OpOrdenTrabajo ot WHERE ot.capataz = :capataz AND ot.activo = true AND ot.visibleEnMapa = true ORDER BY ot.fechaProgramada ASC NULLS LAST")
     List<OpOrdenTrabajo> findByCapatazActivasVisibles(@Param("capataz") RrhhCapataz capataz);
 
@@ -45,10 +54,22 @@ public interface OpOrdenTrabajoRepository extends JpaRepository<OpOrdenTrabajo, 
             AND ot.estadoOt.codigo NOT IN ('COMPLETADA', 'ANULADA')
             AND (
                 ot.latitud IS NULL OR ot.longitud IS NULL
-                OR ot.visibleEnMapa = false
                 OR (ot.filaImportacion IS NOT NULL AND ot.filaImportacion.requiereCoordenadaManual = true)
             )
             ORDER BY ot.createdAt DESC
             """)
     List<OpOrdenTrabajo> findConCoordenadasPendientes();
+
+    @Query("""
+            SELECT ot FROM OpOrdenTrabajo ot
+            WHERE ot.activo = true
+            AND ot.capataz = :capataz
+            AND ot.estadoOt.codigo NOT IN ('COMPLETADA', 'ANULADA')
+            AND (
+                ot.latitud IS NULL OR ot.longitud IS NULL
+                OR (ot.filaImportacion IS NOT NULL AND ot.filaImportacion.requiereCoordenadaManual = true)
+            )
+            ORDER BY ot.createdAt DESC
+            """)
+    List<OpOrdenTrabajo> findConCoordenadasPendientesByCapataz(@Param("capataz") RrhhCapataz capataz);
 }

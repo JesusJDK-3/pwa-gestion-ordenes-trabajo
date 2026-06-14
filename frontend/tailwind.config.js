@@ -23,7 +23,7 @@ export default {
         },
       },
       fontFamily: {
-        sans: ['IBM Plex Sans', 'Segoe UI', 'system-ui', 'sans-serif'],
+        sans: ['Source Sans 3', 'Segoe UI', 'system-ui', 'sans-serif'],
       },
       fontSize: {
         '2xs': ['11px', { lineHeight: '16px' }],

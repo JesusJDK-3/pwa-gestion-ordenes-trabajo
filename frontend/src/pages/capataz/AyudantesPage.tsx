@@ -1,178 +1,192 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { trabajadorService, safeInput } from '../../services/api'
-import { Loader2, CheckCircle2, AlertCircle, ArrowLeft } from 'lucide-react'
+import { registroService } from '../../services/api'
+import PageRefreshButton from '../../components/PageRefreshButton'
+import { Loader2, ArrowLeft, HardHat, Filter } from 'lucide-react'
 
-type Miembro = {
-  idTrabajador: number
+interface FilaApoyo {
+  idOt: number
+  sgio: string
+  estado: string
+  subactividad?: string
+  fecha: string
   dni?: string
-  nombres: string
-  apellidos: string
-  cargo?: string
+  nombres?: string
+  apellidos?: string
+  ayudante: string
+}
+
+function statusClass(estado?: string) {
+  switch (estado) {
+    case 'COMPLETADA':  return 'status-pill status-completada'
+    case 'EN_PROGRESO': return 'status-pill status-progreso'
+    case 'OBSERVADA':   return 'status-pill status-observada'
+    case 'ANULADA':     return 'status-pill status-anulada'
+    default:            return 'status-pill status-pendiente'
+  }
 }
 
 export default function AyudantesPage() {
-  const [miembros, setMiembros] = useState<Miembro[]>([])
-  const [dni, setDni] = useState('')
-  const [nombres, setNombres] = useState('')
-  const [apellidos, setApellidos] = useState('')
+  const [filas, setFilas] = useState<FilaApoyo[]>([])
   const [loading, setLoading] = useState(true)
-  const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
-  const [message, setMessage] = useState('')
+  const [filtroAyudante, setFiltroAyudante] = useState('')
+  const [filtroDesde, setFiltroDesde] = useState('')
 
-  useEffect(() => {
+  const cargar = useCallback(() => {
     setLoading(true)
-    trabajadorService.listar()
+    setError('')
+    registroService.historialApoyo()
       .then(r => {
-        const data = (r.data as any)?.data ?? []
-        setMiembros(Array.isArray(data) ? data : [])
+        const data = (r.data as { data?: FilaApoyo[] })?.data ?? []
+        setFilas(Array.isArray(data) ? data : [])
       })
-      .catch(() => setError('No se pudieron cargar los ayudantes. Intenta de nuevo.'))
+      .catch(() => setError('No se pudo cargar el historial de apoyo.'))
       .finally(() => setLoading(false))
   }, [])
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setError('')
-    setMessage('')
+  useEffect(() => { cargar() }, [cargar])
 
-    if (!nombres.trim() || !apellidos.trim()) {
-      setError('Ingresa nombres y apellidos del ayudante.')
-      return
-    }
+  const ayudantesUnicos = useMemo(() => {
+    const nombres = new Set(filas.map(f => f.ayudante).filter(Boolean))
+    return [...nombres].sort()
+  }, [filas])
 
-    setSaving(true)
-    try {
-      const payload: any = {
-        dni: safeInput(dni, 12),
-        nombres: safeInput(nombres, 100),
-        apellidos: safeInput(apellidos, 100),
-        cargo: 'Ayudante',
-      }
-      const r = await trabajadorService.crear(payload)
-      const data = (r.data as any)?.data ?? {}
-      const nuevoMiembro: Miembro = {
-        idTrabajador: data.idTrabajador ?? Date.now(),
-        dni: data.dni,
-        nombres: data.nombres ?? nombres,
-        apellidos: data.apellidos ?? apellidos,
-        cargo: data.cargo ?? 'Ayudante',
-      }
-      setMiembros(prev => [...prev, nuevoMiembro])
-      setMessage('Ayudante registrado correctamente.')
-      setDni('')
-      setNombres('')
-      setApellidos('')
-    } catch (err: any) {
-      const msg = err?.response?.data?.message ?? 'Error al registrar el ayudante.'
-      setError(msg)
-    } finally {
-      setSaving(false)
-    }
-  }
+  const filtradas = useMemo(() => filas.filter(f => {
+    if (filtroAyudante && f.ayudante !== filtroAyudante) return false
+    if (filtroDesde && f.fecha && f.fecha < filtroDesde) return false
+    return true
+  }), [filas, filtroAyudante, filtroDesde])
 
-  const inputClass = 'w-full border border-gray-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#CC1111]/20 focus:border-[#CC1111] transition-all bg-white'
+  const otsConApoyo = useMemo(() => new Set(filas.map(f => f.idOt)).size, [filas])
 
   return (
-    <div className="max-w-3xl space-y-5">
-      <div className="flex items-center gap-3">
-        <Link to="/capataz" className="w-9 h-9 rounded-xl border border-gray-200 flex items-center justify-center text-gray-500 hover:text-gray-800 hover:border-gray-300 transition-all bg-white shadow-card">
-          <ArrowLeft size={16} />
-        </Link>
-        <div>
-          <h1 className="text-[20px] font-bold text-gray-900">Registrar ayudantes</h1>
-          <p className="text-sm text-gray-500">Agrega ayudantes para seleccionarlos en el formulario de actividad.</p>
+    <div className="space-y-6">
+      <div className="page-header border-0 pb-0 mb-0">
+        <div className="flex items-start gap-3 min-w-0 flex-1">
+          <Link to="/capataz" className="btn-outline py-2 px-2.5 flex-shrink-0">
+            <ArrowLeft size={16} />
+          </Link>
+          <div>
+            <p className="page-breadcrumb">Operaciones de campo · Consulta</p>
+            <h1 className="page-title">Apoyo en OT</h1>
+            <p className="page-subtitle">
+              Consulte en qué OT participó personal de apoyo y en qué fecha. El registro se hace al guardar el formulario de cada OT.
+            </p>
+          </div>
+        </div>
+        <PageRefreshButton onClick={cargar} loading={loading} />
+      </div>
+
+      <div className="kpi-grid grid-cols-1 sm:grid-cols-2">
+        <div className="kpi-tile border-l-4 border-l-[#1B4F72]">
+          <div className="kpi-icon-box bg-sky-50 border-sky-200 text-sky-700">
+            <HardHat size={20} strokeWidth={1.75} />
+          </div>
+          <div>
+            <p className="kpi-value">{otsConApoyo}</p>
+            <p className="kpi-label">Órdenes con apoyo</p>
+          </div>
+        </div>
+        <div className="kpi-tile border-l-4 border-l-amber-500">
+          <div className="kpi-icon-box bg-amber-50 border-amber-200 text-amber-700">
+            <Filter size={20} strokeWidth={1.75} />
+          </div>
+          <div>
+            <p className="kpi-value">{ayudantesUnicos.length}</p>
+            <p className="kpi-label">Personas que apoyaron</p>
+          </div>
         </div>
       </div>
 
-      <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-card p-6 space-y-4">
-        <div className="grid gap-3 sm:grid-cols-2">
-          <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1.5">DNI</label>
+      <div className="corp-card p-4 space-y-3">
+        <p className="corp-label mb-0">Filtros</p>
+        <div className="flex flex-wrap items-end gap-3">
+          <div className="space-y-1">
+            <label className="text-xs text-slate-500">Persona</label>
+            <select
+              value={filtroAyudante}
+              onChange={e => setFiltroAyudante(e.target.value)}
+              className="corp-input text-sm py-1.5 max-w-[240px]"
+            >
+              <option value="">Todas las personas</option>
+              {ayudantesUnicos.map(n => (
+                <option key={n} value={n}>{n}</option>
+              ))}
+            </select>
+          </div>
+          <div className="space-y-1">
+            <label className="text-xs text-slate-500">Desde fecha</label>
             <input
-              type="text"
-              value={dni}
-              onChange={e => setDni(e.target.value)}
-              placeholder="Ej. 12345678"
-              className={inputClass}
+              type="date"
+              value={filtroDesde}
+              onChange={e => setFiltroDesde(e.target.value)}
+              className="corp-input text-sm py-1.5 max-w-[180px]"
             />
           </div>
-          <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1.5">Cargo</label>
-            <input
-              type="text"
-              value="Ayudante"
-              readOnly
-              className={`${inputClass} bg-gray-100 cursor-not-allowed`}
-            />
-          </div>
+          {(filtroAyudante || filtroDesde) && (
+            <button
+              type="button"
+              onClick={() => { setFiltroAyudante(''); setFiltroDesde('') }}
+              className="btn-outline text-xs py-1.5"
+            >
+              Limpiar
+            </button>
+          )}
         </div>
-        <div className="grid gap-3 sm:grid-cols-2">
-          <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1.5">Nombres</label>
-            <input
-              type="text"
-              value={nombres}
-              onChange={e => setNombres(e.target.value)}
-              placeholder="Nombres"
-              className={inputClass}
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1.5">Apellidos</label>
-            <input
-              type="text"
-              value={apellidos}
-              onChange={e => setApellidos(e.target.value)}
-              placeholder="Apellidos"
-              className={inputClass}
-            />
-          </div>
-        </div>
-        {error && (
-          <div className="bg-red-50 border border-red-100 text-red-700 rounded-xl px-4 py-3 text-sm">
-            <AlertCircle size={16} className="inline mr-2" />
-            {error}
-          </div>
-        )}
-        {message && (
-          <div className="bg-emerald-50 border border-emerald-100 text-emerald-700 rounded-xl px-4 py-3 text-sm">
-            <CheckCircle2 size={16} className="inline mr-2" />
-            {message}
-          </div>
-        )}
-        <button type="submit" disabled={saving} className="w-full bg-[#CC1111] disabled:bg-gray-200 disabled:text-gray-400 text-white font-semibold py-3 rounded-xl transition-colors hover:bg-[#AA0E0E]">
-          {saving ? 'Guardando…' : 'Registrar ayudante'}
-        </button>
-      </form>
-
-      <div className="bg-white rounded-2xl shadow-card p-6">
-        <div className="flex items-center justify-between mb-4">
-          <div>
-            <h2 className="text-lg font-semibold text-gray-900">Ayudantes registrados</h2>
-            <p className="text-xs text-gray-500">Estos ayudantes aparecerán en el formulario de actividad.</p>
-          </div>
-          <span className="text-sm text-gray-500">{miembros.length} total</span>
-        </div>
-        {loading ? (
-          <div className="flex items-center justify-center py-12 text-gray-400">
-            <Loader2 size={20} className="animate-spin" />
-          </div>
-        ) : miembros.length === 0 ? (
-          <p className="text-sm text-gray-500">Aún no tienes ayudantes registrados.</p>
-        ) : (
-          <ul className="space-y-3">
-            {miembros.map(miembro => (
-              <li key={miembro.idTrabajador} className="border border-gray-200 rounded-2xl p-4">
-                <p className="font-semibold text-gray-800">{miembro.nombres} {miembro.apellidos}</p>
-                <p className="text-xs text-gray-500">DNI: {miembro.dni ?? '—'}</p>
-                <p className="text-xs text-gray-500">Cargo: {miembro.cargo ?? '—'}</p>
-              </li>
-            ))}
-          </ul>
-        )}
       </div>
+
+      {error && <div className="alert-banner alert-error">{error}</div>}
+
+      {loading ? (
+        <div className="corp-card p-12 flex justify-center text-slate-400">
+          <Loader2 size={22} className="animate-spin text-[#1B4F72]" />
+        </div>
+      ) : filtradas.length === 0 ? (
+        <div className="corp-card p-12 text-center text-slate-500 text-sm">
+          <HardHat size={32} className="mx-auto mb-3 opacity-30" />
+          <p>No hay registros de apoyo{filtroAyudante || filtroDesde ? ' con estos filtros' : ''}.</p>
+          <p className="text-xs mt-2 text-slate-400">
+            Al registrar una OT en campo, puede indicar ayudantes en el formulario de actividad.
+          </p>
+        </div>
+      ) : (
+        <div className="corp-card overflow-hidden">
+          <div className="corp-card-header">
+            <span>Historial de apoyo</span>
+            <span className="badge-count">{filtradas.length}</span>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="enterprise-table">
+              <thead>
+                <tr>
+                  {['Fecha', 'SGIO', 'Persona que apoyó', 'DNI', 'Subactividad', 'Estado OT'].map(h => (
+                    <th key={h}>{h}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {filtradas.map((f, i) => (
+                  <tr key={`${f.idOt}-${f.ayudante}-${i}`}>
+                    <td className="text-slate-500 text-xs tabular-nums whitespace-nowrap">
+                      {f.fecha
+                        ? new Date(f.fecha + 'T12:00:00').toLocaleDateString('es-PE', { day: '2-digit', month: 'short', year: 'numeric' })
+                        : '—'}
+                    </td>
+                    <td className="font-mono font-bold text-[#1B4F72] text-xs">{f.sgio}</td>
+                    <td className="font-medium text-slate-800">{f.ayudante || '—'}</td>
+                    <td className="text-slate-500 text-xs">{f.dni ?? '—'}</td>
+                    <td className="max-w-[180px] truncate text-slate-600">{f.subactividad ?? '—'}</td>
+                    <td>
+                      <span className={statusClass(f.estado)}>{f.estado}</span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

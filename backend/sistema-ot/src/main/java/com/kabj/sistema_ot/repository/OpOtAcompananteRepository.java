@@ -15,4 +15,14 @@ public interface OpOtAcompananteRepository extends JpaRepository<OpOtAcompanante
     long countByOrdenTrabajoActivo(@Param("ot") OpOrdenTrabajo ordenTrabajo);
 
     List<OpOtAcompanante> findByOrdenTrabajo(OpOrdenTrabajo ordenTrabajo);
+
+    @Query("""
+        SELECT a FROM OpOtAcompanante a
+        JOIN FETCH a.ordenTrabajo ot
+        LEFT JOIN FETCH ot.estadoOt
+        WHERE a.activo = true
+        AND ot.capataz.idCapataz = :idCapataz
+        ORDER BY COALESCE(ot.fechaFin, ot.fechaInicio, a.createdAt) DESC, a.ordenEnLista ASC
+        """)
+    List<OpOtAcompanante> findActivosPorCapataz(@Param("idCapataz") Long idCapataz);
 }

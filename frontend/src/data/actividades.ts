@@ -1,4 +1,4 @@
-import type { Actividad, ResumenDiario } from '../types/kabj'
+import type { Actividad } from '../types/kabj'
 
 export const ACTIVIDADES: Actividad[] = [
   {
@@ -272,15 +272,3 @@ export const ACTIVIDADES: Actividad[] = [
     ],
   },
 ]
-
-export const RESUMEN_DIARIO: ResumenDiario = {
-  fecha: new Date().toISOString().slice(0, 10),
-  otCompletadas: 0,
-  tiempoPromedio: 0,
-  tiempoTotal: 0,
-  distanciaTotal: 0,
-  eficiencia: 0,
-  puntualidad: 0,
-  calidad: 0,
-  ordenes: [],
-}

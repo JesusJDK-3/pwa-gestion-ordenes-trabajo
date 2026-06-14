@@ -1,9 +1,13 @@
-import { useEffect, useState } from 'react'
-import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet'
+import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
+import { MapContainer, TileLayer, Marker, useMap, useMapEvents } from 'react-leaflet'
 import L from 'leaflet'
 import { AlertCircle, CheckCircle2, Loader2, MapPin, Save } from 'lucide-react'
 import { ordenService } from '../../services/api'
 import type { OrdenTrabajo } from '../../types'
+import { unwrapList, unwrapData } from '../../utils/apiParse'
+import { normalizarCoordsPeru, parseCoordInput } from '../../utils/coordsPeru'
+import PageRefreshButton from '../../components/PageRefreshButton'
 
 delete (L.Icon.Default.prototype as unknown as Record<string, unknown>)._getIconUrl
 L.Icon.Default.mergeOptions({
@@ -23,31 +27,58 @@ function MapClickHandler({ onPick }: { onPick: (lat: number, lng: number) => voi
   return null
 }
 
+function MapFlyTo({ lat, lng, otId }: { lat: number; lng: number; otId: number }) {
+  const map = useMap()
+  useEffect(() => {
+    map.flyTo([lat, lng], 15, { duration: 0.4 })
+  }, [otId, lat, lng, map])
+  return null
+}
+
 export default function CorregirCoordenadas() {
+  const [searchParams] = useSearchParams()
+  const otFocus = Number(searchParams.get('ot') || 0) || null
+
   const [lista, setLista]       = useState<OrdenTrabajo[]>([])
   const [selected, setSelected] = useState<OrdenTrabajo | null>(null)
   const [lat, setLat]           = useState('')
   const [lng, setLng]           = useState('')
   const [loading, setLoading]   = useState(true)
+  const [loadError, setLoadError] = useState('')
   const [saving, setSaving]     = useState(false)
   const [msg, setMsg]           = useState<{ ok: boolean; text: string } | null>(null)
 
-  const cargar = () => {
+  const cargar = useCallback(() => {
     setLoading(true)
+    setLoadError('')
     ordenService.coordenadasPendientes()
-      .then(r => setLista(Array.isArray(r.data) ? r.data : []))
-      .catch(() => setLista([]))
+      .then(r => setLista(unwrapList<OrdenTrabajo>(r.data)))
+      .catch(() => {
+        setLoadError('No se pudieron cargar las OTs pendientes de georreferencia.')
+      })
       .finally(() => setLoading(false))
-  }
+  }, [])
 
-  useEffect(() => { cargar() }, [])
+  useEffect(() => { cargar() }, [cargar])
 
-  const seleccionar = (ot: OrdenTrabajo) => {
+  const seleccionar = useCallback((ot: OrdenTrabajo) => {
     setSelected(ot)
-    setLat(ot.latitud != null ? String(ot.latitud) : '')
-    setLng(ot.longitud != null ? String(ot.longitud) : '')
     setMsg(null)
-  }
+    if (ot.latitud != null && ot.longitud != null) {
+      const { lat: la, lng: lo } = normalizarCoordsPeru(Number(ot.latitud), Number(ot.longitud))
+      setLat(la.toFixed(6))
+      setLng(lo.toFixed(6))
+    } else {
+      setLat(String(LIMA_CENTER[0]))
+      setLng(String(LIMA_CENTER[1]))
+    }
+  }, [])
+
+  useEffect(() => {
+    if (!otFocus || lista.length === 0) return
+    const ot = lista.find(o => o.idOt === otFocus)
+    if (ot && selected?.idOt !== otFocus) seleccionar(ot)
+  }, [otFocus, lista, selected?.idOt, seleccionar])
 
   const aplicarCoords = (nLat: number, nLng: number) => {
     setLat(nLat.toFixed(6))
@@ -56,48 +87,73 @@ export default function CorregirCoordenadas() {
 
   const guardar = async () => {
     if (!selected) return
-    const latNum = parseFloat(lat)
-    const lngNum = parseFloat(lng)
+    const latNum = parseCoordInput(lat)
+    const lngNum = parseCoordInput(lng)
     if (Number.isNaN(latNum) || Number.isNaN(lngNum)) {
-      setMsg({ ok: false, text: 'Ingrese latitud y longitud numéricas válidas.' })
+      setMsg({ ok: false, text: 'Ingrese latitud y longitud válidas (ej. 12.04 y 77.04).' })
       return
     }
+    const { lat: latNorm, lng: lngNorm } = normalizarCoordsPeru(latNum, lngNum)
+    setLat(latNorm.toFixed(6))
+    setLng(lngNorm.toFixed(6))
+
     setSaving(true)
     setMsg(null)
     try {
-      const { data } = await ordenService.corregirCoordenadas(selected.idOt, latNum, lngNum)
-      const body = data as { success?: boolean; message?: string }
-      setMsg({ ok: true, text: body.message ?? 'Coordenadas guardadas correctamente.' })
-      setLista(prev => prev.filter(o => o.idOt !== selected.idOt))
-      setSelected(null)
-      setLat('')
-      setLng('')
+      const { data } = await ordenService.corregirCoordenadas(selected.idOt, latNorm, lngNorm)
+      unwrapData<OrdenTrabajo>(data)
+      const restantes = lista.filter(o => o.idOt !== selected.idOt)
+      setLista(restantes)
+      setMsg({
+        ok: true,
+        text: `OT ${selected.sgio} guardada: ${latNorm.toFixed(4)}, ${lngNorm.toFixed(4)}`,
+      })
+      if (restantes.length > 0) {
+        seleccionar(restantes[0])
+      } else {
+        setSelected(null)
+        setLat('')
+        setLng('')
+      }
     } catch (err: unknown) {
-      const text = (err as { response?: { data?: { message?: string } } })?.response?.data?.message
-        ?? 'No se pudieron guardar las coordenadas.'
-      setMsg({ ok: false, text })
+      const ax = err as { response?: { data?: { message?: string } } }
+      setMsg({
+        ok: false,
+        text: ax.response?.data?.message ?? 'No se pudieron guardar las coordenadas.',
+      })
     } finally {
       setSaving(false)
     }
   }
 
-  const mapCenter: [number, number] = selected?.latitud && selected?.longitud
-    ? [selected.latitud, selected.longitud]
-    : lat && lng && !Number.isNaN(parseFloat(lat)) && !Number.isNaN(parseFloat(lng))
-      ? [parseFloat(lat), parseFloat(lng)]
-      : LIMA_CENTER
+  const markerPos = useMemo((): [number, number] | null => {
+    const la = parseCoordInput(lat)
+    const lo = parseCoordInput(lng)
+    if (Number.isNaN(la) || Number.isNaN(lo)) return null
+    return [la, lo]
+  }, [lat, lng])
+
+  const mapCenter = useMemo((): [number, number] => {
+    if (markerPos) return markerPos
+    return LIMA_CENTER
+  }, [markerPos])
 
   return (
     <div className="space-y-5">
-      <div className="page-header">
+      <div className="page-header border-0 pb-0 mb-0">
         <div>
+          <p className="page-breadcrumb">Supervisor · Georreferencia</p>
           <h1 className="page-title">Corregir coordenadas</h1>
-          <p className="page-subtitle">
-            OTs con ubicación inválida o pendiente de revisión tras la carga Excel
-          </p>
         </div>
-        <span className="badge-count">{lista.length} pendientes</span>
+        <div className="flex items-center gap-2 flex-shrink-0">
+          <span className="badge-count">{lista.length} pendientes</span>
+          <PageRefreshButton onClick={cargar} loading={loading} />
+        </div>
       </div>
+
+      {loadError && (
+        <div className="alert-banner alert-error text-sm">{loadError}</div>
+      )}
 
       {msg && (
         <div className={`alert-banner ${msg.ok ? 'alert-success' : 'alert-error'}`}>
@@ -118,8 +174,9 @@ export default function CorregirCoordenadas() {
                 <Loader2 size={16} className="animate-spin" /> Cargando…
               </div>
             ) : lista.length === 0 ? (
-              <div className="p-6 text-sm text-slate-500 text-center">
-                No hay coordenadas pendientes de corrección.
+              <div className="p-6 text-sm text-slate-500 text-center space-y-2">
+                <MapPin size={28} className="mx-auto text-slate-300" />
+                <p className="font-medium text-slate-600">No hay coordenadas pendientes</p>
               </div>
             ) : (
               lista.map(ot => (
@@ -133,9 +190,7 @@ export default function CorregirCoordenadas() {
                 >
                   <p className="font-semibold text-sm text-slate-800 font-mono">{ot.sgio}</p>
                   <p className="text-xs text-slate-500 mt-0.5 truncate">{ot.direccion ?? 'Sin dirección'}</p>
-                  {ot.mensajeCoordenadas && (
-                    <p className="text-xs text-amber-700 mt-1 line-clamp-2">{ot.mensajeCoordenadas}</p>
-                  )}
+                  <p className="text-xs text-amber-700 mt-1">Sin ubicación en mapa</p>
                 </button>
               ))
             )}
@@ -153,43 +208,60 @@ export default function CorregirCoordenadas() {
                 <div>
                   <label className="corp-label">Latitud</label>
                   <input
-                    type="number"
-                    step="any"
+                    type="text"
+                    inputMode="decimal"
                     value={lat}
                     onChange={e => setLat(e.target.value)}
                     className="corp-input"
-                    placeholder="-12.046400"
+                    placeholder="12.0464"
                   />
                 </div>
                 <div>
                   <label className="corp-label">Longitud</label>
                   <input
-                    type="number"
-                    step="any"
+                    type="text"
+                    inputMode="decimal"
                     value={lng}
                     onChange={e => setLng(e.target.value)}
                     className="corp-input"
-                    placeholder="-77.042800"
+                    placeholder="77.0428"
                   />
                 </div>
               </div>
               <p className="text-xs text-slate-500 px-4 pb-2">
-                Haga clic en el mapa para ubicar el punto o edite los valores manualmente.
+                1) Clic en el mapa donde va el punto · 2) Guardar. Use 12.04 y 77.04 (con o sin signo menos).
               </p>
-              <div className="flex-1 min-h-[320px] relative">
-                <MapContainer center={mapCenter} zoom={14} className="absolute inset-0 z-0" scrollWheelZoom>
+              <div className="h-[360px] w-full border-t border-slate-100">
+                <MapContainer
+                  key={selected.idOt}
+                  center={mapCenter}
+                  zoom={14}
+                  style={{ height: '100%', width: '100%' }}
+                  scrollWheelZoom
+                >
                   <TileLayer
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a>'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                   />
+                  <MapFlyTo lat={mapCenter[0]} lng={mapCenter[1]} otId={selected.idOt} />
                   <MapClickHandler onPick={aplicarCoords} />
-                  {lat && lng && !Number.isNaN(parseFloat(lat)) && !Number.isNaN(parseFloat(lng)) && (
-                    <Marker position={[parseFloat(lat), parseFloat(lng)]} />
-                  )}
+                  {markerPos && <Marker position={markerPos} />}
                 </MapContainer>
               </div>
-              <div className="p-4 border-t border-slate-100">
-                <button type="button" onClick={guardar} disabled={saving} className="btn-primary w-full sm:w-auto">
+              <div className="p-4 border-t border-slate-100 flex flex-wrap gap-2">
+                <button
+                  type="button"
+                  onClick={() => aplicarCoords(LIMA_CENTER[0], LIMA_CENTER[1])}
+                  className="btn-outline text-sm"
+                >
+                  Centrar en Lima
+                </button>
+                <button
+                  type="button"
+                  onClick={guardar}
+                  disabled={saving || !lat.trim() || !lng.trim()}
+                  className="btn-primary sm:ml-auto min-w-[180px]"
+                >
                   {saving ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
                   Guardar coordenadas
                 </button>
@@ -199,7 +271,6 @@ export default function CorregirCoordenadas() {
             <div className="flex-1 flex flex-col items-center justify-center text-slate-500 p-8 text-center min-h-[400px]">
               <MapPin size={40} className="text-slate-300 mb-3" />
               <p className="text-sm font-medium">Seleccione una OT de la lista</p>
-              <p className="text-xs mt-1">Para corregir su ubicación en el mapa</p>
             </div>
           )}
         </div>

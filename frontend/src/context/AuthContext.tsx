@@ -1,5 +1,6 @@
-import { createContext, type ReactNode, useCallback, useContext, useState } from 'react'
+import { createContext, type ReactNode, useCallback, useContext, useEffect, useState } from 'react'
 import { authService } from '../services/api'
+import { unwrapData } from '../utils/apiParse'
 import type { Rol, User } from '../types/index'
 
 interface AuthContextType {
@@ -56,6 +57,32 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setToken(null)
     setUser(null)
   }, [])
+
+  useEffect(() => {
+    if (!token) return
+    authService.me()
+      .then(res => {
+        const data = unwrapData<{ id: number; nombre: string; email: string; rol: string }>(res.data)
+        if (!data) {
+          logout()
+          return
+        }
+        const rol = data.rol?.toLowerCase() as Rol
+        if (!rol || !VALID_ROLES.includes(rol)) {
+          logout()
+          return
+        }
+        const me: User = {
+          id: data.id,
+          nombre: data.nombre,
+          email: data.email,
+          rol,
+        }
+        localStorage.setItem('user', JSON.stringify(me))
+        setUser(me)
+      })
+      .catch(() => logout())
+  }, [token, logout])
 
   return (
     <AuthContext.Provider value={{ user, token, isAuthenticated: !!token, login, logout }}>

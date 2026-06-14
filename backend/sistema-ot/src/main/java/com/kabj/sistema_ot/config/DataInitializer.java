@@ -8,7 +8,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
+import com.kabj.sistema_ot.service.OpOtFormularioService;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -21,6 +23,7 @@ import java.util.List;
 @Slf4j
 @Component
 @RequiredArgsConstructor
+@ConditionalOnProperty(name = "app.seed-demo-data", havingValue = "true", matchIfMissing = true)
 public class DataInitializer implements ApplicationRunner {
 
     private final RolRepository rolRepository;
@@ -29,6 +32,7 @@ public class DataInitializer implements ApplicationRunner {
     private final RrhhTrabajadorRepository trabajadorRepository;
     private final RrhhCapatazRepository capatazRepository;
     private final CatSubactividadRepository subactividadRepository;
+    private final CatFormularioRepository catFormularioRepository;
     private final CatTipoPuntoOperativoRepository tipoPuntoRepository;
     private final CatEstadoOtRepository estadoOtRepository;
 
@@ -38,6 +42,7 @@ public class DataInitializer implements ApplicationRunner {
         seedRoles();
         seedUsuarios();
         seedSubactividades();
+        seedFormularios();
         seedTiposPunto();
         seedEstadosOt();
     }
@@ -104,6 +109,23 @@ public class DataInitializer implements ApplicationRunner {
             subactividadRepository.save(sub);
         }
         log.info("Subactividades sembradas.");
+    }
+
+    private void seedFormularios() {
+        if (catFormularioRepository.findByCodigo(OpOtFormularioService.CODIGO_PURGADO_RED).isPresent()) {
+            return;
+        }
+        subactividadRepository.findByCodigo("A1.37").ifPresent(sub -> {
+            CatFormulario form = new CatFormulario();
+            form.setSubactividad(sub);
+            form.setCodigo(OpOtFormularioService.CODIGO_PURGADO_RED);
+            form.setNombre("Purgado en redes");
+            form.setDescripcion("Datos técnicos de purgado: presión, tiempo y cloro");
+            form.setVersion(1);
+            form.setActivo(true);
+            catFormularioRepository.save(form);
+            log.info("Formulario PURGADO_RED sembrado.");
+        });
     }
 
     private void seedTiposPunto() {

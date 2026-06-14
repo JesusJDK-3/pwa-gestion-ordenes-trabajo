@@ -2,16 +2,11 @@ import { type ReactNode } from 'react'
 import { Navigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import type { Rol } from '../types'
+import { getRolHome } from '../utils/rolHome'
 
 interface Props {
   children: ReactNode
   roles?: Rol[]
-}
-
-function getRolHome(rol: Rol): string {
-  if (rol === 'supervisor') return '/supervisor'
-  if (rol === 'capataz')    return '/capataz'
-  return '/admin'
 }
 
 export default function PrivateRoute({ children, roles }: Props) {

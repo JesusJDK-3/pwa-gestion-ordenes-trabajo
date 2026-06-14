@@ -11,6 +11,7 @@ import com.kabj.sistema_ot.repository.UsuarioRepository;
 import com.kabj.sistema_ot.service.CuadrillaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/cuadrilla")
 @RequiredArgsConstructor
+@PreAuthorize("hasRole('CAPATAZ')")
 public class CuadrillaController {
 
     private final UsuarioRepository usuarioRepository;

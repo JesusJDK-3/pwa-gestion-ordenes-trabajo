@@ -31,6 +31,7 @@ public class OrdenTrabajoResponse {
     private String estadoSincronizacion;
     private String observacion;
     private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
     private Boolean visibleEnMapa;
     private Boolean requiereCorreccionCoordenadas;
     private String mensajeCoordenadas;
@@ -71,6 +72,7 @@ public class OrdenTrabajoResponse {
         r.setEstadoSincronizacion(ot.getEstadoSincronizacion());
         r.setObservacion(ot.getObservacion());
         r.setCreatedAt(ot.getCreatedAt());
+        r.setUpdatedAt(ot.getUpdatedAt());
         r.setVisibleEnMapa(ot.getVisibleEnMapa());
         if (ot.getFilaImportacion() != null) {
             r.setRequiereCorreccionCoordenadas(ot.getFilaImportacion().getRequiereCoordenadaManual());
