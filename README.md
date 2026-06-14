@@ -2,9 +2,7 @@
 > PWA para gestión de órdenes de trabajo de campo · SEDAPAL · Mantenimiento de Redes  
 > Consultores & Constructores K.A.B.J. S.A.C.
 
-[![CI](https://github.com/TU_USUARIO/pwa-gestion-ordenes-trabajo/actions/workflows/ci.yml/badge.svg)](https://github.com/TU_USUARIO/pwa-gestion-ordenes-trabajo/actions/workflows/ci.yml)
-
-> Reemplaza `TU_USUARIO` en el badge con el owner real del repositorio en GitHub.
+[![CI](https://github.com/JesusJDK-3/pwa-gestion-ordenes-trabajo/actions/workflows/ci.yml/badge.svg)](https://github.com/JesusJDK-3/pwa-gestion-ordenes-trabajo/actions/workflows/ci.yml)
 
 ---
 
@@ -257,6 +255,12 @@ export PATH="$JAVA_HOME/bin:$PATH"
 
 Guía completa de arquitectura, módulos y convenciones: **[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)**.
 
+| Documento | Descripción |
+|-----------|-------------|
+| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Arquitectura, API, estados OT, módulos |
+| [docs/GUIA-DEPLOY-Y-WORKFLOW.md](docs/GUIA-DEPLOY-Y-WORKFLOW.md) | Ramas, CI, variables de entorno, deploy |
+| [docs/INFORME-TECNICO.md](docs/INFORME-TECNICO.md) | Informe técnico (base para exportar a Word) |
+
 El código fuente incluye comentarios **Javadoc** (backend) y **JSDoc** (frontend) en clases, servicios y pantallas críticas. Cada paquete Java tiene un `package-info.java` con índice del módulo.
 
 ### Arquitectura en capas
@@ -329,11 +333,11 @@ cd frontend && npm run lint && npm run build
 
 El proyecto incluye un workflow de **GitHub Actions** en [`.github/workflows/ci.yml`](.github/workflows/ci.yml).
 
-En cada **push** o **pull request** hacia `main`/`master`, CI ejecuta automáticamente:
+En cada **push** o **pull request** hacia `main`, `master` o `melany`, CI ejecuta automáticamente:
 
 | Job | Pasos | Objetivo |
 |-----|-------|----------|
-| **backend** | `./mvnw test` con JDK 21 | Compilar y ejecutar tests JUnit (H2) |
+| **backend** | `mvn test` con JDK 21 | Compilar y ejecutar tests JUnit (H2) |
 | **frontend** | `npm ci`, `npm run lint`, `npm run build` | Dependencias, ESLint y build Vite |
 
 Si algún paso falla, GitHub marca el commit/PR en rojo. Esto evita integrar código roto.
