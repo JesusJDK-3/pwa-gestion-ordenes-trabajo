@@ -6,6 +6,7 @@ import com.kabj.sistema_ot.service.CuadrillaService;
 import com.kabj.sistema_ot.repository.RrhhTrabajadorRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,6 +22,7 @@ public class TrabajadorController {
     private final RrhhTrabajadorRepository trabajadorRepository;
 
     @GetMapping
+    @PreAuthorize("hasRole('CAPATAZ')")
     public ResponseEntity<ApiResponse<List<Map<String, Object>>>> listar() {
         List<Map<String, Object>> trabajadores = trabajadorRepository.findAll().stream()
                 .filter(t -> t.getActivo() != null && t.getActivo())
@@ -39,6 +41,7 @@ public class TrabajadorController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('CAPATAZ')")
     public ResponseEntity<ApiResponse<Map<String, Object>>> crear(@RequestBody Map<String, Object> body) {
         String dni = body.get("dni") != null ? body.get("dni").toString().trim() : null;
         String nombres = body.get("nombres") != null ? body.get("nombres").toString().trim() : null;

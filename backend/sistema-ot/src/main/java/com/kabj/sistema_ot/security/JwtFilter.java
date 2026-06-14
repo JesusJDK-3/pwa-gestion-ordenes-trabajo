@@ -35,17 +35,16 @@ public class JwtFilter extends OncePerRequestFilter {
 
             if (jwtUtil.validateToken(token)) {
                 String username = jwtUtil.extractUsername(token);
-                String rol = jwtUtil.extractRol(token);
 
-                // Verificar que el usuario sigue activo en la base de datos
-                boolean isActive = usuarioRepository.findByUsername(username)
-                        .map(u -> Boolean.TRUE.equals(u.getActivo()))
-                        .orElse(false);
-
-                if (isActive) {
+                var usuarioOpt = usuarioRepository.findByUsername(username);
+                if (usuarioOpt.isPresent()
+                        && Boolean.TRUE.equals(usuarioOpt.get().getActivo())
+                        && usuarioOpt.get().getRol() != null
+                        && usuarioOpt.get().getRol().getCodigo() != null) {
+                    String rolDb = usuarioOpt.get().getRol().getCodigo();
                     var auth = new UsernamePasswordAuthenticationToken(
                             username, null,
-                            List.of(new SimpleGrantedAuthority("ROLE_" + rol.toUpperCase()))
+                            List.of(new SimpleGrantedAuthority("ROLE_" + rolDb.toUpperCase()))
                     );
                     SecurityContextHolder.getContext().setAuthentication(auth);
                 }

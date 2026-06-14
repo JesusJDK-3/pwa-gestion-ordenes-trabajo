@@ -1,137 +1,425 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
+
 import { Link } from 'react-router-dom'
-import { puntoService, puntoExtraService } from '../../services/api'
-import { useOfflineSync } from '../../hooks/useOfflineSync'
+
+import { puntoService } from '../../services/api'
+
+import { offlineDB } from '../../services/offlineDB'
+
+import { useOfflineSync } from '../../context/OfflineSyncContext'
+
+import { useAuth } from '../../context/AuthContext'
+
 import type { OrdenTrabajo } from '../../types'
-import { Clock3, CheckCircle2, AlertCircle, Map, WifiOff, ArrowRight } from 'lucide-react'
+
+import PageRefreshButton from '../../components/PageRefreshButton'
+
+import OtFiltrosBar from '../../components/OtFiltrosBar'
+import { unwrapList } from '../../utils/apiParse'
+
+import {
+
+  Timer, Wrench, CircleCheckBig, MapPinned, WifiOff,
+
+  ClipboardList, AlertTriangle,
+
+} from 'lucide-react'
+
+
+
+function statusClass(codigo?: string) {
+
+  switch (codigo) {
+
+    case 'EN_PROGRESO': return 'status-progreso'
+
+    case 'OBSERVADA':   return 'status-observada'
+
+    case 'COMPLETADA':  return 'status-completada'
+
+    default:            return 'status-pendiente'
+
+  }
+
+}
+
+
+
+function necesitaUbicacion(ot: OrdenTrabajo) {
+
+  return ot.latitud == null || ot.longitud == null || ot.requiereCorreccionCoordenadas
+
+}
+
+
 
 export default function CapatazDashboard() {
-  const [ordenes,  setOrdenes]  = useState<OrdenTrabajo[]>([])
-  const [completadasCount, setCompletadasCount] = useState(0)
+
+  const [ordenes, setOrdenes] = useState<OrdenTrabajo[]>([])
+
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
+
+  const [filtroSgio, setFiltroSgio] = useState('')
+
+  const [filtroEstado, setFiltroEstado] = useState('')
+
   const { isOnline, pendingCount } = useOfflineSync()
 
-  useEffect(() => {
+  const { user } = useAuth()
+
+  const cacheKey = user?.email ?? 'capataz'
+
+
+
+  const cargar = useCallback(() => {
+
     setLoading(true)
-    // Solicitar puntos activos y también el historial de completadas para mostrar el contador
-    Promise.all([puntoService.misPuntos(), puntoExtraService.misCompletadas()])
-      .then(([r1, r2]) => {
-        const data = (r1.data as any)
-        setOrdenes(Array.isArray(data) ? data : (data?.data ?? []))
 
-        const d2 = (r2.data as any)
-        const arr = Array.isArray(d2) ? d2 : (d2?.data ?? [])
-        setCompletadasCount(Array.isArray(arr) ? arr.length : 0)
+    setError('')
+
+    puntoService.misAsignacionesDia({
+
+      sgio: filtroSgio || undefined,
+
+      estado: filtroEstado || undefined,
+
+    })
+
+      .then(r => setOrdenes(unwrapList<OrdenTrabajo>(r.data)))
+
+      .catch(async () => {
+
+        if (!navigator.onLine) {
+
+          const cached = await offlineDB.obtenerPuntosCache(cacheKey)
+
+          setOrdenes(cached)
+
+          setError(cached.length ? '' : 'Sin datos en caché. Conéctese para cargar asignaciones.')
+
+        } else {
+
+          setOrdenes([])
+
+          setError('No se pudieron cargar sus asignaciones. Verifique la conexión.')
+
+        }
+
       })
+
       .finally(() => setLoading(false))
-  }, [])
 
-  const pendientes  = ordenes.filter(p => p.estadoCodigo === 'PENDIENTE')
-  const enProgreso  = ordenes.filter(p => p.estadoCodigo === 'EN_PROGRESO')
-  const completados = ordenes.filter(p => p.estadoCodigo === 'COMPLETADA')
+  }, [filtroSgio, filtroEstado, cacheKey])
 
-  if (loading) return <PageSkeleton />
+
+
+  useEffect(() => { cargar() }, [cargar])
+
+
+
+  const pendientes  = useMemo(() => ordenes.filter(p => p.estadoCodigo === 'PENDIENTE'), [ordenes])
+
+  const enProgreso  = useMemo(() => ordenes.filter(p => p.estadoCodigo === 'EN_PROGRESO'), [ordenes])
+
+  const observadas  = useMemo(() => ordenes.filter(p => p.estadoCodigo === 'OBSERVADA'), [ordenes])
+
+  const completadas = useMemo(() => ordenes.filter(p => p.estadoCodigo === 'COMPLETADA'), [ordenes])
+
+
 
   const stats = [
-    { label: 'Pendientes',  value: pendientes.length,  icon: Clock3,        bg: 'bg-gray-50',    text: 'text-gray-700',    icon_c: 'text-gray-400' },
-    { label: 'En progreso', value: enProgreso.length,  icon: AlertCircle,   bg: 'bg-orange-50',  text: 'text-orange-700',  icon_c: 'text-orange-500' },
-    { label: 'Completados', value: completadasCount || completados.length, icon: CheckCircle2,  bg: 'bg-emerald-50', text: 'text-emerald-700', icon_c: 'text-emerald-500' },
+
+    { label: 'Pendiente',    value: pendientes.length,  icon: Timer,          accent: 'border-l-slate-500',   iconBg: 'bg-slate-50 border-slate-200 text-slate-600', tab: 'PENDIENTE' },
+
+    { label: 'En progreso',  value: enProgreso.length,  icon: Wrench,         accent: 'border-l-amber-500',   iconBg: 'bg-amber-50 border-amber-200 text-amber-700', tab: 'EN_PROGRESO' },
+
+    { label: 'Observada',    value: observadas.length,  icon: AlertTriangle,  accent: 'border-l-yellow-500',  iconBg: 'bg-yellow-50 border-yellow-300 text-yellow-800', tab: 'OBSERVADA' },
+
+    { label: 'Completadas',  value: completadas.length, icon: CircleCheckBig, accent: 'border-l-emerald-600', iconBg: 'bg-emerald-50 border-emerald-200 text-emerald-700', tab: 'COMPLETADA' },
+
   ]
 
+
+
+  if (loading && ordenes.length === 0) return <PageSkeleton />
+
+
+
   return (
+
     <div className="space-y-6">
 
-      {/* Page title */}
-      <div>
-        <h1 className="text-[22px] font-bold text-gray-900">Mi Panel</h1>
-        <p className="text-sm text-gray-500 mt-0.5">Resumen de tus órdenes asignadas</p>
+      <div className="page-header border-0 pb-0 mb-0">
+
+        <div>
+
+          <p className="page-breadcrumb">Operaciones de campo · Capataz</p>
+
+          <h1 className="page-title">Mis asignaciones</h1>
+
+          <p className="page-subtitle">
+
+            Trabajo del día · {new Date().toLocaleDateString('es-PE', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
+
+          </p>
+
+        </div>
+
+        <PageRefreshButton onClick={cargar} loading={loading} />
+
       </div>
 
-      {/* Offline alert */}
+
+
       {!isOnline && (
-        <div className="flex items-center gap-3 bg-red-50 border border-red-100 rounded-2xl px-5 py-4 text-red-700 text-sm font-medium">
-          <WifiOff size={18} className="flex-shrink-0" />
-          Sin conexión — Los registros se guardarán localmente ({pendingCount} pendiente{pendingCount !== 1 ? 's' : ''})
+
+        <div className="alert-banner alert-warning">
+
+          <WifiOff size={16} />
+
+          Modo sin conexión — {pendingCount} registro{pendingCount !== 1 ? 's' : ''} pendiente{pendingCount !== 1 ? 's' : ''} de sincronizar
+
         </div>
+
       )}
 
-      {/* Stats */}
-      <div className="grid grid-cols-3 gap-4">
+
+
+      <div className="kpi-grid">
+
         {stats.map(s => {
+
           const Icon = s.icon
+
           return (
-            <div key={s.label} className={`rounded-2xl p-5 ${s.bg} shadow-card`}>
-              <Icon size={20} className={`${s.icon_c} mb-3`} />
-              <p className={`text-3xl font-bold ${s.text}`}>{s.value}</p>
-              <p className="text-xs text-gray-500 mt-1">{s.label}</p>
-            </div>
+
+            <button
+
+              key={s.label}
+
+              type="button"
+
+              onClick={() => setFiltroEstado(filtroEstado === s.tab ? '' : s.tab)}
+
+              className={`kpi-tile border-l-4 ${s.accent} text-left hover:bg-slate-50/80 transition-colors cursor-pointer`}
+
+            >
+
+              <div className={`kpi-icon-box ${s.iconBg}`}>
+
+                <Icon size={20} strokeWidth={1.75} />
+
+              </div>
+
+              <div>
+
+                <p className="kpi-value">{s.value}</p>
+
+                <p className="kpi-label">{s.label}</p>
+
+              </div>
+
+            </button>
+
           )
+
         })}
+
       </div>
 
-      {/* Map CTA */}
-      <Link
-        to="/capataz/mapa"
-        className="flex items-center justify-between w-full bg-[#1A2535] hover:bg-[#243347] text-white font-semibold py-4 px-5 rounded-2xl transition-colors shadow-card group"
-      >
-        <div className="flex items-center gap-3">
-          <div className="w-9 h-9 bg-white/10 rounded-xl flex items-center justify-center">
-            <Map size={18} />
-          </div>
-          Ver mis puntos en el mapa
-        </div>
-        <ArrowRight size={18} className="opacity-50 group-hover:opacity-100 transition-opacity" />
-      </Link>
 
-      {/* Órdenes activas */}
-      <div className="bg-white rounded-2xl shadow-card overflow-hidden">
-        <div className="px-5 py-4 border-b border-gray-100">
-          <h2 className="font-semibold text-gray-800">
-            Órdenes activas{' '}
-            <span className="text-gray-400 font-normal text-sm">({pendientes.length + enProgreso.length})</span>
-          </h2>
+
+      {error && <div className="alert-banner alert-error text-sm">{error}</div>}
+
+
+
+      <OtFiltrosBar
+
+        sgio={filtroSgio}
+
+        estado={filtroEstado}
+
+        onSgio={setFiltroSgio}
+
+        onEstado={setFiltroEstado}
+
+        onLimpiar={() => { setFiltroSgio(''); setFiltroEstado('') }}
+
+      />
+
+
+
+      <div className="corp-card overflow-hidden">
+
+        <div className="corp-card-header">
+
+          <span className="flex items-center gap-2">
+
+            <ClipboardList size={14} />
+
+            Órdenes del día
+
+          </span>
+
+          <span className="badge-count">{ordenes.length}</span>
+
         </div>
-        {[...enProgreso, ...pendientes].length === 0 ? (
-          <div className="px-5 py-10 text-center text-gray-400">
-            <CheckCircle2 size={32} className="mx-auto mb-2 text-emerald-400" />
-            <p className="text-sm">No tienes órdenes activas.</p>
+
+
+
+        {ordenes.length === 0 ? (
+
+          <div className="px-6 py-12 text-center text-slate-400">
+
+            <CircleCheckBig size={32} className="mx-auto mb-2 text-emerald-400" />
+
+            <p className="text-sm font-medium">No hay OTs para los filtros seleccionados.</p>
+
           </div>
+
         ) : (
-          <ul className="divide-y divide-gray-50">
-            {[...enProgreso, ...pendientes].map(p => (
-              <li key={p.idOt} className="px-5 py-4 flex items-start justify-between gap-4">
-                <div>
-                  <p className="text-sm font-semibold text-gray-800 font-mono">{p.sgio}</p>
-                  <p className="text-xs text-gray-500 mt-0.5">{p.direccion ?? p.subactividad ?? '—'}</p>
-                  <span className={`inline-block mt-2 text-xs px-2.5 py-0.5 rounded-full font-medium ${
-                    p.estadoCodigo === 'EN_PROGRESO' ? 'bg-orange-100 text-orange-700' : 'bg-gray-100 text-gray-600'
-                  }`}>{p.estado ?? p.estadoCodigo}</span>
-                </div>
-                <Link
-                  to={`/capataz/registrar/${p.idOt}`}
-                  className="flex-shrink-0 flex items-center gap-1.5 text-xs bg-[#CC1111] hover:bg-[#AA0E0E] text-white px-3 py-2 rounded-xl font-semibold transition-colors"
-                >
-                  Registrar
-                  <ArrowRight size={12} />
-                </Link>
-              </li>
-            ))}
-          </ul>
+
+          <table className="enterprise-table">
+
+            <thead>
+
+              <tr>
+
+                {['SGIO', 'Ubicación / Actividad', 'Estado', 'Observaciones', 'Acciones'].map(h => (
+
+                  <th key={h}>{h}</th>
+
+                ))}
+
+              </tr>
+
+            </thead>
+
+            <tbody>
+
+              {ordenes.map(p => {
+
+                const sinMapa = necesitaUbicacion(p)
+
+                return (
+
+                  <tr key={p.idOt} className={p.estadoCodigo === 'OBSERVADA' ? 'bg-yellow-50/60' : sinMapa ? 'bg-amber-50/40' : undefined}>
+
+                    <td className="font-mono font-bold text-[#1B4F72] text-xs">{p.sgio}</td>
+
+                    <td className="max-w-xs text-slate-600">
+
+                      <p className="truncate">{p.direccion ?? p.subactividad ?? '—'}</p>
+
+                      {sinMapa && (
+
+                        <p className="text-[10px] text-amber-800 mt-1 flex items-center gap-1">
+
+                          <AlertTriangle size={10} />
+
+                          Ubicación pendiente — ver alertas
+
+                        </p>
+
+                      )}
+
+                    </td>
+
+                    <td>
+
+                      <span className={`status-pill ${statusClass(p.estadoCodigo)}`}>
+
+                        {p.estado ?? p.estadoCodigo}
+
+                      </span>
+
+                    </td>
+
+                    <td className="max-w-[180px] text-xs text-slate-600 line-clamp-2">
+
+                      {p.observacion?.trim() || '—'}
+
+                    </td>
+
+                    <td>
+
+                      <div className="flex flex-wrap items-center gap-2">
+
+                        <Link
+
+                          to={`/capataz/mapa?ot=${p.idOt}`}
+
+                          className={`inline-flex items-center gap-1 text-xs font-semibold hover:underline ${
+
+                            sinMapa ? 'text-amber-800' : 'text-[#1B4F72]'
+
+                          }`}
+
+                        >
+
+                          <MapPinned size={12} />
+
+                          Mapa
+
+                        </Link>
+
+                        {p.estadoCodigo !== 'COMPLETADA' && (
+
+                          <Link to={`/capataz/registrar/${p.idOt}`} className="btn-accent text-xs py-1.5 px-3">
+
+                            Registrar
+
+                          </Link>
+
+                        )}
+
+                      </div>
+
+                    </td>
+
+                  </tr>
+
+                )
+
+              })}
+
+            </tbody>
+
+          </table>
+
         )}
+
       </div>
+
     </div>
+
   )
+
 }
+
+
 
 function PageSkeleton() {
+
   return (
+
     <div className="space-y-6 animate-pulse">
-      <div className="h-8 w-32 bg-gray-200 rounded-lg" />
-      <div className="grid grid-cols-3 gap-4">
-        {[...Array(3)].map((_, i) => <div key={i} className="h-28 bg-gray-200 rounded-2xl" />)}
+
+      <div className="h-10 w-48 bg-slate-200" />
+
+      <div className="grid grid-cols-2 xl:grid-cols-4 gap-px bg-slate-200 border border-slate-200">
+
+        {[...Array(4)].map((_, i) => <div key={i} className="h-24 bg-white" />)}
+
       </div>
-      <div className="h-14 bg-gray-200 rounded-2xl" />
-      <div className="h-64 bg-gray-200 rounded-2xl" />
+
+      <div className="h-64 bg-slate-200" />
+
     </div>
+
   )
+
 }
+
+

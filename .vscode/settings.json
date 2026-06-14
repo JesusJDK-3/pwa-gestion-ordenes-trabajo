@@ -1,0 +1,9 @@
+{
+  "java.compile.nullAnalysis.mode": "automatic",
+  "java.test.editor.enableShortcuts": true,
+  "java.configuration.updateBuildConfiguration": "automatic",
+  "java.import.maven.enabled": true,
+  "testing.openTesting": "openOnTestStart",
+  "testing.gutterEnabled": true,
+  "testing.automaticallyOpenTestResults": "openOnTestStart"
+}

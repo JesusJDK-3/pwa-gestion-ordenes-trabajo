@@ -9,6 +9,7 @@ export interface User {
   nombre: string
   email: string
   rol: Rol
+  username?: string
 }
 
 export interface AuthState {
@@ -41,6 +42,7 @@ export interface OrdenTrabajo {
   estadoSincronizacion?: string
   observacion?: string
   createdAt?: string
+  updatedAt?: string
   visibleEnMapa?: boolean
   requiereCorreccionCoordenadas?: boolean
   mensajeCoordenadas?: string
@@ -64,7 +66,11 @@ export interface SeguimientoOt {
 
 export interface RegistroPendiente {
   id?: number
+  clientOpUuid?: string
+  sincronizado?: boolean
   puntoId: number
+  tipoActividad?: string
+  asistenteIds?: number[]
   cuadrillaId?: number
   cuadrillaNombre?: string
   asistenteId?: number

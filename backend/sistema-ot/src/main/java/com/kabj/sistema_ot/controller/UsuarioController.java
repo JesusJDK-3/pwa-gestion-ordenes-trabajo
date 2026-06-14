@@ -6,6 +6,7 @@ import com.kabj.sistema_ot.repository.RrhhCapatazRepository;
 import com.kabj.sistema_ot.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -22,6 +23,7 @@ public class UsuarioController {
     private final RrhhCapatazRepository capatazRepository;
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN','SUPERVISOR')")
     public ResponseEntity<ApiResponse<List<Map<String, Object>>>> listar() {
         List<Map<String, Object>> usuarios = new ArrayList<>();
 
@@ -32,6 +34,7 @@ public class UsuarioController {
             m.put("usuarioId", u.getIdUsuario());
             m.put("nombre",    u.getNombres() + " " + u.getApellidos());
             m.put("email",     u.getEmail() != null ? u.getEmail() : "");
+            m.put("username",  u.getUsername());
             m.put("rol",       u.getRol().getCodigo());
 
             // Para capataces, exponer id_capataz (que es el FK en op_orden_trabajo)
@@ -39,10 +42,10 @@ public class UsuarioController {
             if ("capataz".equalsIgnoreCase(u.getRol().getCodigo())) {
                 var capOpt = capatazRepository.findByUsuario(u);
                 if (capOpt.isPresent()) {
-                    m.put("id", capOpt.get().getIdCapataz()); // id para asignar
-                } else {
-                    m.put("id", u.getIdUsuario()); // fallback
+                    m.put("id", capOpt.get().getIdCapataz());
+                    usuarios.add(m);
                 }
+                continue;
             } else {
                 m.put("id", u.getIdUsuario());
             }

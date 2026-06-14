@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Upload, CheckCircle2, AlertCircle, Loader2, FileUp } from 'lucide-react'
-import type { ApiResponse } from '../../types'
+import api from '../../services/api'
+import { unwrapData } from '../../utils/apiParse'
 
 interface CargaResult {
   message: string
@@ -58,7 +59,7 @@ export default function CargarDatosGeograficos() {
       return
     }
 
-    const endpoint = tipo === 'vpa' ? '/api/admin/vpa/carga-excel' : '/api/admin/hidrantes/carga-excel'
+    const endpoint = tipo === 'vpa' ? '/admin/vpa/carga-excel' : '/admin/hidrantes/carga-excel'
 
     const formData = new FormData()
     formData.append('file', state.archivo)
@@ -66,30 +67,22 @@ export default function CargarDatosGeograficos() {
     setState((prev) => ({ ...prev, cargando: true, error: null }))
 
     try {
-      const response = await fetch(endpoint, {
-        method: 'POST',
-        body: formData,
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
+      const { data } = await api.post(endpoint, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
       })
-
-      if (!response.ok) {
-        const errorData = await response.json()
-        throw new Error(errorData.message || 'Error al cargar archivo')
-      }
-
-      const data: ApiResponse<CargaResult> = await response.json()
+      const resultado = unwrapData<CargaResult>(data)
+      if (!resultado) throw new Error('Respuesta vacía del servidor')
       setState((prev) => ({
         ...prev,
-        resultado: data.data,
+        resultado,
         cargando: false,
         archivo: null,
       }))
-    } catch (err) {
+    } catch (err: unknown) {
+      const ax = err as { response?: { data?: { message?: string } } }
       setState((prev) => ({
         ...prev,
-        error: err instanceof Error ? err.message : 'Error desconocido',
+        error: ax.response?.data?.message ?? (err instanceof Error ? err.message : 'Error desconocido'),
         cargando: false,
       }))
     }

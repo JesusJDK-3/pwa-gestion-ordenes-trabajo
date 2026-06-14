@@ -1,7 +1,8 @@
-import { useOfflineSync } from '../hooks/useOfflineSync'
+import { RefreshCw } from 'lucide-react'
+import { useOfflineSync } from '../context/OfflineSyncContext'
 
 export default function OfflineBadge() {
-  const { isOnline, pendingCount, syncing } = useOfflineSync()
+  const { isOnline, pendingCount, syncing, syncPending } = useOfflineSync()
 
   if (syncing) {
     return (
@@ -23,10 +24,15 @@ export default function OfflineBadge() {
 
   if (pendingCount > 0) {
     return (
-      <span className="flex items-center gap-1.5 text-xs bg-amber-50 text-amber-700 border border-amber-300 px-2.5 py-1 rounded-full font-medium">
-        <span className="w-2 h-2 bg-amber-500 rounded-full" />
-        {pendingCount} pendiente{pendingCount > 1 ? 's' : ''}
-      </span>
+      <button
+        type="button"
+        onClick={() => syncPending()}
+        className="flex items-center gap-1.5 text-xs bg-amber-50 text-amber-800 border border-amber-300 px-2.5 py-1 rounded-full font-medium hover:bg-amber-100 transition-colors"
+        title="Sincronizar actividades pendientes"
+      >
+        <RefreshCw size={11} />
+        {pendingCount} pendiente{pendingCount > 1 ? 's' : ''} · Sincronizar
+      </button>
     )
   }
 

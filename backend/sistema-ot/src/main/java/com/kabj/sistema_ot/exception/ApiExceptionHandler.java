@@ -1,6 +1,7 @@
 package com.kabj.sistema_ot.exception;
 
 import jakarta.servlet.http.HttpServletRequest;
+import com.kabj.sistema_ot.exception.ForbiddenException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -66,6 +67,39 @@ public class ApiExceptionHandler {
                         HttpStatus.BAD_REQUEST.value(),
                         "Bad Request",
                         ex.getMessage() != null ? ex.getMessage() : "Valor inválido",
+                        req.getRequestURI()));
+    }
+
+    @ExceptionHandler(ForbiddenException.class)
+    public ResponseEntity<ApiErrorResponse> handleForbidden(ForbiddenException ex,
+                                                            HttpServletRequest req) {
+        return ResponseEntity
+                .status(HttpStatus.FORBIDDEN)
+                .body(ApiErrorResponse.of(
+                        HttpStatus.FORBIDDEN.value(),
+                        "Forbidden",
+                        ex.getMessage(),
+                        req.getRequestURI()));
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<ApiErrorResponse> handleRuntime(RuntimeException ex,
+                                                          HttpServletRequest req) {
+        String msg = ex.getMessage() != null ? ex.getMessage() : "Operación no permitida";
+        String lower = msg.toLowerCase();
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        if (lower.contains("no tiene permiso") || lower.contains("no corresponde")
+                || lower.contains("no está asignada") || lower.contains("propiedad")) {
+            status = HttpStatus.FORBIDDEN;
+        } else if (lower.contains("no encontrad")) {
+            status = HttpStatus.NOT_FOUND;
+        }
+        return ResponseEntity
+                .status(status)
+                .body(ApiErrorResponse.of(
+                        status.value(),
+                        status.getReasonPhrase(),
+                        msg,
                         req.getRequestURI()));
     }
 

@@ -1,112 +1,123 @@
-import { useParams, useNavigate } from 'react-router-dom'
-import { Clock, ChevronRight, AlertCircle } from 'lucide-react'
+import { useParams, useNavigate, Link } from 'react-router-dom'
+import { ArrowLeft, Clock, ChevronRight, AlertTriangle, ListOrdered, Wrench } from 'lucide-react'
 import { ACTIVIDADES } from '../../data/actividades'
 import type { Subactividad } from '../../types/kabj'
-import Navbar from '../../components/kabj/Navbar'
-import HelpButton from '../../components/kabj/HelpButton'
 
-const TYPE_COLORS: Record<string, string> = {
-  'Mantenimiento Correctivo': 'bg-red-100 text-red-700',
-  'Mantenimiento Preventivo': 'bg-blue-100 text-blue-700',
-  'Operación Planificada':    'bg-amber-100 text-amber-700',
-  'Inspección Técnica':       'bg-purple-100 text-purple-700',
+const TYPE_CLASS: Record<string, string> = {
+  'Mantenimiento Correctivo': 'status-pill status-anulada',
+  'Mantenimiento Preventivo': 'status-pill border-sky-200 bg-sky-50 text-sky-800',
+  'Operación Planificada':    'status-progreso',
+  'Inspección Técnica':       'status-pill border-violet-200 bg-violet-50 text-violet-800',
 }
 
-function SubactCard({ sub, index, onClick }: { sub: Subactividad; index: number; onClick: () => void }) {
-  const stagger = `stagger-${Math.min(index + 1, 6)}`
-  const typeColor = TYPE_COLORS[sub.tipo] ?? 'bg-gray-100 text-gray-600'
-
+function SubactCard({ sub, onClick }: { sub: Subactividad; onClick: () => void }) {
   return (
     <button
+      type="button"
       onClick={onClick}
-      className={`w-full bg-white rounded-2xl shadow-card hover:shadow-card-hover hover:-translate-y-0.5 transition-all text-left p-5 animate-fade-in-up ${stagger} group`}
+      className="kpi-tile-btn border-l-4 border-l-[#1B4F72] items-start w-full"
     >
-      <div className="flex items-start justify-between gap-3">
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 mb-2 flex-wrap">
-            <span className="bg-gray-100 text-gray-500 text-[12px] px-2 py-0.5 rounded-md font-medium">
-              {sub.id}
-            </span>
-            <span className={`text-[12px] px-2 py-0.5 rounded-md font-medium ${typeColor}`}>
-              {sub.tipo}
-            </span>
-          </div>
-          <p className="font-semibold text-[15px] text-gray-900 leading-snug">{sub.nombre}</p>
-          <p className="text-[13px] text-gray-500 mt-1.5 line-clamp-2">{sub.descripcion}</p>
+      <div className="flex-1 min-w-0 text-left space-y-2">
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wide font-mono">{sub.id}</span>
+          <span className={TYPE_CLASS[sub.tipo] ?? 'status-pill status-pendiente'}>{sub.tipo}</span>
         </div>
-        <div className="flex-shrink-0 flex flex-col items-end gap-2">
-          <ChevronRight size={18} className="text-gray-300 group-hover:text-[#CC1111] transition-colors" />
-          <div className="flex items-center gap-1 text-[12px] text-gray-400">
-            <Clock size={13} />
-            <span>{sub.tiempoMaximo} min</span>
-          </div>
+        <p className="font-bold text-slate-800 text-sm leading-snug">{sub.nombre}</p>
+        <p className="text-xs text-slate-500 line-clamp-2 leading-relaxed">{sub.descripcion}</p>
+        <div className="flex flex-wrap gap-3 text-[11px] text-slate-500 pt-1">
+          <span className="inline-flex items-center gap-1">
+            <ListOrdered size={12} />
+            {sub.pasos.length} pasos
+          </span>
+          <span className="inline-flex items-center gap-1">
+            <Wrench size={12} />
+            {sub.materiales.length} materiales
+          </span>
+          <span className="inline-flex items-center gap-1 text-amber-700">
+            <AlertTriangle size={12} />
+            {sub.medidasSeguridad.length} medidas
+          </span>
         </div>
       </div>
-
-      <div className="mt-4 pt-3 border-t border-gray-50 flex items-center gap-4 text-[12px] text-gray-400">
-        <span>{sub.pasos.length} pasos</span>
-        <span>{sub.materiales.length} materiales</span>
-        <span className="flex items-center gap-1">
-          <AlertCircle size={12} className="text-amber-500" />
-          {sub.medidasSeguridad.length} medidas
-        </span>
+      <div className="flex flex-col items-end gap-2 flex-shrink-0">
+        <ChevronRight size={16} className="text-slate-300" />
+        <div className="flex items-center gap-1 text-xs text-slate-500">
+          <Clock size={12} />
+          <span>{sub.tiempoMaximo} min</span>
+        </div>
       </div>
     </button>
   )
 }
 
 export default function ActividadPage() {
-  const { id }     = useParams<{ id: string }>()
-  const navigate   = useNavigate()
-  const actividad  = ACTIVIDADES.find(a => a.id === id)
+  const { id } = useParams<{ id: string }>()
+  const navigate = useNavigate()
+  const actividad = ACTIVIDADES.find(a => a.id === id)
 
   if (!actividad) {
     return (
-      <div className="min-h-screen bg-[#EEF1F5] flex flex-col">
-        <Navbar showBack subtitle="Actividad no encontrada" />
-        <div className="flex-1 flex items-center justify-center text-gray-400 text-[15px]">
-          Actividad no encontrada.
-        </div>
+      <div className="corp-card p-12 text-center text-slate-500 text-sm">
+        Actividad no encontrada.
       </div>
     )
   }
 
+  const tiempoProm = Math.round(
+    actividad.subactividades.reduce((s, sub) => s + sub.tiempoMaximo, 0) / actividad.subactividades.length
+  )
+
   return (
-    <div className="min-h-screen bg-[#EEF1F5] flex flex-col">
-      <Navbar
-        showBack
-        title={actividad.nombre}
-        subtitle={`${actividad.codigo} · ${actividad.totalOT} órdenes activas`}
-      />
-
-      <main className="flex-1 px-5 py-6">
-        {/* Header */}
-        <div className="mb-5 animate-fade-in-up">
-          <div className="flex items-center justify-between">
-            <h1 className="text-[22px] font-bold text-gray-900">{actividad.nombre}</h1>
-            <span className="bg-green-100 text-green-700 text-[12px] font-medium px-3 py-1 rounded-full">
-              Activo
-            </span>
+    <div className="space-y-6">
+      <div className="page-header border-0 pb-0 mb-0">
+        <div className="flex items-start gap-3">
+          <Link to="/dashboard" className="btn-outline py-2 px-2.5 flex-shrink-0">
+            <ArrowLeft size={16} />
+          </Link>
+          <div>
+            <p className="page-breadcrumb">Manuales · {actividad.codigo}</p>
+            <h1 className="page-title">{actividad.nombre}</h1>
+            <p className="page-subtitle">
+              {actividad.subtitulo} — seleccione la subactividad para ver la ficha técnica
+            </p>
           </div>
-          <p className="text-[14px] text-gray-500 mt-1">
-            Selecciona la subactividad a ejecutar hoy
-          </p>
         </div>
+      </div>
 
-        {/* Sub-activities */}
-        <div className="space-y-3">
-          {actividad.subactividades.map((sub, i) => (
-            <SubactCard
-              key={sub.id}
-              sub={sub}
-              index={i}
-              onClick={() => navigate(`/ficha/${sub.id}`)}
-            />
+      <div className="kpi-grid grid-cols-3">
+        <div className="kpi-tile border-l-4 border-l-[#1B4F72]">
+          <div>
+            <p className="kpi-value">{actividad.subactividades.length}</p>
+            <p className="kpi-label">Subactividades</p>
+          </div>
+        </div>
+        <div className="kpi-tile border-l-4 border-l-amber-500">
+          <div>
+            <p className="kpi-value">{tiempoProm}</p>
+            <p className="kpi-label">Min. promedio</p>
+          </div>
+        </div>
+        <div className="kpi-tile border-l-4 border-l-emerald-600">
+          <div>
+            <p className="kpi-value">{actividad.totalOT}</p>
+            <p className="kpi-label">OT referencia</p>
+          </div>
+        </div>
+      </div>
+
+      <div className="corp-card overflow-hidden">
+        <div className="corp-card-header">
+          <span>Subactividades disponibles</span>
+          <span className="badge-count">{actividad.subactividades.length}</span>
+        </div>
+        <div className="divide-y divide-slate-100">
+          {actividad.subactividades.map(sub => (
+            <div key={sub.id} className="p-0">
+              <SubactCard sub={sub} onClick={() => navigate(`/ficha/${sub.id}`)} />
+            </div>
           ))}
         </div>
-      </main>
-
-      <HelpButton />
+      </div>
     </div>
   )
 }

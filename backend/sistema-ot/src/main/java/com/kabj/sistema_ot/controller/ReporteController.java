@@ -2,18 +2,22 @@ package com.kabj.sistema_ot.controller;
 
 import com.kabj.sistema_ot.dto.ApiResponse;
 import com.kabj.sistema_ot.entity.OpOrdenTrabajo;
+import com.kabj.sistema_ot.entity.OpOtEvento;
 import com.kabj.sistema_ot.repository.OpOrdenTrabajoRepository;
+import com.kabj.sistema_ot.repository.OpOtEventoRepository;
 import com.kabj.sistema_ot.repository.RrhhCapatazRepository;
 import com.kabj.sistema_ot.repository.UsuarioRepository;
+import com.kabj.sistema_ot.service.AlertaService;
+import com.kabj.sistema_ot.service.EventoService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -21,14 +25,17 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/reportes")
 @RequiredArgsConstructor
-@PreAuthorize("hasAnyRole('ADMIN','SUPERVISOR')")
 public class ReporteController {
 
     private final OpOrdenTrabajoRepository ordenRepo;
+    private final OpOtEventoRepository     eventoRepo;
     private final UsuarioRepository        usuarioRepository;
     private final RrhhCapatazRepository    capatazRepository;
+    private final AlertaService            alertaService;
+    private final EventoService            eventoService;
 
     @GetMapping("/auditoria")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ApiResponse<Map<String, Object>>> auditoria() {
         var todas  = ordenRepo.findByActivoTrueOrderByCreatedAtDesc();
         long total = todas.size();
@@ -50,8 +57,9 @@ public class ReporteController {
         return ResponseEntity.ok(new ApiResponse<>(true, null, data));
     }
 
-    /** Reporte diario: OTs con actividad en la fecha indicada (HU18) */
+    /** Reporte diario: OTs con actividad en la fecha indicada (HU18) — solo supervisor */
     @GetMapping("/diario")
+    @PreAuthorize("hasRole('SUPERVISOR')")
     public ResponseEntity<ApiResponse<Map<String, Object>>> diario(
             @RequestParam(required = false) String fecha) {
 
@@ -59,21 +67,39 @@ public class ReporteController {
         LocalDateTime t0 = dia.atStartOfDay();
         LocalDateTime t1 = dia.plusDays(1).atStartOfDay();
 
-        var todas  = ordenRepo.findByActivoTrueOrderByCreatedAtDesc();
+        var todas = ordenRepo.findByActivoTrueOrderByCreatedAtDesc();
+        Set<Long> idsConActividad = new HashSet<>();
+        eventoService.buscar(null, null, null, t0, t1).forEach(e -> {
+            if (e.getOrden() != null) idsConActividad.add(e.getOrden().getIdOt());
+        });
+
         var delDia = todas.stream()
-                .filter(o -> o.getUpdatedAt() != null
-                        && !o.getUpdatedAt().isBefore(t0)
-                        && o.getUpdatedAt().isBefore(t1))
+                .filter(o -> idsConActividad.contains(o.getIdOt())
+                        || (o.getCreatedAt() != null
+                            && !o.getCreatedAt().isBefore(t0)
+                            && o.getCreatedAt().isBefore(t1))
+                        || (o.getUpdatedAt() != null
+                            && !o.getUpdatedAt().isBefore(t0)
+                            && o.getUpdatedAt().isBefore(t1))
+                        || (o.getFechaInicio() != null
+                            && !o.getFechaInicio().isBefore(t0)
+                            && o.getFechaInicio().isBefore(t1))
+                        || (o.getFechaFin() != null
+                            && !o.getFechaFin().isBefore(t0)
+                            && o.getFechaFin().isBefore(t1)))
                 .toList();
 
         var detalle = delDia.stream().map(o -> {
             Map<String, Object> m = new LinkedHashMap<>();
+            m.put("idOt",        o.getIdOt());
             m.put("sgio",        o.getSgio());
             m.put("estado",      codigo(o));
             m.put("direccion",   o.getDireccion() != null ? o.getDireccion() : "");
             m.put("capataz",     cap(o));
             m.put("subactividad", o.getSubactividad() != null ? o.getSubactividad().getNombre() : "");
             m.put("observacion", o.getObservacion() != null ? o.getObservacion() : "");
+            m.put("fechaInicio", o.getFechaInicio() != null ? o.getFechaInicio().toString() : "");
+            m.put("fechaFin",    o.getFechaFin() != null ? o.getFechaFin().toString() : "");
             m.put("updatedAt",   o.getUpdatedAt() != null ? o.getUpdatedAt().toString() : "");
             return (Map<String, Object>) m;
         }).collect(Collectors.toList());
@@ -88,8 +114,48 @@ public class ReporteController {
         return ResponseEntity.ok(new ApiResponse<>(true, null, res));
     }
 
-    /** Reporte mensual (HU19) */
+    /** OTs marcadas observadas en una fecha (registro histórico por eventos) — supervisor */
+    @GetMapping("/observadas-dia")
+    @PreAuthorize("hasRole('SUPERVISOR')")
+    public ResponseEntity<ApiResponse<Map<String, Object>>> observadasDia(
+            @RequestParam String fecha) {
+
+        LocalDate dia = LocalDate.parse(fecha);
+        LocalDateTime t0 = dia.atStartOfDay();
+        LocalDateTime t1 = dia.plusDays(1).atStartOfDay();
+
+        Map<Long, OpOtEvento> ultimoPorOt = new LinkedHashMap<>();
+        eventoService.buscar(null, null, null, t0, t1).stream()
+                .filter(e -> e.getOrden() != null && "OBSERVADA".equals(e.getEstadoNuevo()))
+                .sorted(Comparator.comparing(OpOtEvento::getFechaEvento))
+                .forEach(e -> ultimoPorOt.put(e.getOrden().getIdOt(), e));
+
+        var detalle = ultimoPorOt.values().stream()
+                .map(e -> {
+                    OpOrdenTrabajo o = e.getOrden();
+                    Map<String, Object> m = new LinkedHashMap<>();
+                    m.put("idOt", o.getIdOt());
+                    m.put("sgio", o.getSgio());
+                    m.put("direccion", o.getDireccion() != null ? o.getDireccion() : "");
+                    m.put("capataz", cap(o));
+                    m.put("observacion", o.getObservacion() != null ? o.getObservacion() : "");
+                    m.put("estadoActual", codigo(o));
+                    m.put("horaObservada", e.getFechaEvento() != null ? e.getFechaEvento().toString() : "");
+                    return m;
+                })
+                .sorted(Comparator.comparing(m -> String.valueOf(m.get("sgio"))))
+                .collect(Collectors.toList());
+
+        Map<String, Object> res = new LinkedHashMap<>();
+        res.put("fecha", dia.toString());
+        res.put("total", detalle.size());
+        res.put("detalle", detalle);
+        return ResponseEntity.ok(new ApiResponse<>(true, null, res));
+    }
+
+    /** Reporte mensual (HU19) — solo supervisor */
     @GetMapping("/mensual")
+    @PreAuthorize("hasRole('SUPERVISOR')")
     public ResponseEntity<ApiResponse<Map<String, Object>>> mensual(
             @RequestParam(required = false, defaultValue = "0") int mes,
             @RequestParam(required = false, defaultValue = "0") int anio) {
@@ -118,6 +184,15 @@ public class ReporteController {
         Map<String, Long> porCapataz = compMes.stream()
                 .collect(Collectors.groupingBy(o -> cap(o), Collectors.counting()));
 
+        Map<String, Long> porSemana = new LinkedHashMap<>();
+        for (int w = 1; w <= 5; w++) porSemana.put(String.valueOf(w), 0L);
+        for (OpOrdenTrabajo o : compMes) {
+            if (o.getFechaFin() == null) continue;
+            int semana = ((o.getFechaFin().getDayOfMonth() - 1) / 7) + 1;
+            String key = String.valueOf(Math.min(semana, 5));
+            porSemana.put(key, porSemana.get(key) + 1);
+        }
+
         Map<String, Object> res = new LinkedHashMap<>();
         res.put("mes",         m);
         res.put("anio",        a);
@@ -126,43 +201,31 @@ public class ReporteController {
         res.put("creadas",     (long) creadMes.size());
         res.put("pendientes",  count(creadMes, "PENDIENTE"));
         res.put("porCapataz",  porCapataz);
+        res.put("porSemana",   porSemana);
         return ResponseEntity.ok(new ApiResponse<>(true, null, res));
     }
 
-    /** Alertas activas en tiempo real (HU16) */
+    /** Alertas activas (HU16) — delega a AlertaService */
     @GetMapping("/alertas")
-    public ResponseEntity<ApiResponse<List<Map<String, Object>>>> alertas() {
-        var todas   = ordenRepo.findByActivoTrueOrderByCreatedAtDesc();
-        var lista   = new ArrayList<Map<String, Object>>();
+    @PreAuthorize("hasAnyRole('ADMIN','SUPERVISOR','CAPATAZ')")
+    public ResponseEntity<ApiResponse<List<Map<String, Object>>>> alertas(Authentication auth) {
+        return ResponseEntity.ok(new ApiResponse<>(true, null,
+                alertaService.listarActivas(auth.getName())));
+    }
 
-        for (OpOrdenTrabajo ot : todas) {
-            String estado = codigo(ot);
-
-            if ("OBSERVADA".equals(estado)) {
-                lista.add(alerta("OBSERVADA", "OT observada — requiere atención",
-                        ot.getSgio() + (ot.getDireccion() != null ? " · " + ot.getDireccion() : ""),
-                        "alta", ot.getSgio()));
-            }
-
-            if ("PENDIENTE".equals(estado) && ot.getCapataz() == null) {
-                lista.add(alerta("SIN_ASIGNAR", "OT sin capataz asignado",
-                        ot.getSgio() + " — asigna un responsable de campo",
-                        "media", ot.getSgio()));
-            }
-
-            if ("EN_PROGRESO".equals(estado) && ot.getFechaInicio() != null) {
-                long dias = ChronoUnit.DAYS.between(ot.getFechaInicio(), LocalDateTime.now());
-                if (dias > 3) {
-                    lista.add(alerta("RETRASADA",
-                            "OT retrasada (" + dias + " días en campo)",
-                            ot.getSgio() + " · " + cap(ot),
-                            "alta", ot.getSgio()));
-                }
-            }
-        }
-
-        log.debug("Alertas generadas: {}", lista.size());
-        return ResponseEntity.ok(new ApiResponse<>(true, null, lista));
+    /** HU21: timeline de auditoría */
+    @GetMapping("/auditoria/eventos")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ApiResponse<List<Map<String, Object>>>> eventosAuditoria(
+            @RequestParam(required = false) Long idOt,
+            @RequestParam(required = false) String tipo,
+            @RequestParam(required = false) Long idUsuario,
+            @RequestParam(required = false) String desde,
+            @RequestParam(required = false) String hasta) {
+        LocalDateTime t0 = (desde != null && !desde.isBlank()) ? LocalDate.parse(desde).atStartOfDay() : null;
+        LocalDateTime t1 = (hasta != null && !hasta.isBlank()) ? LocalDate.parse(hasta).plusDays(1).atStartOfDay() : null;
+        return ResponseEntity.ok(new ApiResponse<>(true, null,
+                eventoService.listar(idOt, tipo, idUsuario, t0, t1)));
     }
 
     // ── helpers ──────────────────────────────────────────────────────
@@ -181,15 +244,4 @@ public class ReporteController {
         return list.stream().filter(o -> estado.equals(codigo(o))).count();
     }
 
-    private Map<String, Object> alerta(String tipo, String titulo, String detalle,
-                                       String prioridad, String sgio) {
-        Map<String, Object> a = new LinkedHashMap<>();
-        a.put("tipo",      tipo);
-        a.put("titulo",    titulo);
-        a.put("detalle",   detalle);
-        a.put("prioridad", prioridad);
-        a.put("sgio",      sgio);
-        a.put("timestamp", LocalDateTime.now().toString());
-        return a;
-    }
 }

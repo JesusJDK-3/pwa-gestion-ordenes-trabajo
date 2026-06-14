@@ -1,12 +1,25 @@
-import { useEffect, useState } from 'react'
-import { puntoService } from '../../services/api'
-import api from '../../services/api'
-import type { OrdenTrabajo, User, ApiResponse } from '../../types'
+import { useCallback, useEffect, useMemo, useState } from 'react'
+import { Link } from 'react-router-dom'
+import { puntoService, usuarioService } from '../../services/api'
+import type { OrdenTrabajo, User } from '../../types'
+import PageRefreshButton from '../../components/PageRefreshButton'
 import {
-  Filter, Loader2, Lock, AlertTriangle, CheckCircle2, UserCheck, Ban
+  Filter, Loader2, Lock, AlertTriangle, CheckCircle2, UserCheck, Ban, Eye,
 } from 'lucide-react'
+import { unwrapList } from '../../utils/apiParse'
+import { formatearFechaHistorial, fechaLocalISO } from '../../utils/formatTime'
+
+const inputClass = 'corp-input text-sm py-2'
 
 type EstadoFiltro = '' | 'PENDIENTE' | 'EN_PROGRESO' | 'OBSERVADA' | 'COMPLETADA' | 'ANULADA'
+type MsgScope = 'asignar' | 'accion'
+
+interface OtMsg {
+  id: number
+  ok: boolean
+  txt: string
+  scope: MsgScope
+}
 
 // Estados donde el supervisor PUEDE asignar capataz
 const ESTADOS_EDITABLES = ['PENDIENTE', 'EN_PROGRESO', 'OBSERVADA']
@@ -14,51 +27,124 @@ const ESTADOS_EDITABLES = ['PENDIENTE', 'EN_PROGRESO', 'OBSERVADA']
 const ESTADOS_FINALES   = ['COMPLETADA', 'ANULADA']
 
 const BADGE: Record<string, string> = {
-  PENDIENTE:   'bg-gray-100 text-gray-600',
-  EN_PROGRESO: 'bg-orange-100 text-orange-700',
-  OBSERVADA:   'bg-yellow-100 text-yellow-700',
-  COMPLETADA:  'bg-emerald-100 text-emerald-700',
-  ANULADA:     'bg-red-100 text-red-700',
+  PENDIENTE:   'status-pill status-pendiente',
+  EN_PROGRESO: 'status-pill status-progreso',
+  OBSERVADA:   'status-pill status-observada',
+  COMPLETADA:  'status-pill status-completada',
+  ANULADA:     'status-pill status-anulada',
+}
+
+const FILTROS: { value: EstadoFiltro; label: string; accent: string; iconBg: string }[] = [
+  { value: '', label: 'Todas', accent: 'border-l-slate-500', iconBg: 'bg-slate-50 border-slate-200 text-slate-600' },
+  { value: 'PENDIENTE', label: 'Pendiente', accent: 'border-l-slate-400', iconBg: 'bg-slate-50 border-slate-200 text-slate-600' },
+  { value: 'EN_PROGRESO', label: 'En progreso', accent: 'border-l-amber-500', iconBg: 'bg-amber-50 border-amber-200 text-amber-700' },
+  { value: 'OBSERVADA', label: 'Observada', accent: 'border-l-yellow-500', iconBg: 'bg-yellow-50 border-yellow-300 text-yellow-800' },
+  { value: 'COMPLETADA', label: 'Completada', accent: 'border-l-emerald-600', iconBg: 'bg-emerald-50 border-emerald-200 text-emerald-700' },
+  { value: 'ANULADA', label: 'Anulada', accent: 'border-l-red-500', iconBg: 'bg-red-50 border-red-200 text-red-700' },
+]
+
+function esOtDelDia(ot: OrdenTrabajo, dia: string): boolean {
+  const fechas = [ot.fechaProgramada, ot.updatedAt, ot.createdAt, ot.fechaInicio, ot.fechaFin]
+  return fechas.some(f => f != null && f.slice(0, 10) === dia)
+}
+
+function fechaVisibleOt(ot: OrdenTrabajo): string | undefined {
+  return ot.fechaProgramada ?? ot.createdAt
 }
 
 export default function AsignarPuntos() {
   const [todas,     setTodas]     = useState<OrdenTrabajo[]>([])
   const [capataces, setCapataces] = useState<User[]>([])
   const [filtro,    setFiltro]    = useState<EstadoFiltro>('PENDIENTE')
+  const [fechaDia,  setFechaDia]  = useState(fechaLocalISO)
   const [saving,    setSaving]    = useState<Record<number, boolean>>({})
   const [anulando,  setAnulando]  = useState<Record<number, boolean>>({})
-  const [msg,       setMsg]       = useState<{ id: number; ok: boolean; txt: string } | null>(null)
+  const [msg,       setMsg]       = useState<OtMsg | null>(null)
   const [loading,   setLoading]   = useState(true)
+  const [loadError, setLoadError] = useState('')
+  const [fechaAjustada, setFechaAjustada] = useState(false)
 
-  useEffect(() => {
+  const cargar = useCallback(() => {
+    setLoadError('')
+    setLoading(true)
     Promise.all([
       puntoService.todos(),
-      api.get<ApiResponse<User[]>>('/usuarios'),
+      usuarioService.listar(),
     ]).then(([otsRes, usrRes]) => {
-      const d = otsRes.data as any
-      setTodas(Array.isArray(d) ? d : (d?.data ?? []))
-
-      const todos = usrRes.data.data ?? []
-      setCapataces(todos.filter((u: User) => u.rol === 'capataz'))
+      setTodas(unwrapList<OrdenTrabajo>(otsRes.data))
+      const todos = unwrapList<User>(usrRes.data)
+      setCapataces(todos.filter(u => u.rol?.toLowerCase() === 'capataz' && u.id > 0))
+    }).catch(() => {
+      setLoadError('No se pudieron cargar las OTs o los capataces. Verifique la conexión.')
+      setTodas([])
+      setCapataces([])
     }).finally(() => setLoading(false))
   }, [])
 
-  const mostradas = filtro ? todas.filter(p => p.estadoCodigo === filtro) : todas
+  useEffect(() => { cargar() }, [cargar])
 
-  const handleAsignar = async (puntoId: number, capatazId: number) => {
-    // Bloquear inmediatamente en el estado local para feedback
+  // Si hoy no hay OT pero sí hay importación reciente, mostrar el día de carga del Excel
+  useEffect(() => {
+    if (loading || fechaAjustada || todas.length === 0) return
+    const pendientes = todas.filter(o => o.estadoCodigo === 'PENDIENTE')
+    if (pendientes.length === 0) return
+    const enFecha = pendientes.filter(o => esOtDelDia(o, fechaDia)).length
+    if (enFecha > 0) return
+    const fechasImport = [...new Set(
+      pendientes.map(o => o.createdAt?.slice(0, 10)).filter((f): f is string => !!f),
+    )].sort().reverse()
+    if (fechasImport[0]) {
+      setFechaDia(fechasImport[0])
+      setFechaAjustada(true)
+    }
+  }, [loading, todas, fechaDia, fechaAjustada])
+
+  const delDia = useMemo(
+    () => todas.filter(o => esOtDelDia(o, fechaDia)),
+    [todas, fechaDia],
+  )
+
+  const etiquetaFecha = useMemo(
+    () => formatearFechaHistorial(`${fechaDia}T12:00:00`, true),
+    [fechaDia],
+  )
+
+  const mostradas = filtro ? delDia.filter(p => p.estadoCodigo === filtro) : delDia
+
+  const fechasConPendientes = useMemo(() => {
+    const map = new Map<string, number>()
+    for (const o of todas) {
+      if (o.estadoCodigo !== 'PENDIENTE') continue
+      const f = o.createdAt?.slice(0, 10)
+      if (!f) continue
+      map.set(f, (map.get(f) ?? 0) + 1)
+    }
+    return [...map.entries()].sort((a, b) => b[0].localeCompare(a[0]))
+  }, [todas])
+
+  const totalPendientes = useMemo(
+    () => todas.filter(o => o.estadoCodigo === 'PENDIENTE').length,
+    [todas],
+  )
+
+  const handleAsignar = async (puntoId: number, capatazId: number, capatazActual?: number) => {
+    if (!capatazId || capatazId <= 0) return
+    if (capatazActual === capatazId) return
+
     setSaving(s => ({ ...s, [puntoId]: true }))
     setMsg(null)
     try {
       await puntoService.asignar(puntoId, capatazId)
       const capNombre = capataces.find(c => c.id === capatazId)?.nombre ?? ''
       setTodas(prev =>
-        prev.map(p => p.idOt === puntoId ? { ...p, capatazId, capatazNombre: capNombre } : p)
+        prev.map(p => p.idOt === puntoId
+          ? { ...p, capatazId, capatazNombre: capNombre, updatedAt: new Date().toISOString() }
+          : p)
       )
-      setMsg({ id: puntoId, ok: true, txt: 'Capataz asignado correctamente.' })
+      setMsg({ id: puntoId, ok: true, txt: 'Capataz asignado correctamente.', scope: 'asignar' })
     } catch (err: any) {
       const txt = err?.response?.data?.message ?? 'Error al asignar capataz.'
-      setMsg({ id: puntoId, ok: false, txt })
+      setMsg({ id: puntoId, ok: false, txt, scope: 'asignar' })
     } finally {
       setSaving(s => ({ ...s, [puntoId]: false }))
     }
@@ -73,10 +159,10 @@ export default function AsignarPuntos() {
       setTodas(prev =>
         prev.map(p => p.idOt === ot.idOt ? { ...p, estadoCodigo: 'ANULADA', estado: 'Anulada' } : p)
       )
-      setMsg({ id: ot.idOt, ok: true, txt: `OT ${ot.sgio} anulada.` })
+      setMsg({ id: ot.idOt, ok: true, txt: `OT ${ot.sgio} anulada.`, scope: 'accion' })
     } catch (err: any) {
       const txt = err?.response?.data?.message ?? 'Error al anular OT.'
-      setMsg({ id: ot.idOt, ok: false, txt })
+      setMsg({ id: ot.idOt, ok: false, txt, scope: 'accion' })
     } finally {
       setAnulando(s => ({ ...s, [ot.idOt]: false }))
     }
@@ -84,148 +170,181 @@ export default function AsignarPuntos() {
 
   // Contadores rápidos para los filtros
   const conteo: Record<string, number> = {}
-  for (const ot of todas) {
+  for (const ot of delDia) {
     const c = ot.estadoCodigo ?? 'PENDIENTE'
     conteo[c] = (conteo[c] ?? 0) + 1
   }
 
   return (
     <div className="space-y-6">
-
-      {/* Título */}
-      <div>
-        <h1 className="text-[22px] font-bold text-gray-900">Asignar Capataces a OTs</h1>
-        <p className="text-sm text-gray-500 mt-0.5">
-          Gestiona la asignación de capataces. Las OTs completadas o anuladas no se pueden modificar.
-        </p>
-      </div>
-
-      {/* Chips de filtro por estado */}
-      <div className="flex flex-wrap gap-2">
-        {([
-          { value: '' as EstadoFiltro,          label: 'Todas',       color: 'bg-gray-100 text-gray-700 border-gray-200' },
-          { value: 'PENDIENTE' as EstadoFiltro, label: 'Pendiente',   color: 'bg-gray-50  text-gray-600 border-gray-200' },
-          { value: 'EN_PROGRESO' as EstadoFiltro, label: 'En Progreso', color: 'bg-orange-50 text-orange-700 border-orange-200' },
-          { value: 'OBSERVADA' as EstadoFiltro, label: 'Observada',   color: 'bg-yellow-50 text-yellow-700 border-yellow-200' },
-          { value: 'COMPLETADA' as EstadoFiltro,label: 'Completada',  color: 'bg-emerald-50 text-emerald-700 border-emerald-200' },
-          { value: 'ANULADA' as EstadoFiltro,   label: 'Anulada',    color: 'bg-red-50 text-red-700 border-red-200' },
-        ] as const).map(({ value, label, color }) => (
-          <button
-            key={value}
-            onClick={() => setFiltro(value)}
-            className={`px-3.5 py-1.5 rounded-full text-xs font-semibold border transition-all ${color}
-              ${filtro === value ? 'ring-2 ring-offset-1 ring-[#CC1111]/30 scale-[1.05]' : 'opacity-70 hover:opacity-100'}`}
-          >
-            {label}
-            {value !== '' && conteo[value] != null
-              ? <span className="ml-1.5 opacity-60">({conteo[value]})</span>
-              : null}
-          </button>
-        ))}
-        <div className="ml-auto flex items-center gap-1.5 text-xs text-gray-400">
-          <Filter size={12} />
-          {mostradas.length} resultado{mostradas.length !== 1 ? 's' : ''}
+      <div className="page-header border-0 pb-0 mb-0">
+        <div>
+          <p className="page-breadcrumb">Operaciones · Supervisor</p>
+          <h1 className="page-title">Asignación de cuadrillas</h1>
+        </div>
+        <div className="flex flex-wrap items-center gap-2 flex-shrink-0">
+          <div>
+            <label className="corp-label">Día</label>
+            <input
+              type="date"
+              value={fechaDia}
+              onChange={e => setFechaDia(e.target.value)}
+              className={inputClass}
+            />
+          </div>
+          <div className="self-end">
+            <PageRefreshButton onClick={cargar} loading={loading} />
+          </div>
         </div>
       </div>
 
-      {/* Tabla */}
+      {loadError && <div className="alert-banner alert-error text-sm">{loadError}</div>}
+
+      {!loading && totalPendientes > 0 && mostradas.length === 0 && (
+        <div className="alert-banner alert-warning text-sm">
+          <AlertTriangle size={16} className="flex-shrink-0" />
+          <span>
+            Hay <strong>{totalPendientes}</strong> OT pendientes del Excel, pero ninguna para el día{' '}
+            <strong>{etiquetaFecha}</strong>. Cambie la fecha arriba
+            {fechasConPendientes.length > 0 && (
+              <>
+                {' '}o use:{' '}
+                {fechasConPendientes.slice(0, 3).map(([f, n]) => (
+                  <button
+                    key={f}
+                    type="button"
+                    onClick={() => setFechaDia(f)}
+                    className="underline font-semibold mx-1"
+                  >
+                    {formatearFechaHistorial(`${f}T12:00:00`, true)} ({n})
+                  </button>
+                ))}
+              </>
+            )}
+          </span>
+        </div>
+      )}
+
+      <div className="kpi-grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-6">
+        {FILTROS.map(({ value, label, accent }) => (
+          <button
+            key={value || 'all'}
+            type="button"
+            onClick={() => setFiltro(value)}
+            className={`kpi-tile-btn ${accent} ${filtro === value ? 'kpi-tile-btn-active' : ''}`}
+          >
+            <div>
+              <p className="kpi-value text-2xl">{value === '' ? delDia.length : (conteo[value] ?? 0)}</p>
+              <p className="kpi-label">{label}</p>
+            </div>
+          </button>
+        ))}
+      </div>
+
       {loading ? (
-        <div className="bg-white rounded-2xl shadow-card p-12 flex items-center justify-center gap-3 text-gray-400 text-sm">
-          <Loader2 size={20} className="animate-spin text-[#CC1111]" />
+        <div className="corp-card p-12 flex items-center justify-center gap-3 text-slate-400 text-sm">
+          <Loader2 size={20} className="animate-spin text-[#1B4F72]" />
           Cargando órdenes de trabajo…
         </div>
       ) : mostradas.length === 0 ? (
-        <div className="bg-white rounded-2xl shadow-card p-12 text-center text-gray-400">
+        <div className="corp-card p-12 text-center text-slate-400">
           <Filter size={28} className="mx-auto mb-3 opacity-30" />
-          <p className="text-sm">No hay OTs con el estado seleccionado.</p>
+          <p className="text-sm">
+            {totalPendientes === 0
+              ? 'No hay OT pendientes. Importe el Excel en Cargar OT.'
+              : 'No hay OT para el estado y día seleccionados.'}
+          </p>
         </div>
       ) : (
-        <div className="bg-white rounded-2xl shadow-card overflow-hidden">
+        <div className="corp-card overflow-hidden">
+          <div className="corp-card-header">
+            <span>Órdenes de trabajo · {etiquetaFecha}</span>
+            <span className="badge-count">{mostradas.length}</span>
+          </div>
           <div className="overflow-x-auto">
-            <table className="w-full text-sm">
+            <table className="enterprise-table">
               <thead>
-                <tr className="bg-gray-50 text-gray-500 text-xs uppercase tracking-wide">
-                  <th className="px-5 py-3 text-left font-semibold">OT / SGIO</th>
-                  <th className="px-5 py-3 text-left font-semibold">Dirección</th>
-                  <th className="px-5 py-3 text-left font-semibold">Estado</th>
-                  <th className="px-5 py-3 text-left font-semibold">Capataz asignado</th>
-                  <th className="px-5 py-3 text-left font-semibold">Asignar capataz</th>
-                  <th className="px-5 py-3 text-left font-semibold">Acciones</th>
+                <tr>
+                  {['OT / SGIO', 'Fecha', 'Dirección', 'Estado', 'Capataz', 'Asignar', 'Acciones'].map(h => (
+                    <th key={h}>{h}</th>
+                  ))}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-50">
+              <tbody>
                 {mostradas.map(ot => {
                   const esEditable = ESTADOS_EDITABLES.includes(ot.estadoCodigo ?? '')
                   const esFinal    = ESTADOS_FINALES.includes(ot.estadoCodigo ?? '')
                   const isAnulando = anulando[ot.idOt]
                   const isSaving   = saving[ot.idOt]
-                  const esMsgOt    = msg?.id === ot.idOt
+                  const esMsgAsignar = msg?.id === ot.idOt && msg.scope === 'asignar'
+                  const esMsgAccion  = msg?.id === ot.idOt && msg.scope === 'accion'
 
                   return (
                     <tr
                       key={ot.idOt}
-                      className={`transition-colors ${esFinal ? 'bg-gray-50/60 opacity-70' : 'hover:bg-gray-50/40'}`}
+                      className={esFinal ? 'opacity-70' : ''}
                     >
-                      {/* SGIO */}
-                      <td className="px-5 py-3.5">
-                        <span className="font-bold text-gray-800 font-mono">{ot.sgio}</span>
+                      <td>
+                        <span className="font-mono font-bold text-[#1B4F72] text-xs">{ot.sgio}</span>
                         {ot.subactividad && (
-                          <p className="text-[11px] text-gray-400 mt-0.5">{ot.subactividad}</p>
+                          <p className="text-[11px] text-slate-400 mt-0.5">{ot.subactividad}</p>
                         )}
                       </td>
-
-                      {/* Dirección */}
-                      <td className="px-5 py-3.5 text-gray-500 text-[13px] max-w-[200px]">
-                        <span className="line-clamp-2">{ot.direccion ?? '—'}</span>
+                      <td className="text-[13px] whitespace-nowrap">
+                        <span className={
+                          fechaVisibleOt(ot)?.slice(0, 10) === fechaDia
+                            ? 'font-semibold text-[#1B4F72]'
+                            : 'text-slate-500'
+                        }>
+                          {formatearFechaHistorial(fechaVisibleOt(ot), true)}
+                        </span>
                       </td>
-
-                      {/* Estado */}
-                      <td className="px-5 py-3.5">
-                        <span className={`px-2.5 py-1 rounded-full text-xs font-semibold ${BADGE[ot.estadoCodigo ?? 'PENDIENTE'] ?? 'bg-gray-100 text-gray-600'}`}>
+                      <td className="max-w-[200px] truncate text-slate-500">{ot.direccion ?? '—'}</td>
+                      <td>
+                        <span className={BADGE[ot.estadoCodigo ?? 'PENDIENTE'] ?? 'status-pill status-pendiente'}>
                           {ot.estadoCodigo ?? 'PENDIENTE'}
                         </span>
                       </td>
-
-                      {/* Capataz actual */}
-                      <td className="px-5 py-3.5 text-gray-600 text-[13px]">
+                      <td className="text-slate-600 text-[13px]">
                         {ot.capatazNombre
                           ? <span className="flex items-center gap-1"><UserCheck size={13} className="text-emerald-500" />{ot.capatazNombre}</span>
-                          : <span className="text-gray-300 italic text-xs">Sin asignar</span>
+                          : <span className="text-slate-400 italic text-xs">Sin asignar</span>
                         }
                       </td>
-
-                      {/* Selector de asignación */}
-                      <td className="px-5 py-3.5">
+                      <td>
                         {esFinal ? (
-                          <span className="flex items-center gap-1.5 text-xs text-gray-400">
+                          <span className="flex items-center gap-1.5 text-xs text-slate-400">
                             <Lock size={12} />
                             {ot.estadoCodigo === 'ANULADA' ? 'OT anulada' : 'OT completada'}
                           </span>
                         ) : (
                           <div className="flex items-center gap-2">
                             <select
-                              defaultValue={ot.capatazId ?? ''}
-                              onChange={e => handleAsignar(ot.idOt, Number(e.target.value))}
+                              value={ot.capatazId ?? ''}
+                              onChange={e => {
+                                const id = Number(e.target.value)
+                                if (id > 0) handleAsignar(ot.idOt, id, ot.capatazId)
+                              }}
                               disabled={isSaving || !esEditable}
-                              className="border border-gray-200 rounded-lg px-2.5 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-[#CC1111]/20 focus:border-[#CC1111] bg-white transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                              className="corp-input text-xs py-1.5 max-w-[160px] disabled:opacity-50"
                             >
                               <option value="">Sin asignar</option>
                               {capataces.map(c => (
-                                <option key={c.id} value={c.id}>{c.nombre}</option>
+                                <option key={c.id} value={c.id}>
+                                  {c.nombre}{c.username ? ` (${c.username})` : ''}
+                                </option>
                               ))}
                             </select>
-                            {isSaving && <Loader2 size={14} className="animate-spin text-[#CC1111]" />}
+                            {isSaving && <Loader2 size={14} className="animate-spin text-[#1B4F72]" />}
                           </div>
                         )}
-                        {esMsgOt && (
+                        {esMsgAsignar && (
                           <p className={`mt-1 text-[11px] font-medium ${msg!.ok ? 'text-emerald-600' : 'text-red-500'}`}>
                             {msg!.txt}
                           </p>
                         )}
                       </td>
-
-                      {/* Acciones supervisor */}
-                      <td className="px-5 py-3.5">
+                      <td>
                         {!esFinal && (
                           <button
                             onClick={() => handleAnular(ot)}
@@ -241,14 +360,24 @@ export default function AsignarPuntos() {
                           </button>
                         )}
                         {ot.estadoCodigo === 'OBSERVADA' && (
-                          <button
-                            onClick={() => handleAsignar(ot.idOt, ot.capatazId ?? 0)}
-                            className="flex items-center gap-1.5 text-xs text-yellow-600 hover:text-yellow-800 hover:bg-yellow-50 px-2.5 py-1.5 rounded-lg transition-all mt-1"
-                            title="Esta OT requiere atención"
-                          >
-                            <AlertTriangle size={12} />
-                            Observada
-                          </button>
+                          <div className="mt-1 space-y-1">
+                            <p className="flex items-center gap-1.5 text-xs text-amber-700">
+                              <AlertTriangle size={12} />
+                              Requiere atención en campo
+                            </p>
+                            <Link
+                              to={`/supervisor/alertas?ot=${ot.idOt}`}
+                              className="inline-flex items-center gap-1 text-xs text-[#1B4F72] hover:underline"
+                            >
+                              <Eye size={12} />
+                              Ver en alertas
+                            </Link>
+                          </div>
+                        )}
+                        {esMsgAccion && (
+                          <p className={`mt-1 text-[11px] font-medium ${msg!.ok ? 'text-emerald-600' : 'text-red-500'}`}>
+                            {msg!.txt}
+                          </p>
                         )}
                         {ot.estadoCodigo === 'COMPLETADA' && (
                           <span className="flex items-center gap-1.5 text-xs text-emerald-600">

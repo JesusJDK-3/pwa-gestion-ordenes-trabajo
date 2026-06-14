@@ -165,6 +165,64 @@ public class ExcelCargaService {
     // Todo lo que viene después de la columna I es ignorado.
     // El capataz se deja en null — el supervisor lo asigna después.
     // ─────────────────────────────────────────────────────────────────────────
+    /** HU02: previsualiza filas sin guardar en BD */
+    public Map<String, Object> previewExcel(MultipartFile file) throws IOException {
+        List<Map<String, Object>> filas = new ArrayList<>();
+        int validas = 0, errores = 0;
+
+        try (Workbook wb = WorkbookFactory.create(file.getInputStream())) {
+            Sheet sheet = wb.getSheetAt(0);
+            if (sheet.getPhysicalNumberOfRows() == 0) {
+                throw new RuntimeException("El archivo Excel está vacío");
+            }
+            Row header = sheet.getRow(0);
+            Map<String, Integer> headerIndex = buildHeaderIndex(header);
+            boolean isMnttoPrevVpa = headerIndex.containsKey("NRO_OT")
+                    && headerIndex.containsKey("NIS_RAD")
+                    && headerIndex.containsKey("DESC_SUBACTIVIDAD");
+
+            for (int rowIdx = 1; rowIdx <= sheet.getLastRowNum(); rowIdx++) {
+                Row row = sheet.getRow(rowIdx);
+                if (row == null) continue;
+
+                String sgio = isMnttoPrevVpa
+                        ? trim(cellStr(row, headerIndex.getOrDefault("NRO_OT", -1)))
+                        : cellStr(row, 2);
+                if (sgio == null || sgio.isBlank()) continue;
+
+                Map<String, Object> fila = new java.util.LinkedHashMap<>();
+                fila.put("fila", rowIdx + 1);
+                fila.put("sgio", sgio);
+                fila.put("direccion", previewDireccion(row, headerIndex, isMnttoPrevVpa));
+
+                if (ordenRepo.findBySgio(sgio).isPresent()) {
+                    fila.put("valido", false);
+                    fila.put("mensaje", "OT duplicada en el sistema");
+                    errores++;
+                } else {
+                    fila.put("valido", true);
+                    fila.put("mensaje", "Lista para importar");
+                    validas++;
+                }
+                filas.add(fila);
+            }
+        }
+
+        return Map.of(
+                "filas", filas,
+                "validas", validas,
+                "errores", errores,
+                "total", filas.size()
+        );
+    }
+
+    private String previewDireccion(Row row, Map<String, Integer> headerIndex, boolean mntto) {
+        if (mntto) {
+            return trim(cellStr(row, headerIndex.getOrDefault("DIRECCION", -1)));
+        }
+        return cellStr(row, 3);
+    }
+
     public Map<String, Object> cargarExcel(MultipartFile file, String usernameCreador) throws IOException {
 
         CatEstadoOt estadoPendiente = estadoRepo.findByCodigo("PENDIENTE")
@@ -281,7 +339,15 @@ public class ExcelCargaService {
         String distrito   = cellStr(row, 5); // F
         String sector     = cellStr(row, 6); // G
         // col H (índice 7) = EJECUTADO — ignorado
-        String fechaStr   = cellStr(row, 8); // I: FECHA
+        String fechaStr   = cellStr(row, 8); // I: FECHA (fallback texto)
+        LocalDate fechaProg = parseDateCell(row, 8);
+        if (fechaProg == null && fechaStr != null && !fechaStr.isBlank()) {
+            try {
+                fechaProg = LocalDate.parse(fechaStr.trim());
+            } catch (Exception e) {
+                log.warn("No se pudo parsear fecha para OT {}: {}", sgio, fechaStr);
+            }
+        }
 
         // Normalizar HIA: si es "FALTA" (o variante) se trata como ausente
         String hia = isFalta(gisCol) ? null : gisCol;
@@ -368,12 +434,8 @@ public class ExcelCargaService {
             validacionMsg.append("GIS marcado como FALTA");
         }
 
-        if (fechaStr != null && !fechaStr.isBlank()) {
-            try {
-                ot.setFechaProgramada(LocalDate.parse(fechaStr.trim()));
-            } catch (Exception e) {
-                log.warn("No se pudo parsear fecha para OT {}: {}", sgio, fechaStr);
-            }
+        if (fechaProg != null) {
+            ot.setFechaProgramada(fechaProg);
         }
 
         ImpOtFila fila = new ImpOtFila();
@@ -386,10 +448,8 @@ public class ExcelCargaService {
         fila.setLocalidadExcel(localidad);
         fila.setDistritoExcel(distrito);
         fila.setSectorExcel(sector != null ? sector : "");
-        if (fechaStr != null && !fechaStr.isBlank()) {
-            try {
-                fila.setFechaProgramada(LocalDate.parse(fechaStr.trim()));
-            } catch (Exception ignored) {}
+        if (fechaProg != null) {
+            fila.setFechaProgramada(fechaProg);
         }
 
         aplicarValidacionCoordenadas(ot, fila, validacionMsg, coordStats, sgio);
@@ -415,17 +475,19 @@ public class ExcelCargaService {
                                            ImpOtLote lote,
                                            CoordenadaStats coordStats) {
 
-        String sgio            = cellStr(row, headerIndex.getOrDefault("NRO_OT", -1));
-        String nis             = cellStr(row, headerIndex.getOrDefault("NIS_RAD", -1));
-        String actividadCodigo = cellStr(row, headerIndex.getOrDefault("ACTIVIDAD", -1));
-        String actividadNombre = cellStr(row, headerIndex.getOrDefault("DESC_ACTIVIDAD", -1));
-        String subactCodigo    = cellStr(row, headerIndex.getOrDefault("SUBACTIVIDAD", -1));
-        String subactNombre    = cellStr(row, headerIndex.getOrDefault("DESC_SUBACTIVIDAD", -1));
-        String direccion       = cellStr(row, headerIndex.getOrDefault("DIRECCION", -1));
-        String localidad       = cellStr(row, headerIndex.getOrDefault("LOCALIDAD", -1));
-        String distrito        = cellStr(row, headerIndex.getOrDefault("MUNICIPIO", -1));
-        String fechaStr        = cellStr(row, headerIndex.getOrDefault("F_PROGRAMACION", -1));
-        String observacion     = cellStr(row, headerIndex.getOrDefault("VOBSERVACION_CONTRATA", -1));
+        String sgio            = trim(cellStr(row, headerIndex.getOrDefault("NRO_OT", -1)));
+        String nis             = trim(cellStr(row, headerIndex.getOrDefault("NIS_RAD", -1)));
+        String actividadCodigo = trim(cellStr(row, headerIndex.getOrDefault("ACTIVIDAD", -1)));
+        String actividadNombre = trim(cellStr(row, headerIndex.getOrDefault("DESC_ACTIVIDAD", -1)));
+        String subactCodigo    = trim(cellStr(row, headerIndex.getOrDefault("SUBACTIVIDAD", -1)));
+        String subactNombre    = trim(cellStr(row, headerIndex.getOrDefault("DESC_SUBACTIVIDAD", -1)));
+        String direccion       = trim(cellStr(row, headerIndex.getOrDefault("DIRECCION", -1)));
+        String localidad       = trim(cellStr(row, headerIndex.getOrDefault("LOCALIDAD", -1)));
+        String distrito        = trim(cellStr(row, headerIndex.getOrDefault("MUNICIPIO", -1)));
+        String observacion     = trim(cellStr(row, headerIndex.getOrDefault("VOBSERVACION_CONTRATA", -1)));
+        if (observacion == null || observacion.isBlank()) {
+            observacion = trim(cellStr(row, headerIndex.getOrDefault("OBSERVACION", -1)));
+        }
 
         CatSubactividad subactividad = resolveSubactividad(subactCodigo, subactNombre);
         CatTipoPuntoOperativo tipoPunto = resolveTipoPunto(actividadNombre, subactNombre, tipoDefault);
@@ -469,12 +531,12 @@ public class ExcelCargaService {
             log.debug("OT {} sin coordenadas — requiere corrección", sgio);
         }
 
-        if (fechaStr != null && !fechaStr.isBlank()) {
-            try {
-                ot.setFechaProgramada(LocalDate.parse(fechaStr.trim()));
-            } catch (Exception e) {
-                log.warn("No se pudo parsear fecha para OT {}: {}", sgio, fechaStr);
-            }
+        LocalDate fechaProg = parseDateCell(row, headerIndex.getOrDefault("F_PROGRAMACION", -1));
+        if (fechaProg == null) {
+            fechaProg = parseDateCell(row, headerIndex.getOrDefault("F_ALTA", -1));
+        }
+        if (fechaProg != null) {
+            ot.setFechaProgramada(fechaProg);
         }
 
         if (observacion != null && !observacion.isBlank()) {
@@ -492,10 +554,8 @@ public class ExcelCargaService {
         fila.setLocalidadExcel(localidad);
         fila.setDistritoExcel(distrito);
         fila.setSectorExcel("");
-        if (fechaStr != null && !fechaStr.isBlank()) {
-            try {
-                fila.setFechaProgramada(LocalDate.parse(fechaStr.trim()));
-            } catch (Exception ignored) {}
+        if (fechaProg != null) {
+            fila.setFechaProgramada(fechaProg);
         }
 
         aplicarValidacionCoordenadas(ot, fila, validacionMsg, coordStats, sgio);
@@ -516,6 +576,9 @@ public class ExcelCargaService {
     private void aplicarValidacionCoordenadas(OpOrdenTrabajo ot, ImpOtFila fila,
                                               StringBuilder validacionMsg,
                                               CoordenadaStats stats, String sgio) {
+        BigDecimal[] norm = CoordenadaValidator.normalizarPeru(ot.getLatitud(), ot.getLongitud());
+        ot.setLatitud(norm[0]);
+        ot.setLongitud(norm[1]);
         CoordenadaValidator.Resultado res = CoordenadaValidator.validar(ot.getLatitud(), ot.getLongitud());
         if (!res.valida()) {
             ot.setLatitud(null);
@@ -630,6 +693,35 @@ public class ExcelCargaService {
         return valor != null && "FALTA".equalsIgnoreCase(valor.trim());
     }
 
+    private String trim(String value) {
+        return value != null ? value.trim() : null;
+    }
+
+    /** Parsea fechas ISO o seriales numéricos de Excel (ej. 45902.39 → 2025-09-02). */
+    private LocalDate parseDateCell(Row row, int col) {
+        if (row == null || col < 0) return null;
+        Cell cell = row.getCell(col, Row.MissingCellPolicy.RETURN_BLANK_AS_NULL);
+        if (cell == null) return null;
+        try {
+            if (cell.getCellType() == CellType.NUMERIC) {
+                if (DateUtil.isCellDateFormatted(cell)) {
+                    return cell.getLocalDateTimeCellValue().toLocalDate();
+                }
+                double serial = cell.getNumericCellValue();
+                if (DateUtil.isValidExcelDate(serial)) {
+                    return DateUtil.getLocalDateTime(serial, false).toLocalDate();
+                }
+            }
+            if (cell.getCellType() == CellType.STRING) {
+                String s = cell.getStringCellValue().trim();
+                if (!s.isBlank()) return LocalDate.parse(s);
+            }
+        } catch (Exception e) {
+            log.debug("Fecha no parseada col {}: {}", col, e.getMessage());
+        }
+        return null;
+    }
+
     private String cellStr(Row row, int col) {
         if (row == null || col < 0) return null;
         Cell cell = row.getCell(col, Row.MissingCellPolicy.RETURN_BLANK_AS_NULL);
@@ -638,10 +730,18 @@ public class ExcelCargaService {
             case STRING  -> cell.getStringCellValue().trim();
             case NUMERIC -> DateUtil.isCellDateFormatted(cell)
                     ? cell.getLocalDateTimeCellValue().toLocalDate().toString()
-                    : String.valueOf((long) cell.getNumericCellValue());
+                    : formatNumericAsString(cell.getNumericCellValue());
             case BOOLEAN -> String.valueOf(cell.getBooleanCellValue());
             default      -> null;
         };
+    }
+
+    /** NIS / NRO_OT largos sin notación científica ni decimales .0 */
+    private String formatNumericAsString(double value) {
+        if (Math.floor(value) == value) {
+            return String.valueOf((long) value);
+        }
+        return String.valueOf(value);
     }
 
     private Double cellNum(Row row, int col) {
