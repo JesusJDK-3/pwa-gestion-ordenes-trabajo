@@ -6,6 +6,25 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+/**
+ * Entidad central del dominio operativo: una Orden de Trabajo (OT) de campo.
+ * <p>
+ * Tabla {@code op_orden_trabajo}. Representa un punto de trabajo asignado a un capataz,
+ * con estado ({@link CatEstadoOt}), ubicación GIS y trazabilidad de importación Excel.
+ * </p>
+ * <h3>Campos operativos clave</h3>
+ * <ul>
+ *   <li>{@code sgio} — identificador único de negocio (SEDAPAL)</li>
+ *   <li>{@code estadoOt} — PENDIENTE → EN_PROGRESO → COMPLETADA / ANULADA</li>
+ *   <li>{@code capataz} — responsable de campo (nullable hasta asignación supervisor)</li>
+ *   <li>{@code visibleEnMapa} — false cuando la OT llega a estado final</li>
+ *   <li>{@code latitud}/{@code longitud} — posición en mapa Leaflet</li>
+ * </ul>
+ * <p>
+ * Creada por {@link com.kabj.sistema_ot.service.ExcelCargaService} en estado PENDIENTE.
+ * Actualizada por {@link com.kabj.sistema_ot.controller.RegistroController} en campo.
+ * </p>
+ */
 @Data
 @Entity
 @Table(name = "op_orden_trabajo")

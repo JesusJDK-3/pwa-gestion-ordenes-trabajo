@@ -1,3 +1,16 @@
+/**
+ * Formulario de registro de actividad en campo — pantalla más crítica del capataz.
+ *
+ * Responsabilidades:
+ * - Cambiar estado OT (PENDIENTE→EN_PROGRESO, OBSERVADA, COMPLETADA)
+ * - Registrar observaciones, subactividad y ayudantes
+ * - Modo offline: guarda en IndexedDB sin cambiar estado; sync posterior
+ * - Validación fotos externa (S COMAS) antes de completar
+ *
+ * Backend: POST /api/registros → RegistroController
+ *
+ * @see docs/ARCHITECTURE.md §5.3
+ */
 import { type FormEvent, useEffect, useRef, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { configService, ordenService, puntoService, registroService, safeInput, trabajadorService, VALIDACION_FOTOS_URL } from '../../services/api'
@@ -146,7 +159,7 @@ export default function FormularioActividad() {
         setObs(parsed.observaciones || '')
         setFecha(parsed.fecha || new Date().toISOString().slice(0, 10))
         setFotosConfirmadas(Boolean(parsed.fotosConfirmadas))
-      } catch (e) {
+      } catch {
         // Ignorar si hay error al parsear
       }
     }

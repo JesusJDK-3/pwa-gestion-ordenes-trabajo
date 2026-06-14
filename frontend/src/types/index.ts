@@ -1,7 +1,18 @@
+/**
+ * Tipos TypeScript alineados al contrato REST del backend.
+ *
+ * Mantener sincronizados con:
+ * - `OrdenTrabajoResponse` (Java DTO)
+ * - `cat_estado_ot` en PostgreSQL
+ * - Payload de login JWT
+ *
+ * @module types
+ */
+
 // Roles del nuevo esquema (lowercase)
 export type Rol = 'supervisor' | 'capataz' | 'admin'
 
-// Estados de OT según cat_estado_ot
+// Estados de OT según cat_estado_ot — ver docs/ARCHITECTURE.md §3
 export type EstadoOt = 'PENDIENTE' | 'EN_PROGRESO' | 'OBSERVADA' | 'COMPLETADA' | 'ANULADA'
 
 export interface User {

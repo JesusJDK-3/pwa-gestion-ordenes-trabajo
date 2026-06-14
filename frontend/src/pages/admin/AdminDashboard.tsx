@@ -1,16 +1,18 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState, type FormEvent } from 'react'
 import * as XLSX from 'xlsx'
-import { ordenService, reporteService } from '../../services/api'
+import { ordenService, reporteService, capatazService } from '../../services/api'
 import type { OrdenTrabajo, EstadoOt } from '../../types'
 import PageRefreshButton from '../../components/PageRefreshButton'
 import {
-  Activity, ClipboardList, Users, Briefcase, CheckCircle2, Eye, Download, ChevronLeft, ChevronRight,
+  Activity, ClipboardList, Users, Briefcase, CheckCircle2, Eye, Download, ChevronLeft, ChevronRight, UserPlus,
 } from 'lucide-react'
+import { unwrapList } from '../../utils/apiParse'
 
-type Tab = 'actividades' | 'auditoria'
+type Tab = 'actividades' | 'auditoria' | 'capataces'
 
 const TABS: { id: Tab; label: string; icon: typeof Activity }[] = [
   { id: 'actividades', label: 'Todas las OTs', icon: Activity },
+  { id: 'capataces',   label: 'Capataces',     icon: Users },
   { id: 'auditoria',   label: 'Auditoría',     icon: ClipboardList },
 ]
 
@@ -87,7 +89,7 @@ export default function AdminDashboard() {
           <p className="page-breadcrumb">Panel ejecutivo · Administrador</p>
           <h1 className="page-title">Consola administrativa</h1>
           <p className="page-subtitle">
-            Consulta global de OTs, carga de base geográfica y alertas del sistema ·{' '}
+            Consulta global de OTs, registro de capataces de campo, base geográfica y alertas ·{' '}
             {new Date().toLocaleDateString('es-PE', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
           </p>
         </div>
@@ -135,6 +137,8 @@ export default function AdminDashboard() {
           <OTsTable ordenes={ordenes} />
         </div>
       )}
+
+      {tab === 'capataces' && <CapatacesPanel />}
 
       {tab === 'auditoria' && stats && (
         <div className="space-y-5">
@@ -191,6 +195,154 @@ export default function AdminDashboard() {
 }
 
 const PAGE_SIZE = 20
+
+interface CapatazRegistro {
+  id: number
+  nombre: string
+  email: string
+  username: string
+  dni: string
+  codigoCapataz: string
+}
+
+function CapatacesPanel() {
+  const [lista, setLista] = useState<CapatazRegistro[]>([])
+  const [loading, setLoading] = useState(true)
+  const [saving, setSaving] = useState(false)
+  const [error, setError] = useState('')
+  const [exito, setExito] = useState('')
+  const [form, setForm] = useState({
+    nombres: '',
+    apellidos: '',
+    dni: '',
+    email: '',
+    username: '',
+    password: '',
+  })
+
+  const cargar = useCallback(() => {
+    setLoading(true)
+    capatazService.listar()
+      .then(r => setLista(unwrapList<CapatazRegistro>(r.data)))
+      .catch(() => setError('No se pudo cargar la lista de capataces.'))
+      .finally(() => setLoading(false))
+  }, [])
+
+  useEffect(() => { cargar() }, [cargar])
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault()
+    setSaving(true)
+    setError('')
+    setExito('')
+    try {
+      await capatazService.registrar(form)
+      setExito(`Capataz ${form.nombres} ${form.apellidos} registrado. El supervisor ya puede asignarlo en «Asignar cuadrillas».`)
+      setForm({ nombres: '', apellidos: '', dni: '', email: '', username: '', password: '' })
+      cargar()
+    } catch (err: unknown) {
+      const txt = (err as { response?: { data?: { message?: string } } })?.response?.data?.message
+        ?? 'No se pudo registrar el capataz.'
+      setError(txt)
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  const inputClass = 'corp-input text-sm py-2 w-full'
+
+  return (
+    <div className="space-y-5">
+      <div className="corp-card p-5">
+        <div className="flex items-start gap-3 mb-4">
+          <div className="kpi-icon-box bg-sky-50 border-sky-200 text-sky-700">
+            <UserPlus size={20} strokeWidth={1.75} />
+          </div>
+          <div>
+            <h3 className="text-sm font-bold text-slate-800">Registrar capataz de campo</h3>
+            <p className="text-sm text-slate-500 mt-1">
+              Crea el usuario de acceso y el registro RRHH. El supervisor no da de alta capataces: solo los asigna a las OTs del día.
+            </p>
+          </div>
+        </div>
+
+        {error && <div className="alert-banner alert-error text-sm mb-4" role="alert">{error}</div>}
+        {exito && <div className="alert-banner alert-success text-sm mb-4" role="status">{exito}</div>}
+
+        <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label htmlFor="cap-nombres" className="corp-label">Nombres</label>
+            <input id="cap-nombres" required maxLength={100} value={form.nombres}
+              onChange={e => setForm(f => ({ ...f, nombres: e.target.value }))} className={inputClass} />
+          </div>
+          <div>
+            <label htmlFor="cap-apellidos" className="corp-label">Apellidos</label>
+            <input id="cap-apellidos" required maxLength={100} value={form.apellidos}
+              onChange={e => setForm(f => ({ ...f, apellidos: e.target.value }))} className={inputClass} />
+          </div>
+          <div>
+            <label htmlFor="cap-dni" className="corp-label">DNI</label>
+            <input id="cap-dni" required maxLength={8} pattern="[0-9]{8}" value={form.dni}
+              onChange={e => setForm(f => ({ ...f, dni: e.target.value.replace(/\D/g, '').slice(0, 8) }))}
+              className={inputClass} placeholder="8 dígitos" />
+          </div>
+          <div>
+            <label htmlFor="cap-email" className="corp-label">Email (login)</label>
+            <input id="cap-email" type="email" required maxLength={150} value={form.email}
+              onChange={e => setForm(f => ({ ...f, email: e.target.value }))} className={inputClass} />
+          </div>
+          <div>
+            <label htmlFor="cap-username" className="corp-label">Usuario</label>
+            <input id="cap-username" required maxLength={60} value={form.username}
+              onChange={e => setForm(f => ({ ...f, username: e.target.value }))} className={inputClass} />
+          </div>
+          <div>
+            <label htmlFor="cap-password" className="corp-label">Contraseña inicial</label>
+            <input id="cap-password" type="password" required minLength={8} maxLength={100} value={form.password}
+              onChange={e => setForm(f => ({ ...f, password: e.target.value }))} className={inputClass}
+              autoComplete="new-password" />
+          </div>
+          <div className="sm:col-span-2">
+            <button type="submit" disabled={saving} className="btn-primary min-h-11 px-5">
+              {saving ? 'Registrando…' : 'Registrar capataz'}
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <div className="corp-card overflow-hidden">
+        <div className="corp-card-header">
+          <span>Capataces activos</span>
+          <span className="badge-count">{lista.length}</span>
+        </div>
+        <div className="overflow-x-auto">
+          <table className="enterprise-table">
+            <thead>
+              <tr>
+                {['Código', 'Nombre', 'DNI', 'Email', 'Usuario'].map(h => <th key={h}>{h}</th>)}
+              </tr>
+            </thead>
+            <tbody>
+              {loading ? (
+                <tr><td colSpan={5} className="text-center py-10 text-slate-400">Cargando…</td></tr>
+              ) : lista.length === 0 ? (
+                <tr><td colSpan={5} className="text-center py-10 text-slate-400">No hay capataces registrados.</td></tr>
+              ) : lista.map(c => (
+                <tr key={c.id}>
+                  <td className="font-mono text-xs">{c.codigoCapataz}</td>
+                  <td className="font-medium">{c.nombre}</td>
+                  <td className="tabular-nums">{c.dni}</td>
+                  <td>{c.email}</td>
+                  <td>{c.username}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  )
+}
 
 function OTsTable({ ordenes }: { ordenes: OrdenTrabajo[] }) {
   const [filtroCapataz, setFiltroCapataz] = useState('')

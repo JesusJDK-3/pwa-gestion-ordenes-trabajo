@@ -27,8 +27,8 @@ export default function OfflineBadge() {
       <button
         type="button"
         onClick={() => syncPending()}
-        className="flex items-center gap-1.5 text-xs bg-amber-50 text-amber-800 border border-amber-300 px-2.5 py-1 rounded-full font-medium hover:bg-amber-100 transition-colors"
-        title="Sincronizar actividades pendientes"
+        className="flex items-center gap-1.5 text-xs bg-amber-50 text-amber-800 border border-amber-300 px-3 py-2 min-h-11 rounded-full font-medium hover:bg-amber-100 transition-colors"
+        aria-label={`Sincronizar ${pendingCount} actividad${pendingCount > 1 ? 'es' : ''} pendiente${pendingCount > 1 ? 's' : ''}`}
       >
         <RefreshCw size={11} />
         {pendingCount} pendiente{pendingCount > 1 ? 's' : ''} · Sincronizar

@@ -23,6 +23,13 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * API REST de órdenes de trabajo y puntos operativos.
+ * <p>
+ * Agrupa endpoints de supervisor (Excel, asignación, historial) y capataz (mis puntos, mapa).
+ * Rutas bajo {@code /api/ordenes/*} y {@code /api/puntos/*}.
+ * </p>
+ */
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor

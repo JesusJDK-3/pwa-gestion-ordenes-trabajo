@@ -22,9 +22,10 @@ export function fechaActividadOt(ot: {
   updatedAt?: string
   fechaFin?: string
   fechaInicio?: string
+  fechaProgramada?: string
   createdAt?: string
 }): string | undefined {
-  return ot.updatedAt ?? ot.fechaFin ?? ot.fechaInicio ?? ot.createdAt
+  return ot.updatedAt ?? ot.fechaFin ?? ot.fechaInicio ?? ot.fechaProgramada ?? ot.createdAt
 }
 
 export function formatearFechaHistorial(val?: string, soloFecha = false): string {

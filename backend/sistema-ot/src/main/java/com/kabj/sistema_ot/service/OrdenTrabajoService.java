@@ -23,6 +23,19 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.*;
 
+/**
+ * Reglas de negocio y consultas sobre órdenes de trabajo ({@link OpOrdenTrabajo}).
+ * <p>
+ * Responsabilidades principales:
+ * </p>
+ * <ul>
+ *   <li>Listado por capataz ({@link #misPuntos}) incluyendo OT sin coordenadas</li>
+ *   <li>Historial y seguimiento para supervisor</li>
+ *   <li>Corrección de coordenadas y validación Peru bounds</li>
+ *   <li>Cambio de estado supervisor (solo anulación desde panel)</li>
+ *   <li>{@link #validarPropiedadCapataz} — impide que un capataz opere OT ajena</li>
+ * </ul>
+ */
 @Service
 @RequiredArgsConstructor
 public class OrdenTrabajoService {
@@ -303,6 +316,7 @@ public class OrdenTrabajoService {
         }
         LocalDateTime t0 = fecha != null ? fecha.atStartOfDay() : null;
         LocalDateTime t1 = fecha != null ? fecha.plusDays(1).atStartOfDay() : null;
+        final LocalDate fechaFiltro = fecha;
 
         Set<Long> idsEvento = new HashSet<>();
         Set<Long> idsObservadasDia = new HashSet<>();
@@ -335,13 +349,16 @@ public class OrdenTrabajoService {
                         }
                     }
                     if (t0 != null && !observadasHistoricasDia) {
+                        final LocalDateTime inicio = t0;
+                        final LocalDateTime fin = t1;
                         boolean actividad = idsEvento.contains(ot.getIdOt())
                                 || (ot.getUpdatedAt() != null
-                                && !ot.getUpdatedAt().isBefore(t0) && ot.getUpdatedAt().isBefore(t1))
+                                && !ot.getUpdatedAt().isBefore(inicio) && ot.getUpdatedAt().isBefore(fin))
                                 || (ot.getFechaInicio() != null
-                                && !ot.getFechaInicio().isBefore(t0) && ot.getFechaInicio().isBefore(t1))
+                                && !ot.getFechaInicio().isBefore(inicio) && ot.getFechaInicio().isBefore(fin))
                                 || (ot.getFechaFin() != null
-                                && !ot.getFechaFin().isBefore(t0) && ot.getFechaFin().isBefore(t1));
+                                && !ot.getFechaFin().isBefore(inicio) && ot.getFechaFin().isBefore(fin))
+                                || (ot.getFechaProgramada() != null && ot.getFechaProgramada().equals(fechaFiltro));
                         if (!actividad) return false;
                     } else if (requiereFecha) {
                         return false;

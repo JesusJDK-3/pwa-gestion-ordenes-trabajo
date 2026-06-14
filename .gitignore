@@ -6,6 +6,7 @@ frontend/.env.local
 
 # ─── BACKEND ────────────────────────────
 backend/sistema-ot/target/
+backend/sistema-ot/data/
 backend/.env
 
 # ─── ROOT (no dependencias en raíz) ───
@@ -28,4 +29,5 @@ Thumbs.db
 *.env
 *.env.local
 application-prod.properties
-backend/src/main/resources/application-prod.properties
+backend/sistema-ot/src/main/resources/application-local.properties
+backend/sistema-ot/src/main/resources/application-prod.properties

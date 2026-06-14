@@ -75,48 +75,24 @@ const PRIORIDAD_COLOR: Record<string, string> = {
 
 
 
+function puedeMarcarResuelta(tipo: string | undefined, rol: string): boolean {
+  return tipo === 'OBSERVADA' && (rol === 'admin' || rol === 'supervisor')
+}
+
 function rutaAccion(tipo: string | undefined, rol: string, idOt?: number): string | null {
-
   switch (tipo) {
-
     case 'SIN_ASIGNAR':
-
       return rol === 'supervisor' ? '/supervisor/asignar' : null
-
     case 'OBSERVADA':
-
       if (rol === 'capataz' && idOt) return `/capataz/registrar/${idOt}`
-
       return null
-
     case 'RETRASADA':
-
       if (rol === 'capataz') return '/capataz/mapa'
-
       if (rol === 'supervisor') return '/supervisor/mapa'
-
       return '/admin/mapa'
-
-    case 'SIN_UBICACION':
-
-      if (rol === 'capataz' && idOt) return `/capataz/mapa?ot=${idOt}`
-
-      return rol === 'capataz' ? '/capataz/alertas' : null
-
-    case 'SIN_GEOREFERENCIA':
-
-      if (rol === 'supervisor') return idOt ? `/supervisor/coordenadas?ot=${idOt}` : '/supervisor/coordenadas'
-
-      if (rol === 'admin') return idOt ? `/admin/coordenadas?ot=${idOt}` : '/admin/coordenadas'
-
-      return null
-
     default:
-
       return null
-
   }
-
 }
 
 
@@ -285,10 +261,10 @@ export default function AlertasPage() {
 
           <p className="page-subtitle">
             {rol === 'capataz'
-              ? 'Avisos de sus OT: observadas, retrasadas o sin ubicación en mapa (el supervisor corrige la georreferencia).'
+              ? 'Avisos de sus OT observadas o retrasadas. La georreferencia la corrige el supervisor en su módulo de coordenadas.'
               : rol === 'supervisor'
-                ? 'OTs sin georreferencia, observadas, sin capataz o retrasadas. «Marcar como resuelta» indica que ya revisó el caso; la alerta solo vuelve si el capataz registra observaciones nuevas. La OT sigue observada hasta que el capataz la complete en campo.'
-                : 'OTs sin georreferencia, observadas, sin asignar o retrasadas. Las fotos en S COMAS se resuelven con el estado observada → completada.'}
+                ? 'OTs observadas, sin capataz o retrasadas. «Marcar como revisada» solo aplica a observadas; las demás se resuelven al corregir la causa (asignar capataz, etc.).'
+                : 'OTs observadas, sin asignar o retrasadas para escalamiento. La georreferencia y asignación las gestiona el supervisor.'}
           </p>
 
         </div>
@@ -349,7 +325,11 @@ export default function AlertasPage() {
 
                   onClick={() => toggleDetalle(a.id)}
 
-                  className="w-full px-6 py-4 flex items-start justify-between gap-4 hover:bg-gray-50/60 text-left"
+                  aria-expanded={abierta}
+
+                  aria-controls={a.id != null ? `alerta-detalle-${a.id}` : undefined}
+
+                  className="w-full px-6 py-4 flex items-start justify-between gap-4 hover:bg-gray-50/60 text-left min-h-11"
 
                 >
 
@@ -419,7 +399,7 @@ export default function AlertasPage() {
 
                 {abierta && (
 
-                  <div className="px-6 pb-4 -mt-1 border-t border-gray-50 bg-gray-50/40">
+                  <div id={a.id != null ? `alerta-detalle-${a.id}` : undefined} className="px-6 pb-4 -mt-1 border-t border-gray-50 bg-gray-50/40">
 
                     {a.tipo === 'OBSERVADA' && (
 
@@ -539,20 +519,18 @@ export default function AlertasPage() {
                         </button>
                       )}
 
-                      {a.id != null && (
+                      {a.id != null && puedeMarcarResuelta(a.tipo, rol) && (
                         <button
                           type="button"
                           onClick={e => marcarResuelta(a.id!, e)}
                           disabled={resolviendo === a.id}
-                          title={a.tipo === 'OBSERVADA'
-                            ? 'Confirma que revisó el caso. La OT sigue observada hasta que el capataz la complete.'
-                            : 'Quitar esta alerta de la lista activa'}
+                          title="Confirma que revisó el caso. La OT sigue observada hasta que el capataz la complete."
                           className="flex items-center gap-1.5 text-xs bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-2 rounded-lg disabled:opacity-50"
                         >
 
                           {resolviendo === a.id ? <Loader2 size={12} className="animate-spin" /> : <CheckCircle2 size={12} />}
 
-                          Marcar como resuelta
+                          Marcar como revisada
 
                         </button>
 

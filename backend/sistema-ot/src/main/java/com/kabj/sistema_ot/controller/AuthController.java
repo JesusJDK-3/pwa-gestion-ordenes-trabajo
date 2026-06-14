@@ -15,6 +15,14 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
+/**
+ * Autenticación JWT del sistema.
+ * <ul>
+ *   <li>{@code POST /api/auth/login} — credenciales → token Bearer + rol</li>
+ *   <li>{@code GET /api/auth/me} — usuario autenticado (requiere token)</li>
+ * </ul>
+ * El token se valida en {@link com.kabj.sistema_ot.security.JwtFilter}.
+ */
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor

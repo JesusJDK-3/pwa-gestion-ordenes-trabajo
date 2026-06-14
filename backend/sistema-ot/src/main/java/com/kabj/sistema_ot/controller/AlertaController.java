@@ -11,6 +11,19 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * API REST de alertas operativas derivadas del estado de las OT.
+ * <p>
+ * Las alertas se generan automáticamente en {@link com.kabj.sistema_ot.service.AlertaService}
+ * (SIN_ASIGNAR, OBSERVADA, RETRASADA). Solo OBSERVADA puede resolverse manualmente
+ * por admin/supervisor; el resto se cierra al corregir la causa.
+ * </p>
+ * <ul>
+ *   <li>{@code GET /api/alertas} — listado filtrado por rol</li>
+ *   <li>{@code GET /api/alertas/count} — contador para badges en UI</li>
+ *   <li>{@code PUT /api/alertas/{id}/resolver} — marcar OBSERVADA como revisada</li>
+ * </ul>
+ */
 @RestController
 @RequestMapping("/api/alertas")
 @RequiredArgsConstructor
@@ -33,7 +46,7 @@ public class AlertaController {
     }
 
     @PutMapping("/{id}/resolver")
-    @PreAuthorize("hasAnyRole('ADMIN','SUPERVISOR','CAPATAZ')")
+    @PreAuthorize("hasAnyRole('ADMIN','SUPERVISOR')")
     public ResponseEntity<ApiResponse<Void>> resolver(@PathVariable Long id, Authentication auth) {
         alertaService.marcarResuelta(id, auth.getName());
         return ResponseEntity.ok(new ApiResponse<>(true, "Alerta marcada como resuelta", null));

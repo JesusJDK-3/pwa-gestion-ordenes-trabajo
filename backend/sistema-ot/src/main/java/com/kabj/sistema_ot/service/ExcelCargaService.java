@@ -19,6 +19,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * Importación masiva de OT desde Excel (formatos SEDAPAL y Preventivo VPA).
+ * <p>
+ * Flujo: {@link #previewExcel} valida filas sin persistir → {@link #cargarExcel} crea OT en PENDIENTE.
+ * Resolución de coordenadas por prioridad: HIA/hidrante → NIS/VPA → columnas Excel.
+ * OT creadas sin capataz; el supervisor asigna después en Asignar OT.
+ * </p>
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor

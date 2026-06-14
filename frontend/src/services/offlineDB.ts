@@ -1,3 +1,15 @@
+/**
+ * Persistencia local IndexedDB para modo offline del capataz.
+ *
+ * Stores:
+ * - `actividades_pendientes` — registros no sincronizados (cola de sync)
+ * - `puntos_cache` — cache de OT por capataz para consulta sin red
+ *
+ * Consumido por FormularioActividad (guardar) y useOfflineSync (enviar batch).
+ *
+ * @see hooks/useOfflineSync.ts
+ * @see POST /api/sync/operacion
+ */
 import { openDB } from 'idb'
 import type { OrdenTrabajo, RegistroPendiente } from '../types'
 

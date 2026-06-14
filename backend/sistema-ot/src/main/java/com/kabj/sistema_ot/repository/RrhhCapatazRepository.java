@@ -8,4 +8,5 @@ import java.util.Optional;
 public interface RrhhCapatazRepository extends JpaRepository<RrhhCapataz, Long> {
     Optional<RrhhCapataz> findByUsuario(Usuario usuario);
     Optional<RrhhCapataz> findByCodigoCapataz(String codigoCapataz);
+    Optional<RrhhCapataz> findByTrabajador_IdTrabajador(Long idTrabajador);
 }

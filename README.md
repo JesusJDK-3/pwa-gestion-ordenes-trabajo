@@ -2,6 +2,10 @@
 > PWA para gestión de órdenes de trabajo de campo · SEDAPAL · Mantenimiento de Redes  
 > Consultores & Constructores K.A.B.J. S.A.C.
 
+[![CI](https://github.com/TU_USUARIO/pwa-gestion-ordenes-trabajo/actions/workflows/ci.yml/badge.svg)](https://github.com/TU_USUARIO/pwa-gestion-ordenes-trabajo/actions/workflows/ci.yml)
+
+> Reemplaza `TU_USUARIO` en el badge con el owner real del repositorio en GitHub.
+
 ---
 
 ## ⚡ Inicio rápido (Git Bash)
@@ -246,6 +250,95 @@ VITE_API_URL=http://localhost:8081
 export JAVA_HOME="/c/Program Files/Eclipse Adoptium/jdk-21.x.x"
 export PATH="$JAVA_HOME/bin:$PATH"
 ```
+
+---
+
+## Documentación técnica (desarrolladores)
+
+Guía completa de arquitectura, módulos y convenciones: **[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)**.
+
+El código fuente incluye comentarios **Javadoc** (backend) y **JSDoc** (frontend) en clases, servicios y pantallas críticas. Cada paquete Java tiene un `package-info.java` con índice del módulo.
+
+### Arquitectura en capas
+
+```
+React PWA  ──JWT/REST──►  Spring Boot API  ──JPA──►  PostgreSQL
+     │                           │
+ IndexedDB (offline)        Apache POI (Excel)
+```
+
+| Capa | Ruta | Qué hace |
+|------|------|----------|
+| UI | `frontend/src/pages/` | Pantallas por rol (supervisor, capataz, admin) |
+| Cliente API | `frontend/src/services/api.ts` | Axios + servicios REST tipados |
+| Offline | `frontend/src/services/offlineDB.ts` | Cola IndexedDB y sync |
+| REST | `backend/.../controller/` | Endpoints HTTP + `@PreAuthorize` |
+| Negocio | `backend/.../service/` | Reglas OT, alertas, Excel, sync |
+| Datos | `backend/.../entity/` | Entidades JPA (`OpOrdenTrabajo`, etc.) |
+| Seguridad | `backend/.../security/` | JWT, filtros, rate limit login |
+
+### Estados de una OT (`cat_estado_ot`)
+
+| Estado | Significado |
+|--------|-------------|
+| `PENDIENTE` | Importada; trabajo no iniciado |
+| `EN_PROGRESO` | Capataz registró actividad en campo |
+| `OBSERVADA` | Incidencia con observación obligatoria |
+| `COMPLETADA` | Cerrada — desaparece del mapa |
+| `ANULADA` | Cancelada por supervisor |
+
+Flujo: **Excel → PENDIENTE → asignar capataz → EN_PROGRESO → COMPLETADA**.
+
+Código clave: `ExcelCargaService`, `OrdenTrabajoController`, `RegistroController`.
+
+### API REST (prefijo `/api`)
+
+| Módulo | Endpoints principales | Rol típico |
+|--------|----------------------|------------|
+| Auth | `POST /auth/login`, `GET /auth/me` | Todos |
+| Órdenes | `POST /ordenes/carga-excel`, `GET /puntos/mis-puntos` | Supervisor / Capataz |
+| Registros | `POST /registros` | Capataz |
+| Alertas | `GET /alertas`, `PUT /alertas/{id}/resolver` | Todos (filtrado por rol) |
+| Sync | `POST /sync/operacion` | Capataz (offline) |
+| Reportes | `GET /reportes/diario`, `/mensual`, `/auditoria` | Supervisor / Admin |
+
+Respuesta estándar: `{ success, message, data }` (`ApiResponse<T>`).
+
+### Comandos de desarrollo
+
+```bash
+# Tests backend (H2 en memoria — no requiere PostgreSQL)
+cd backend/sistema-ot && ./mvnw test
+
+# Lint + build frontend
+cd frontend && npm run lint && npm run build
+```
+
+### Perfiles Spring
+
+| Perfil | Archivo | Uso |
+|--------|---------|-----|
+| (default) | `application.properties` | Dev con PostgreSQL |
+| `local` | `application-local.properties` | H2 en disco (sin PostgreSQL) |
+| `prod` | `application-prod.properties` | Producción |
+| `test` | `application-test.properties` | Tests automatizados |
+
+---
+
+## Integración continua (CI)
+
+El proyecto incluye un workflow de **GitHub Actions** en [`.github/workflows/ci.yml`](.github/workflows/ci.yml).
+
+En cada **push** o **pull request** hacia `main`/`master`, CI ejecuta automáticamente:
+
+| Job | Pasos | Objetivo |
+|-----|-------|----------|
+| **backend** | `./mvnw test` con JDK 21 | Compilar y ejecutar tests JUnit (H2) |
+| **frontend** | `npm ci`, `npm run lint`, `npm run build` | Dependencias, ESLint y build Vite |
+
+Si algún paso falla, GitHub marca el commit/PR en rojo. Esto evita integrar código roto.
+
+Para ver el estado: pestaña **Actions** del repositorio en GitHub.
 
 ---
 

@@ -1,3 +1,10 @@
+/**
+ * Hook de sincronización offline → backend.
+ *
+ * Detecta conectividad (`navigator.onLine`), cuenta pendientes en IndexedDB
+ * y envía batch a syncService al reconectar o manualmente.
+ * Timeout 15s por operación batch.
+ */
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { offlineDB } from '../services/offlineDB'
 import { syncService } from '../services/api'

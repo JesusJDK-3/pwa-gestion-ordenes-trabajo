@@ -11,30 +11,38 @@ export default defineConfig({
         name: 'Sistema OT - K.A.B.J.',
         short_name: 'Sistema OT',
         description: 'Gestión de Órdenes de Trabajo en Campo',
-        theme_color: '#1D9E75',
+        theme_color: '#1B4F72',
         background_color: '#ffffff',
         display: 'standalone',
         start_url: '/',
+        lang: 'es',
         icons: [
-          { src: '/favicon.svg', sizes: 'any', type: 'image/svg+xml', purpose: 'any maskable' },
+          { src: '/favicon.svg', sizes: 'any', type: 'image/svg+xml', purpose: 'any' },
+          { src: '/favicon.svg', sizes: '512x512', type: 'image/svg+xml', purpose: 'maskable' },
         ],
       },
       workbox: {
-        globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
-        runtimeCaching: [
-          {
-            urlPattern: ({ url }) => url.pathname.startsWith('/api'),
-            handler: 'NetworkFirst',
-            options: {
-              cacheName: 'api-cache',
-              networkTimeoutSeconds: 10,
-              expiration: { maxEntries: 100, maxAgeSeconds: 86400 },
-            },
-          },
-        ],
+        globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2,jpg}'],
+        // Sin cache de /api: datos sensibles y offline ya usa IndexedDB
       },
     }),
   ],
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes('node_modules/leaflet') || id.includes('node_modules/react-leaflet')) {
+            return 'leaflet'
+          }
+          if (id.includes('node_modules/xlsx')) return 'xlsx'
+          if (id.includes('node_modules/react') || id.includes('node_modules/react-dom')
+            || id.includes('node_modules/react-router')) {
+            return 'vendor'
+          }
+        },
+      },
+    },
+  },
   optimizeDeps: {
     include: ['xlsx'],
   },

@@ -22,6 +22,13 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
 
+/**
+ * Configuración central de Spring Security para la API REST.
+ * <p>
+ * Stateless JWT: sin sesión HTTP. Rutas {@code /api/auth/login} y health públicas;
+ * el resto requiere Bearer token. CORS limitado a {@code cors.allowed-origin}.
+ * </p>
+ */
 @Configuration
 @EnableMethodSecurity
 @RequiredArgsConstructor

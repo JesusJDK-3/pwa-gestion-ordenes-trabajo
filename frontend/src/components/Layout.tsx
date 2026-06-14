@@ -1,5 +1,11 @@
+/**
+ * Shell de navegación por rol: sidebar, header, badge offline y alertas.
+ *
+ * Menús definidos en NAV_BY_ROL según supervisor | capataz | admin.
+ * No implementa autorización de seguridad (solo UX); el backend valida JWT.
+ */
 import { NavLink, Outlet, useNavigate, useLocation } from 'react-router-dom'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import {
   Gauge, FileSpreadsheet, Crosshair, UserCog, LineChart,
   ClipboardList, MapPinned, HardHat, BookMarked, Building2,
@@ -40,7 +46,6 @@ const NAV_BY_ROL: Record<Rol, NavItem[]> = {
     { to: '/admin',              label: 'Consola administrativa', icon: Building2,      section: 'Sistema' },
     { to: '/admin/cargar-datos', label: 'Base VPA / Hidrantes',   icon: Upload },
     { to: '/admin/mapa',         label: 'Mapa de monitoreo',      icon: MapPinned,      section: 'Monitoreo' },
-    { to: '/admin/coordenadas',  label: 'Georreferencia',         icon: Crosshair },
     { to: '/admin/alertas',      label: 'Alertas',                icon: AlertTriangle },
   ],
 }
@@ -89,12 +94,127 @@ const PAGE_TITLES: Record<string, string> = {
   '/admin':                       'Consola administrativa',
   '/admin/cargar-datos':          'Base geográfica',
   '/admin/mapa':                  'Mapa de monitoreo',
-  '/admin/coordenadas':           'Georreferencia',
   '/admin/alertas':               'Alertas',
 }
 
 function getInitials(nombre = '') {
   return nombre.split(' ').filter(Boolean).map(n => n[0]).slice(0, 2).join('').toUpperCase()
+}
+
+interface SidebarPanelProps {
+  navItems: NavItem[]
+  badge: (typeof ROL_BADGE)[Rol]
+  userNombre?: string
+  alertasPath: string
+  alertasActivas: number
+  onNavClick: () => void
+  onLogout: () => void
+}
+
+function SidebarPanel({
+  navItems,
+  badge,
+  userNombre,
+  alertasPath,
+  alertasActivas,
+  onNavClick,
+  onLogout,
+}: SidebarPanelProps) {
+  const navWithSections = navItems.reduce<Array<NavItem & { showSection: boolean }>>((acc, item) => {
+    const prevSection = acc.length > 0 ? acc[acc.length - 1].section : undefined
+    const showSection = Boolean(item.section && item.section !== prevSection)
+    acc.push({ ...item, showSection })
+    return acc
+  }, [])
+
+  return (
+    <>
+      <div className="sidebar-brand relative overflow-hidden border-b border-slate-200">
+        <div
+          className="absolute inset-0 bg-cover bg-center scale-110 blur-[2px] opacity-[0.14]"
+          style={{ backgroundImage: "url('/login-campo.jpg')" }}
+          aria-hidden
+        />
+        <div className="absolute inset-0 bg-white/94" />
+        <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-[#C0392B]" />
+        <div className="relative px-5 py-5">
+          <img
+            src={logoKabj}
+            alt="K.A.B.J."
+            className="h-[68px] w-auto max-w-full object-contain object-left"
+          />
+          <div className="mt-3 pt-3 border-t border-slate-200/80">
+            <p className="app-display text-[#1B4F72] text-[14px] font-semibold tracking-tight">
+              Sistema OT
+            </p>
+            <span className={`inline-flex mt-2 px-2.5 py-1 rounded border app-eyebrow ${badge.pillLight}`}>
+              {badge.label}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <nav className="flex-1 py-2 overflow-y-auto bg-[#FAFBFC]" aria-label="Navegación principal">
+        {navWithSections.map(item => {
+          const Icon = item.icon
+          return (
+            <div key={item.to}>
+              {item.showSection && (
+                <p className="app-eyebrow px-4 pt-4 pb-1 text-slate-400">
+                  {item.section}
+                </p>
+              )}
+              <NavLink
+                to={item.to}
+                end={item.to === '/supervisor' || item.to === '/capataz' || item.to === '/admin'}
+                className={({ isActive }) =>
+                  `flex items-center gap-3 mx-2 px-2 py-2.5 text-[13px] font-medium transition-colors ${
+                    isActive
+                      ? 'bg-[#1B4F72] text-white border-l-[3px] border-l-[#C0392B] shadow-sm'
+                      : 'text-slate-600 hover:text-[#1B4F72] hover:bg-white border-l-[3px] border-l-transparent'
+                  }`
+                }
+                onClick={onNavClick}
+              >
+                {({ isActive }) => (
+                  <>
+                    <span className={`nav-icon-box ${isActive ? 'nav-icon-box-active' : ''}`}>
+                      <Icon size={14} strokeWidth={2} />
+                    </span>
+                    <span className="flex-1">{item.label}</span>
+                    {item.to === alertasPath && alertasActivas > 0 && (
+                      <span className="min-w-[18px] h-[18px] px-1 flex items-center justify-center rounded-full bg-[#C0392B] text-white text-[10px] font-bold">
+                        {alertasActivas > 99 ? '99+' : alertasActivas}
+                      </span>
+                    )}
+                  </>
+                )}
+              </NavLink>
+            </div>
+          )
+        })}
+      </nav>
+
+      <div className="px-4 py-4 border-t border-slate-200 bg-white">
+        <div className="flex items-center gap-3 mb-3">
+          <div className={`w-9 h-9 rounded border flex items-center justify-center flex-shrink-0 ${badge.pillLight}`}>
+            <span className="text-[10px] font-bold">{getInitials(userNombre)}</span>
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-slate-800 text-[12px] font-semibold truncate">{userNombre}</p>
+            <p className={`text-[10px] font-medium app-eyebrow ${badge.labelLight}`}>{badge.label}</p>
+          </div>
+        </div>
+        <button
+          onClick={onLogout}
+          className="w-full flex items-center gap-2 text-slate-400 hover:text-[#C0392B] text-[12px] py-1.5 px-1"
+        >
+          <LogOut size={13} />
+          Cerrar sesión
+        </button>
+      </div>
+    </>
+  )
 }
 
 export default function Layout() {
@@ -133,111 +253,58 @@ export default function Layout() {
       .catch(() => setAlertasActivas(0))
   }, [rol, location.pathname])
 
-  let lastSection = ''
+  useEffect(() => {
+    document.title = `${pageTitle} — Sistema OT | K.A.B.J.`
+  }, [pageTitle])
 
-  const SidebarContent = () => (
-    <>
-      <div className="sidebar-brand relative overflow-hidden border-b border-slate-200">
-        <div
-          className="absolute inset-0 bg-cover bg-center scale-110 blur-[2px] opacity-[0.14]"
-          style={{ backgroundImage: "url('/login-campo.jpg')" }}
-          aria-hidden
-        />
-        <div className="absolute inset-0 bg-white/94" />
-        <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-[#C0392B]" />
-        <div className="relative px-5 py-5">
-          <img
-            src={logoKabj}
-            alt="K.A.B.J."
-            className="h-[68px] w-auto max-w-full object-contain object-left"
-          />
-          <div className="mt-3 pt-3 border-t border-slate-200/80">
-            <p className="app-display text-[#1B4F72] text-[14px] font-semibold tracking-tight">
-              Sistema OT
-            </p>
-            <span className={`inline-flex mt-2 px-2.5 py-1 rounded border app-eyebrow ${badge.pillLight}`}>
-              {badge.label}
-            </span>
-          </div>
-        </div>
-      </div>
+  const closeMobile = useCallback(() => setMobileOpen(false), [])
 
-      <nav className="flex-1 py-2 overflow-y-auto bg-[#FAFBFC]">
-        {navItems.map(item => {
-          const Icon = item.icon
-          const showSection = item.section && item.section !== lastSection
-          if (item.section) lastSection = item.section
-
-          return (
-            <div key={item.to}>
-              {showSection && (
-                <p className="app-eyebrow px-4 pt-4 pb-1 text-slate-400">
-                  {item.section}
-                </p>
-              )}
-              <NavLink
-                to={item.to}
-                end={item.to === '/supervisor' || item.to === '/capataz' || item.to === '/admin'}
-                className={({ isActive }) =>
-                  `flex items-center gap-3 mx-2 px-2 py-2.5 text-[13px] font-medium transition-colors ${
-                    isActive
-                      ? 'bg-[#1B4F72] text-white border-l-[3px] border-l-[#C0392B] shadow-sm'
-                      : 'text-slate-600 hover:text-[#1B4F72] hover:bg-white border-l-[3px] border-l-transparent'
-                  }`
-                }
-                onClick={() => setMobileOpen(false)}
-              >
-                {({ isActive }) => (
-                  <>
-                    <span className={`nav-icon-box ${isActive ? 'nav-icon-box-active' : ''}`}>
-                      <Icon size={14} strokeWidth={2} />
-                    </span>
-                    <span className="flex-1">{item.label}</span>
-                    {item.to === alertasPath && alertasActivas > 0 && (
-                      <span className="min-w-[18px] h-[18px] px-1 flex items-center justify-center rounded-full bg-[#C0392B] text-white text-[10px] font-bold">
-                        {alertasActivas > 99 ? '99+' : alertasActivas}
-                      </span>
-                    )}
-                  </>
-                )}
-              </NavLink>
-            </div>
-          )
-        })}
-      </nav>
-
-      <div className="px-4 py-4 border-t border-slate-200 bg-white">
-        <div className="flex items-center gap-3 mb-3">
-          <div className={`w-9 h-9 rounded border flex items-center justify-center flex-shrink-0 ${badge.pillLight}`}>
-            <span className="text-[10px] font-bold">{getInitials(user?.nombre)}</span>
-          </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-slate-800 text-[12px] font-semibold truncate">{user?.nombre}</p>
-            <p className={`text-[10px] font-medium app-eyebrow ${badge.labelLight}`}>{badge.label}</p>
-          </div>
-        </div>
-        <button
-          onClick={handleLogout}
-          className="w-full flex items-center gap-2 text-slate-400 hover:text-[#C0392B] text-[12px] py-1.5 px-1"
-        >
-          <LogOut size={13} />
-          Cerrar sesión
-        </button>
-      </div>
-    </>
-  )
+  useEffect(() => {
+    if (!mobileOpen) return
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') closeMobile() }
+    document.addEventListener('keydown', onKey)
+    return () => document.removeEventListener('keydown', onKey)
+  }, [mobileOpen, closeMobile])
 
   return (
     <div className="app-shell flex h-screen bg-[#ECEFF1] overflow-hidden">
+      <a href="#main-content" className="skip-link">
+        Saltar al contenido principal
+      </a>
       <aside className="w-60 bg-white border-r border-slate-200 flex flex-col flex-shrink-0 hidden md:flex shadow-[2px_0_16px_rgba(10,22,40,0.04)]">
-        <SidebarContent />
+        <SidebarPanel
+          navItems={navItems}
+          badge={badge}
+          userNombre={user?.nombre}
+          alertasPath={alertasPath}
+          alertasActivas={alertasActivas}
+          onNavClick={closeMobile}
+          onLogout={handleLogout}
+        />
       </aside>
 
       {mobileOpen && (
         <div className="fixed inset-0 z-[9999] md:hidden">
-          <div className="absolute inset-0 bg-black/60" onClick={() => setMobileOpen(false)} />
-          <aside className="absolute left-0 top-0 bottom-0 w-64 bg-white border-r border-slate-200 flex flex-col z-[9999] shadow-xl">
-            <SidebarContent />
+          <div
+            className="absolute inset-0 bg-black/60"
+            onClick={closeMobile}
+            aria-hidden
+          />
+          <aside
+            className="absolute left-0 top-0 bottom-0 w-64 bg-white border-r border-slate-200 flex flex-col z-[9999] shadow-xl"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Menú de navegación"
+          >
+            <SidebarPanel
+              navItems={navItems}
+              badge={badge}
+              userNombre={user?.nombre}
+              alertasPath={alertasPath}
+              alertasActivas={alertasActivas}
+              onNavClick={closeMobile}
+              onLogout={handleLogout}
+            />
           </aside>
         </div>
       )}
@@ -247,11 +314,12 @@ export default function Layout() {
           <div className="absolute left-0 top-0 bottom-0 w-1 bg-[#C0392B]" />
           <div className="flex items-center gap-3 pl-2">
             <button
-              className="md:hidden w-8 h-8 flex items-center justify-center hover:bg-white/10"
+              className="md:hidden min-w-11 min-h-11 flex items-center justify-center hover:bg-white/10 rounded"
               onClick={() => setMobileOpen(true)}
               aria-label="Abrir menú"
+              aria-expanded={mobileOpen}
             >
-              <Menu size={18} />
+              <Menu size={18} aria-hidden />
             </button>
             <div className="flex items-center gap-2">
               <Building2 size={15} className="opacity-70 hidden sm:block" />
@@ -276,7 +344,7 @@ export default function Layout() {
         </div>
 
         <BannerOffline />
-        <main className="flex-1 overflow-auto p-5 md:p-6">
+        <main id="main-content" className="flex-1 overflow-auto p-5 md:p-6" tabIndex={-1}>
           <Outlet />
         </main>
       </div>

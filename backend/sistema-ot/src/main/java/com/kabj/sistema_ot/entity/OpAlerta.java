@@ -4,6 +4,13 @@ import jakarta.persistence.*;
 import lombok.Data;
 import java.time.LocalDateTime;
 
+/**
+ * Alerta operativa derivada del estado de una OT.
+ * <p>
+ * Tipos generados por {@link com.kabj.sistema_ot.service.AlertaService}:
+ * SIN_ASIGNAR, OBSERVADA, RETRASADA. Tabla {@code op_alerta}.
+ * </p>
+ */
 @Data
 @Entity
 @Table(name = "op_alerta")

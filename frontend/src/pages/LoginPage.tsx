@@ -13,6 +13,10 @@ export default function LoginPage() {
     if (isAuthenticated && user) navigate(getRolHome(user.rol), { replace: true })
   }, [isAuthenticated, user, navigate])
 
+  useEffect(() => {
+    document.title = 'Inicio de sesión — Sistema OT | K.A.B.J.'
+  }, [])
+
   const [email,    setEmail]    = useState('')
   const [password, setPassword] = useState('')
   const [loading,  setLoading]  = useState(false)
@@ -65,6 +69,8 @@ export default function LoginPage() {
               <img
                 src={logoKabj}
                 alt="K.A.B.J. Consultores & Constructores S.A.C."
+                width={280}
+                height={104}
                 className="h-[104px] w-auto max-w-[280px] object-contain drop-shadow-[0_6px_24px_rgba(10,22,40,0.12)]"
               />
             </div>
@@ -82,18 +88,23 @@ export default function LoginPage() {
 
               <div className="px-8 py-8">
                 {error && (
-                  <div className="alert-banner alert-error mb-6 text-sm">{error}</div>
+                  <div className="alert-banner alert-error mb-6 text-sm" role="alert" aria-live="assertive">
+                    {error}
+                  </div>
                 )}
 
-                <form onSubmit={handleSubmit} className="space-y-5">
+                <form onSubmit={handleSubmit} className="space-y-5" noValidate>
                   <div>
-                    <label className="login-label block mb-2">Usuario / Email</label>
+                    <label htmlFor="login-email" className="login-label block mb-2">Usuario / Email</label>
                     <div className="relative">
-                      <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#1B4F72]/45">
+                      <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#1B4F72]/45" aria-hidden>
                         <User size={17} strokeWidth={1.75} />
                       </span>
                       <input
+                        id="login-email"
+                        name="email"
                         type="email"
+                        autoComplete="username"
                         value={email}
                         onChange={e => setEmail(e.target.value)}
                         placeholder="correo@empresa.com"
@@ -105,13 +116,16 @@ export default function LoginPage() {
                   </div>
 
                   <div>
-                    <label className="login-label block mb-2">Contraseña</label>
+                    <label htmlFor="login-password" className="login-label block mb-2">Contraseña</label>
                     <div className="relative">
-                      <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#1B4F72]/45">
+                      <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#1B4F72]/45" aria-hidden>
                         <Lock size={17} strokeWidth={1.75} />
                       </span>
                       <input
+                        id="login-password"
+                        name="password"
                         type="password"
+                        autoComplete="current-password"
                         value={password}
                         onChange={e => setPassword(e.target.value)}
                         placeholder="••••••••"

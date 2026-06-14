@@ -21,11 +21,25 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * Motor de alertas operativas del sistema.
+ * <p>
+ * {@link #sincronizarDesdeOrdenes()} recorre OT activas y crea/actualiza/elimina alertas según reglas:
+ * </p>
+ * <ul>
+ *   <li><b>SIN_ASIGNAR</b> — OT PENDIENTE sin capataz (prioridad media)</li>
+ *   <li><b>OBSERVADA</b> — OT en estado OBSERVADA (prioridad alta; resolución manual)</li>
+ *   <li><b>RETRASADA</b> — EN_PROGRESO con más de 3 días desde fecha_inicio</li>
+ * </ul>
+ * <p>
+ * Visibilidad: admin/supervisor ven todas; capataz solo OBSERVADA y RETRASADA de sus OT.
+ * </p>
+ */
 @Service
 @RequiredArgsConstructor
 public class AlertaService {
 
-    private static final Set<String> TIPOS_CAPATAZ = Set.of("OBSERVADA", "RETRASADA", "SIN_UBICACION");
+    private static final Set<String> TIPOS_CAPATAZ = Set.of("OBSERVADA", "RETRASADA");
     private static final DateTimeFormatter FMT_FECHA = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
     private final OpAlertaRepository alertaRepo;
@@ -36,6 +50,8 @@ public class AlertaService {
     @Transactional
     public void sincronizarDesdeOrdenes() {
         alertaRepo.deleteByTipo("SIN_FOTOS");
+        alertaRepo.deleteByTipo("SIN_GEOREFERENCIA");
+        alertaRepo.deleteByTipo("SIN_UBICACION");
 
         for (OpOrdenTrabajo ot : ordenRepo.findByActivoTrueOrderByCreatedAtDesc()) {
             String estado = ot.getEstadoOt() != null ? ot.getEstadoOt().getCodigo() : "PENDIENTE";
@@ -60,23 +76,7 @@ public class AlertaService {
                     "OT retrasada (" + diasRetraso + " días en campo)",
                     ot.getSgio() + " · " + capatazNombre(ot),
                     "alta");
-
-            sincronizarTipo(ot, "SIN_GEOREFERENCIA", requiereGeoreferencia(ot),
-                    tituloGeoreferencia(ot),
-                    detalleGeoreferencia(ot),
-                    prioridadGeoreferencia(ot));
-
-            sincronizarTipo(ot, "SIN_UBICACION", requiereUbicacionCapataz(ot),
-                    "OT sin ubicación en mapa",
-                    ot.getSgio() + (ot.getDireccion() != null ? " · " + ot.getDireccion() : "")
-                            + " — el supervisor debe corregir la georreferencia",
-                    "media");
         }
-    }
-
-    private boolean requiereUbicacionCapataz(OpOrdenTrabajo ot) {
-        if (ot.getCapataz() == null) return false;
-        return requiereGeoreferencia(ot);
     }
 
     private String detalleObservada(OpOrdenTrabajo ot) {
@@ -128,9 +128,16 @@ public class AlertaService {
                     a.setObservacionAlResolver(null);
                     alertaRepo.save(a);
                 }
-                return;
+            } else {
+                a.setResuelta(false);
+                a.setTitulo(titulo);
+                a.setDetalle(detalle);
+                a.setPrioridad(prioridad);
+                a.setCreatedAt(LocalDateTime.now());
+                a.setResueltaAt(null);
+                a.setObservacionAlResolver(null);
+                alertaRepo.save(a);
             }
-            // Otros tipos: el supervisor ya marcó resuelta — no reabrir automáticamente
             return;
         }
 
@@ -143,43 +150,6 @@ public class AlertaService {
         a.setResuelta(false);
         a.setCreatedAt(LocalDateTime.now());
         alertaRepo.save(a);
-    }
-
-    private boolean requiereGeoreferencia(OpOrdenTrabajo ot) {
-        if (!Boolean.TRUE.equals(ot.getActivo())) return false;
-        String estado = ot.getEstadoOt() != null ? ot.getEstadoOt().getCodigo() : "PENDIENTE";
-        if ("COMPLETADA".equals(estado) || "ANULADA".equals(estado)) return false;
-        if (ot.getLatitud() == null || ot.getLongitud() == null) return true;
-        if (Boolean.FALSE.equals(ot.getVisibleEnMapa())) return true;
-        return ot.getFilaImportacion() != null
-                && Boolean.TRUE.equals(ot.getFilaImportacion().getRequiereCoordenadaManual());
-    }
-
-    private String tituloGeoreferencia(OpOrdenTrabajo ot) {
-        if (ot.getLatitud() == null || ot.getLongitud() == null) {
-            return "OT sin georreferencia";
-        }
-        return "Georreferencia requiere corrección";
-    }
-
-    private String detalleGeoreferencia(OpOrdenTrabajo ot) {
-        String base = ot.getSgio();
-        if (ot.getDireccion() != null && !ot.getDireccion().isBlank()) {
-            base += " · " + ot.getDireccion();
-        }
-        String mensaje = ot.getFilaImportacion() != null ? ot.getFilaImportacion().getMensajeValidacion() : null;
-        if (mensaje != null && !mensaje.isBlank()) {
-            return base + " — " + mensaje;
-        }
-        if (ot.getLatitud() == null || ot.getLongitud() == null) {
-            return base + " — sin coordenadas en el sistema";
-        }
-        return base + " — revise ubicación en mapa";
-    }
-
-    private String prioridadGeoreferencia(OpOrdenTrabajo ot) {
-        if (ot.getLatitud() == null || ot.getLongitud() == null) return "alta";
-        return "media";
     }
 
     @Transactional
@@ -201,6 +171,13 @@ public class AlertaService {
         ContextoRol ctx = resolverContexto(username);
         if (!visibleParaRol(a, ctx)) {
             throw new RuntimeException("No tiene permiso para resolver esta alerta");
+        }
+        if (!ctx.admin && !ctx.supervisor) {
+            throw new RuntimeException("Solo supervisor o administrador pueden marcar alertas como resueltas");
+        }
+        if (!"OBSERVADA".equals(a.getTipo())) {
+            throw new RuntimeException(
+                    "Solo las alertas OBSERVADA pueden marcarse manualmente. Las demás se resuelven al corregir la causa.");
         }
         a.setResuelta(true);
         a.setResueltaAt(LocalDateTime.now());

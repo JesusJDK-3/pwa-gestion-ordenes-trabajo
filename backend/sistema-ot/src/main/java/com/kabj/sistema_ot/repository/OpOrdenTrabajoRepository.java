@@ -8,6 +8,13 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Repositorio JPA de órdenes de trabajo ({@link OpOrdenTrabajo}).
+ * <p>
+ * Consultas clave para capataz: {@link #findByCapatazActivas} (incluye sin coords),
+ * {@link #findByCapatazActivasVisibles} (solo mapa), {@link #findConCoordenadasPendientes}.
+ * </p>
+ */
 public interface OpOrdenTrabajoRepository extends JpaRepository<OpOrdenTrabajo, Long> {
 
     Optional<OpOrdenTrabajo> findBySgio(String sgio);

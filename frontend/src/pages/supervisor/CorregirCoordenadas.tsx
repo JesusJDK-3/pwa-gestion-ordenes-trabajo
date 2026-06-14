@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
+import 'leaflet/dist/leaflet.css'
 import { MapContainer, TileLayer, Marker, useMap, useMapEvents } from 'react-leaflet'
 import L from 'leaflet'
 import { AlertCircle, CheckCircle2, Loader2, MapPin, Save } from 'lucide-react'

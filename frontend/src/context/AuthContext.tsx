@@ -1,3 +1,12 @@
+/**
+ * Contexto global de autenticación JWT.
+ *
+ * Persiste token y usuario en localStorage. Expone `login`, `logout` e
+ * `isAuthenticated` para `PrivateRoute` y redirección por rol (`rolHome`).
+ *
+ * @see services/api.ts — authService
+ * @see components/PrivateRoute.tsx — guard de rutas
+ */
 import { createContext, type ReactNode, useCallback, useContext, useEffect, useState } from 'react'
 import { authService } from '../services/api'
 import { unwrapData } from '../utils/apiParse'

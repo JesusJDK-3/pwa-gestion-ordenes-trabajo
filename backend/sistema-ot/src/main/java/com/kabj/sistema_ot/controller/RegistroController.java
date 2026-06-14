@@ -32,6 +32,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * Registro de actividad de campo por el capataz — núcleo operativo del sistema.
+ * <p>
+ * {@code POST /api/registros} persiste observaciones, ayudantes, cuadrilla y cambio de estado OT.
+ * Reglas críticas implementadas aquí:
+ * </p>
+ * <ul>
+ *   <li>PENDIENTE → EN_PROGRESO al primer registro (fecha_inicio)</li>
+ *   <li>COMPLETADA exige observaciones y estado previo EN_PROGRESO u OBSERVADA</li>
+ *   <li>OBSERVADA exige texto de observación</li>
+ *   <li>Capataz no puede ANULAR</li>
+ *   <li>Ayudantes se registran como {@link OpOtAcompanante} rol AYUDANTE</li>
+ * </ul>
+ */
 @Slf4j
 @RestController
 @RequestMapping("/api")

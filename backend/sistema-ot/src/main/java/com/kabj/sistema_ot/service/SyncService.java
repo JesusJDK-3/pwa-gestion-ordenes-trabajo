@@ -22,12 +22,17 @@ import java.util.*;
 
 
 
+/**
+ * Sincronización de operaciones móviles guardadas offline por el capataz.
+ * <p>
+ * Recibe batch desde {@code POST /api/sync/operacion}, deduplica por UUID cliente
+ * y reutiliza la lógica de {@link com.kabj.sistema_ot.controller.RegistroController}.
+ * Valida bloqueos por validación de fotos antes de completar OT.
+ * </p>
+ */
 @Slf4j
-
 @Service
-
 @RequiredArgsConstructor
-
 public class SyncService {
 
 

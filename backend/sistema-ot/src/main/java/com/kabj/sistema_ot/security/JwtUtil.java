@@ -11,6 +11,13 @@ import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
+/**
+ * Utilidad JWT HS256: generación y validación de tokens Bearer.
+ * <p>
+ * Claims: {@code sub} = username, {@code rol} = código de rol en minúsculas.
+ * Secret y expiración desde {@code application.properties} ({@code jwt.secret}, {@code jwt.expiration}).
+ * </p>
+ */
 @Component
 public class JwtUtil {
 

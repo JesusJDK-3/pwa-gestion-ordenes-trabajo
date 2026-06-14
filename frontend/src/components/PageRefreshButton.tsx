@@ -13,9 +13,10 @@ export default function PageRefreshButton({ onClick, loading = false, disabled =
       type="button"
       onClick={onClick}
       disabled={loading || disabled}
-      className="btn-outline text-xs py-2 flex-shrink-0 disabled:opacity-50"
+      className="btn-outline text-sm min-h-11 px-3 py-2 flex-shrink-0 disabled:opacity-50"
+      aria-label={loading ? 'Actualizando datos' : 'Actualizar datos de la página'}
     >
-      {loading ? <Loader2 size={12} className="animate-spin" /> : <RefreshCw size={12} />}
+      {loading ? <Loader2 size={14} className="animate-spin" aria-hidden /> : <RefreshCw size={14} aria-hidden />}
       Actualizar
     </button>
   )

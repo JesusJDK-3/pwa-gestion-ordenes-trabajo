@@ -1,5 +1,15 @@
+/**
+ * Mapa operativo Leaflet — OT georreferenciadas por estado de color.
+ *
+ * Usado por capataz (mis puntos), supervisor (monitoreo) y admin.
+ * Solo muestra OT con coordenadas válidas y visibleEnMapa=true.
+ * Popup permite ir a FormularioActividad para registrar trabajo.
+ *
+ * Colores: PENDIENTE rojo, EN_PROGRESO naranja, OBSERVADA amarillo, COMPLETADA verde.
+ */
 import { useCallback, useEffect, useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
+import 'leaflet/dist/leaflet.css'
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet'
 import L from 'leaflet'
 import { puntoService, puntoExtraService } from '../../services/api'

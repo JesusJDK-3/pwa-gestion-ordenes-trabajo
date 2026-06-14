@@ -1,3 +1,27 @@
+/**
+ * Cliente HTTP central del frontend PWA.
+ *
+ * Punto único de acceso a la API REST (`/api/*`). Todos los módulos de pantalla
+ * deben usar estos servicios en lugar de llamar axios directamente.
+ *
+ * ## Interceptores
+ * - **Request:** adjunta `Authorization: Bearer` desde localStorage.
+ * - **Response:** ante 401 (excepto login/me) limpia sesión y redirige a `/login`.
+ *
+ * ## Servicios exportados
+ * | Servicio | Dominio |
+ * |----------|---------|
+ * | `authService` | Login y sesión |
+ * | `ordenService` | Excel, validación foto, coordenadas |
+ * | `puntoService` | OT del capataz, asignación, seguimiento |
+ * | `registroService` | Actividad de campo y ayudantes |
+ * | `syncService` | Cola offline → backend |
+ * | `alertaService` | Alertas operativas |
+ * | `capatazService` | Alta/listado capataces (admin) |
+ * | `reporteService` | Reportes diario/mensual/auditoría |
+ *
+ * @module services/api
+ */
 import axios from 'axios'
 
 const api = axios.create({ baseURL: import.meta.env.VITE_API_URL || '/api' })
@@ -108,6 +132,18 @@ export const registroService = {
 
 export const syncService = {
   operacion: (ops: object[]) => api.post('/sync/operacion', ops, { timeout: 15_000 }),
+}
+
+export const capatazService = {
+  listar: () => api.get('/capataces'),
+  registrar: (data: {
+    email: string
+    username: string
+    nombres: string
+    apellidos: string
+    dni: string
+    password: string
+  }) => api.post('/capataces', data),
 }
 
 export const usuarioService = {

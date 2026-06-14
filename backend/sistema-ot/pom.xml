@@ -11,8 +11,8 @@
 	<groupId>com.kabj</groupId>
 	<artifactId>sistema-ot</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name/>
-	<description/>
+	<name>KABJ GIS — Sistema OT</name>
+	<description>API REST Spring Boot para gestión de órdenes de trabajo de campo (SEDAPAL/KABJ)</description>
 	<url/>
 	<licenses>
 		<license/>
@@ -81,15 +81,11 @@
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-		<!--
-		  H2: base de datos en memoria para pruebas de integración (@SpringBootTest).
-		  Permite correr SistemaOtApplicationTests sin necesitar PostgreSQL.
-		  scope=test: solo se incluye al compilar y ejecutar tests, no en producción.
-		-->
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
-			<scope>test</scope>
+			<scope>runtime</scope>
+			<optional>true</optional>
 		</dependency>
 
 		<!-- Apache POI — leer/generar Excel -->

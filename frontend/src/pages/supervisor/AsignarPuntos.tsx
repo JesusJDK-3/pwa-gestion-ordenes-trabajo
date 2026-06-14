@@ -1,6 +1,12 @@
+/**
+ * Panel supervisor: asignación de capataces a OT pendientes.
+ *
+ * Filtra por estado (default PENDIENTE). PUT /api/puntos/{id}/asignar.
+ * OT COMPLETADA/ANULADA son solo lectura (ESTADOS_FINALES).
+ */
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { puntoService, usuarioService } from '../../services/api'
+import { puntoService, capatazService } from '../../services/api'
 import type { OrdenTrabajo, User } from '../../types'
 import PageRefreshButton from '../../components/PageRefreshButton'
 import {
@@ -69,11 +75,17 @@ export default function AsignarPuntos() {
     setLoading(true)
     Promise.all([
       puntoService.todos(),
-      usuarioService.listar(),
-    ]).then(([otsRes, usrRes]) => {
+      capatazService.listar(),
+    ]).then(([otsRes, capRes]) => {
       setTodas(unwrapList<OrdenTrabajo>(otsRes.data))
-      const todos = unwrapList<User>(usrRes.data)
-      setCapataces(todos.filter(u => u.rol?.toLowerCase() === 'capataz' && u.id > 0))
+      const caps = unwrapList<User>(capRes.data)
+      setCapataces(caps.map(c => ({
+        id: c.id,
+        nombre: c.nombre,
+        email: c.email ?? '',
+        rol: 'capataz' as const,
+        username: c.username,
+      })))
     }).catch(() => {
       setLoadError('No se pudieron cargar las OTs o los capataces. Verifique la conexión.')
       setTodas([])
@@ -142,8 +154,9 @@ export default function AsignarPuntos() {
           : p)
       )
       setMsg({ id: puntoId, ok: true, txt: 'Capataz asignado correctamente.', scope: 'asignar' })
-    } catch (err: any) {
-      const txt = err?.response?.data?.message ?? 'Error al asignar capataz.'
+    } catch (err: unknown) {
+      const txt = (err as { response?: { data?: { message?: string } } })?.response?.data?.message
+        ?? 'Error al asignar capataz.'
       setMsg({ id: puntoId, ok: false, txt, scope: 'asignar' })
     } finally {
       setSaving(s => ({ ...s, [puntoId]: false }))
@@ -160,8 +173,9 @@ export default function AsignarPuntos() {
         prev.map(p => p.idOt === ot.idOt ? { ...p, estadoCodigo: 'ANULADA', estado: 'Anulada' } : p)
       )
       setMsg({ id: ot.idOt, ok: true, txt: `OT ${ot.sgio} anulada.`, scope: 'accion' })
-    } catch (err: any) {
-      const txt = err?.response?.data?.message ?? 'Error al anular OT.'
+    } catch (err: unknown) {
+      const txt = (err as { response?: { data?: { message?: string } } })?.response?.data?.message
+        ?? 'Error al anular OT.'
       setMsg({ id: ot.idOt, ok: false, txt, scope: 'accion' })
     } finally {
       setAnulando(s => ({ ...s, [ot.idOt]: false }))
@@ -181,6 +195,10 @@ export default function AsignarPuntos() {
         <div>
           <p className="page-breadcrumb">Operaciones · Supervisor</p>
           <h1 className="page-title">Asignación de cuadrillas</h1>
+          <p className="page-subtitle text-sm text-slate-500 mt-1 max-w-2xl">
+            Asigne un capataz ya registrado a cada OT del día. El alta de nuevos capataces (usuario de campo)
+            la realiza el administrador; aquí solo se elige quién ejecuta la OT.
+          </p>
         </div>
         <div className="flex flex-wrap items-center gap-2 flex-shrink-0">
           <div>
@@ -199,6 +217,16 @@ export default function AsignarPuntos() {
       </div>
 
       {loadError && <div className="alert-banner alert-error text-sm">{loadError}</div>}
+
+      {!loading && capataces.length === 0 && (
+        <div className="alert-banner alert-warning text-sm">
+          <AlertTriangle size={16} className="flex-shrink-0" />
+          <span>
+            No hay capataces registrados en el sistema. El administrador debe darlos de alta en la consola
+            administrativa antes de poder asignarlos a las OTs.
+          </span>
+        </div>
+      )}
 
       {!loading && totalPendientes > 0 && mostradas.length === 0 && (
         <div className="alert-banner alert-warning text-sm">

@@ -11,6 +11,10 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Endpoint de sincronización batch para registros guardados offline en la PWA.
+ * {@code POST /api/sync/operacion} — solo capataz autenticado.
+ */
 @RestController
 @RequestMapping("/api/sync")
 @RequiredArgsConstructor

@@ -1,3 +1,16 @@
+/**
+ * Enrutamiento principal de la PWA KABJ GIS.
+ *
+ * Define todas las rutas por rol (supervisor, capataz, admin) con lazy loading.
+ * Envuelve la app en AuthProvider + OfflineSyncProvider + ErrorBoundary.
+ *
+ * Rutas críticas de negocio:
+ * - `/capataz/registrar/:puntoId` → FormularioActividad (cambio estado OT)
+ * - `/supervisor/asignar` → AsignarPuntos
+ * - `/supervisor/cargar-ot` → importación Excel
+ *
+ * @see docs/ARCHITECTURE.md §5.1
+ */
 import { lazy, Suspense, type ReactNode } from 'react'
 
 import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom'
@@ -13,6 +26,8 @@ import Layout from './components/Layout'
 import { useAuth } from './context/AuthContext'
 
 import { getRolHome } from './utils/rolHome'
+
+import ErrorBoundary from './components/ErrorBoundary'
 
 import LoginPage from './pages/LoginPage'
 
@@ -350,15 +365,19 @@ export default function App() {
 
   return (
 
-    <AuthProvider>
+    <ErrorBoundary>
 
-      <OfflineSyncProvider>
+      <AuthProvider>
 
-        <RouterProvider router={router} />
+        <OfflineSyncProvider>
 
-      </OfflineSyncProvider>
+          <RouterProvider router={router} />
 
-    </AuthProvider>
+        </OfflineSyncProvider>
+
+      </AuthProvider>
+
+    </ErrorBoundary>
 
   )
 

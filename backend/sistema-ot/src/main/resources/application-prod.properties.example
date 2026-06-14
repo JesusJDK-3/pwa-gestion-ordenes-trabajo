@@ -1,0 +1,21 @@
+# ──────────────────────────────────────────────────────────────────────────────
+# Plantilla para producción.
+# Copia como application-prod.properties (gitignored) o define variables de entorno.
+# Arranque: SPRING_PROFILES_ACTIVE=prod
+# ──────────────────────────────────────────────────────────────────────────────
+
+# Obligatorias en producción (sin defaults inseguros)
+spring.datasource.url=${PG_URL}
+spring.datasource.username=${PG_USER}
+spring.datasource.password=${PG_PASSWORD}
+jwt.secret=${JWT_SECRET}
+cors.allowed-origin=${CORS_ALLOWED_ORIGIN}
+
+# Esquema ya aplicado con bootstrap.sql — no auto-modificar tablas
+spring.jpa.hibernate.ddl-auto=validate
+
+# Sin usuarios ni datos de demostración
+app.seed-demo-data=false
+
+# Integración S COMAS (URL real del servicio)
+app.validacion-fotos.url=${VALIDACION_FOTOS_URL}
