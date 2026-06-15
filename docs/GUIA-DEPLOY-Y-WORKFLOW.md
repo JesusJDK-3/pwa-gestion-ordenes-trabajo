@@ -92,7 +92,57 @@ Build: `cd frontend && npm run build` → salida en `frontend/dist/`
 
 ---
 
-## 4. Checklist de deploy
+## 4. Deploy en Vercel (frontend) + Railway (backend)
+
+### 4.1 Backend en Railway
+
+1. [railway.app](https://railway.app) → **New Project** → **Deploy from GitHub** → repo `pwa-gestion-ordenes-trabajo`.
+2. En el servicio backend: **Settings → Root Directory** = `backend/sistema-ot`.
+3. **New → Database → PostgreSQL** y vincular al servicio backend (variables `PGHOST`, `PGPORT`, etc.).
+4. **Variables** (ver `backend/sistema-ot/railway.env.example`):
+
+| Variable | Valor |
+|----------|-------|
+| `SPRING_PROFILES_ACTIVE` | `cloud` |
+| `JWT_SECRET` | Clave aleatoria ≥ 32 caracteres |
+| `CORS_ALLOWED_ORIGIN` | URL de Vercel (ej. `https://tu-app.vercel.app`) |
+| `SEED_DEMO_DATA` | `true` (primera vez; luego `false`) |
+| `JPA_DDL_AUTO` | `update` (primera vez; con `bootstrap.sql` usar `validate`) |
+
+5. Tras el deploy, copia la URL pública (ej. `https://xxx.up.railway.app`).
+6. Verifica: `https://xxx.up.railway.app/api/health` → `{"status":"ok",...}`.
+
+Archivos de config: `railway.toml`, `nixpacks.toml`, `application-cloud.properties`.
+
+### 4.2 Frontend en Vercel
+
+1. [vercel.com](https://vercel.com) → **Add New Project** → mismo repo de GitHub.
+2. **Root Directory** = `frontend`.
+3. Framework: **Vite** (detectado automáticamente vía `vercel.json`).
+4. **Environment Variables** (Production):
+
+| Variable | Valor |
+|----------|-------|
+| `VITE_API_URL` | `https://xxx.up.railway.app/api` (URL Railway + `/api`) |
+| `VITE_VALIDACION_FOTOS_URL` | URL portal S COMAS |
+
+5. Deploy. La PWA quedará en `https://tu-proyecto.vercel.app`.
+
+6. Vuelve a Railway y actualiza `CORS_ALLOWED_ORIGIN` con la URL exacta de Vercel si cambió.
+
+Archivo de config: `frontend/vercel.json` (rewrites SPA + caché assets).
+
+### 4.3 Orden recomendado
+
+```
+Railway (BD + backend) → copiar URL → Vercel (frontend con VITE_API_URL) → CORS en Railway
+```
+
+Credenciales demo (si `SEED_DEMO_DATA=true`): `supervisor@ot.com` / `password123` (y demás roles del README).
+
+---
+
+## 5. Checklist de deploy
 
 **Antes del merge a `main`**
 
@@ -108,7 +158,7 @@ Build: `cd frontend && npm run build` → salida en `frontend/dist/`
 
 ---
 
-## 5. Documentación relacionada
+## 6. Documentación relacionada
 
 | Documento | Contenido |
 |-----------|-----------|
