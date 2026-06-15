@@ -92,53 +92,43 @@ Build: `cd frontend && npm run build` → salida en `frontend/dist/`
 
 ---
 
-## 4. Deploy en Vercel (frontend) + Railway (backend)
+## 4. Deploy en Supabase + Railway + Vercel
 
-### 4.1 Backend en Railway
+Guía completa paso a paso: **[DEPLOY-SUPABASE-RAILWAY-VERCEL.md](DEPLOY-SUPABASE-RAILWAY-VERCEL.md)**
 
-1. [railway.app](https://railway.app) → **New Project** → **Deploy from GitHub** → repo `pwa-gestion-ordenes-trabajo`.
-2. En el servicio backend: **Settings → Root Directory** = `backend/sistema-ot`.
-3. **New → Database → PostgreSQL** y vincular al servicio backend (variables `PGHOST`, `PGPORT`, etc.).
-4. **Variables** (ver `backend/sistema-ot/railway.env.example`):
+| Plataforma | Componente | Archivos clave |
+|------------|------------|----------------|
+| **Supabase** | PostgreSQL + PostGIS | `database/bootstrap.sql` |
+| **Railway** | Backend Spring Boot | `railway.toml`, `application-cloud.properties`, `supabase.env.example` |
+| **Vercel** | Frontend PWA | `vercel.json`, `vercel.env.example` |
 
-| Variable | Valor |
-|----------|-------|
+### Orden de despliegue
+
+```
+Supabase (BD + SQL) → Railway (backend) → Vercel (frontend) → CORS en Railway
+```
+
+### Variables mínimas
+
+**Railway** (`backend/sistema-ot/railway.env.example`):
+
+| Variable | Ejemplo |
+|----------|---------|
 | `SPRING_PROFILES_ACTIVE` | `cloud` |
-| `JWT_SECRET` | Clave aleatoria ≥ 32 caracteres |
-| `CORS_ALLOWED_ORIGIN` | URL de Vercel (ej. `https://tu-app.vercel.app`) |
-| `SEED_DEMO_DATA` | `true` (primera vez; luego `false`) |
-| `JPA_DDL_AUTO` | `update` (primera vez; con `bootstrap.sql` usar `validate`) |
+| `DATABASE_URL` | URI de Supabase |
+| `JWT_SECRET` | clave ≥ 32 caracteres |
+| `CORS_ALLOWED_ORIGIN` | `https://tu-app.vercel.app` |
+| `JPA_DDL_AUTO` | `validate` (con bootstrap.sql) |
+| `SEED_DEMO_DATA` | `true` (primera vez) |
 
-5. Tras el deploy, copia la URL pública (ej. `https://xxx.up.railway.app`).
-6. Verifica: `https://xxx.up.railway.app/api/health` → `{"status":"ok",...}`.
+**Vercel** (`frontend/vercel.env.example`):
 
-Archivos de config: `railway.toml`, `nixpacks.toml`, `application-cloud.properties`.
-
-### 4.2 Frontend en Vercel
-
-1. [vercel.com](https://vercel.com) → **Add New Project** → mismo repo de GitHub.
-2. **Root Directory** = `frontend`.
-3. Framework: **Vite** (detectado automáticamente vía `vercel.json`).
-4. **Environment Variables** (Production):
-
-| Variable | Valor |
-|----------|-------|
-| `VITE_API_URL` | `https://xxx.up.railway.app/api` (URL Railway + `/api`) |
+| Variable | Ejemplo |
+|----------|---------|
+| `VITE_API_URL` | `https://xxx.up.railway.app/api` |
 | `VITE_VALIDACION_FOTOS_URL` | URL portal S COMAS |
 
-5. Deploy. La PWA quedará en `https://tu-proyecto.vercel.app`.
-
-6. Vuelve a Railway y actualiza `CORS_ALLOWED_ORIGIN` con la URL exacta de Vercel si cambió.
-
-Archivo de config: `frontend/vercel.json` (rewrites SPA + caché assets).
-
-### 4.3 Orden recomendado
-
-```
-Railway (BD + backend) → copiar URL → Vercel (frontend con VITE_API_URL) → CORS en Railway
-```
-
-Credenciales demo (si `SEED_DEMO_DATA=true`): `supervisor@ot.com` / `password123` (y demás roles del README).
+Credenciales demo: `supervisor@ot.com` / `password123`
 
 ---
 
@@ -150,9 +140,13 @@ Credenciales demo (si `SEED_DEMO_DATA=true`): `supervisor@ot.com` / `password123
 - [ ] Sin secretos en el repo (`.env`, `application-prod.properties` gitignored)
 - [ ] Schema BD aplicado si es instalación nueva (`database/bootstrap.sql`)
 
-**En servidor**
+**En cloud (Supabase + Railway + Vercel)**
 
-- [ ] Java 21 + PostgreSQL 14+
+- [ ] Guía [DEPLOY-SUPABASE-RAILWAY-VERCEL.md](DEPLOY-SUPABASE-RAILWAY-VERCEL.md) completada
+- [ ] `/api/health` OK en Railway
+- [ ] Login OK desde URL de Vercel
+
+**En servidor propio (alternativa)**
 - [ ] Reverse proxy (Nginx) sirviendo `dist/` y proxy `/api` → `:8080`
 - [ ] HTTPS activo
 

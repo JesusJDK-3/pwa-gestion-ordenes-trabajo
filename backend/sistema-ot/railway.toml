@@ -1,6 +1,6 @@
-# Railway — despliegue del backend Spring Boot
-# En Railway: Root Directory = backend/sistema-ot
-# Añadir plugin PostgreSQL y variables de entorno (ver docs/GUIA-DEPLOY-Y-WORKFLOW.md)
+# Railway — Backend Spring Boot (API REST)
+# Root Directory = backend/sistema-ot
+# Base de datos = Supabase (DATABASE_URL) — ver docs/DEPLOY-SUPABASE-RAILWAY-VERCEL.md
 
 [build]
 builder = "NIXPACKS"
