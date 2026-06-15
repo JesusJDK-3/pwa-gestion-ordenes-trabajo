@@ -259,6 +259,7 @@ Guía completa de arquitectura, módulos y convenciones: **[docs/ARCHITECTURE.md
 |-----------|-------------|
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Arquitectura, API, estados OT, módulos |
 | [docs/GUIA-DEPLOY-Y-WORKFLOW.md](docs/GUIA-DEPLOY-Y-WORKFLOW.md) | Ramas, CI, variables de entorno, deploy |
+| [docs/DEPLOY-SUPABASE-RAILWAY-VERCEL.md](docs/DEPLOY-SUPABASE-RAILWAY-VERCEL.md) | Deploy paso a paso: Supabase + Railway + Vercel |
 | [docs/INFORME-TECNICO.md](docs/INFORME-TECNICO.md) | Informe técnico (base para exportar a Word) |
 
 El código fuente incluye comentarios **Javadoc** (backend) y **JSDoc** (frontend) en clases, servicios y pantallas críticas. Cada paquete Java tiene un `package-info.java` con índice del módulo.
