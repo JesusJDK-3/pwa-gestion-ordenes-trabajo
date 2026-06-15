@@ -11,7 +11,7 @@ backend/.env
 
 # ─── ROOT (no dependencias en raíz) ───
 node_modules/
-package-lock.json
+/package-lock.json
 
 # ─── LOGS Y RUNTIME ─────────────────────
 *.log

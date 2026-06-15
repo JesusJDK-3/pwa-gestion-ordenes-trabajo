@@ -203,6 +203,7 @@ Solo funcionan si `SEED_DEMO_DATA=true` en el primer deploy.
 | Login falla | BD vacía sin seed | `SEED_DEMO_DATA=true` o ejecuta bootstrap.sql |
 | Supabase pausado | Plan gratuito inactivo | Dashboard → Restore project |
 | Frontend sin datos | `VITE_API_URL` mal | Debe ser `https://backend.../api` (con `/api`) |
+| `vite: command not found` en Vercel | Root Directory vacío o sin devDependencies | Root Directory = `frontend` **o** usar `vercel.json` en raíz del repo; redeploy |
 
 ---
 
