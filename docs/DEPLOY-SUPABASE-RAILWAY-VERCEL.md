@@ -125,8 +125,10 @@ Archivos de config en el repo:
 ### 3.1 Crear proyecto
 
 1. [vercel.com](https://vercel.com) → **Add New Project** → mismo repo GitHub.
-2. **Root Directory:** `frontend`
-3. Framework: **Vite** (detectado por `vercel.json`).
+2. **Production Branch:** `melany` (no uses `main` si está desactualizada).
+3. **Root Directory:** déjalo **vacío** (usa `vercel.json` en la raíz del repo).
+   - Alternativa: Root = `frontend` y usa `frontend/vercel.json`.
+4. **Framework Preset:** Other (no Vite auto) — el build es `npm run build`.
 
 ### 3.2 Variables de entorno
 
@@ -198,12 +200,13 @@ Solo funcionan si `SEED_DEMO_DATA=true` en el primer deploy.
 
 | Problema | Causa probable | Solución |
 |----------|----------------|----------|
+| `vite: command not found` (Vercel) | Rama vieja o build sin `npm run build` | Rama **`melany`**, Root Directory **vacío**, redeploy |
+| Railway "Application failed to respond" | Sin `DATABASE_URL` o Supabase pausado | Variables Railway + Restore Supabase |
 | 502 en Railway | BD no conecta | Revisa `DATABASE_URL`, contraseña, proyecto Supabase activo |
 | CORS error en navegador | URL Vercel no en CORS | Actualiza `CORS_ALLOWED_ORIGIN` en Railway |
 | Login falla | BD vacía sin seed | `SEED_DEMO_DATA=true` o ejecuta bootstrap.sql |
 | Supabase pausado | Plan gratuito inactivo | Dashboard → Restore project |
 | Frontend sin datos | `VITE_API_URL` mal | Debe ser `https://backend.../api` (con `/api`) |
-| `vite: command not found` en Vercel | Root Directory vacío o sin devDependencies | Root Directory = `frontend` **o** usar `vercel.json` en raíz del repo; redeploy |
 
 ---
 

@@ -1,35 +1,58 @@
 package com.kabj.sistema_ot.config;
 
 import com.zaxxer.hikari.HikariDataSource;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
+import org.springframework.core.env.Environment;
 
 import javax.sql.DataSource;
 
 /**
- * DataSource para despliegue cloud (Railway + Supabase).
+ * DataSource único para despliegue cloud (Railway + Supabase).
  * <p>
- * Si Railway define {@code DATABASE_URL} (cadena de Supabase), la convierte a JDBC
- * con {@code sslmode=require}. Si no existe, Spring usa {@code PG_URL} o
- * {@code PGHOST}/{@code PGPORT}/… de {@code application-cloud.properties}.
+ * Prioridad: {@code DATABASE_URL} (Supabase URI) → {@code PG_URL} (JDBC) →
+ * {@code PGHOST}/{@code PGPORT}/{@code PGDATABASE}.
  * </p>
  */
 @Configuration
 @Profile("cloud")
-@ConditionalOnProperty(name = "DATABASE_URL")
 public class CloudDataSourceConfig {
 
     @Bean
     @Primary
-    public DataSource cloudDataSource(@Value("${DATABASE_URL}") String databaseUrl) {
+    public DataSource cloudDataSource(Environment env) {
+        String jdbcUrl = resolveJdbcUrl(env);
+
         HikariDataSource ds = new HikariDataSource();
-        ds.setJdbcUrl(toJdbcUrl(databaseUrl));
+        ds.setJdbcUrl(jdbcUrl);
+        ds.setUsername(env.getProperty("PGUSER", env.getProperty("PG_USER", "postgres")));
+        ds.setPassword(env.getProperty("PGPASSWORD", env.getProperty("PG_PASSWORD", "")));
         ds.setDriverClassName("org.postgresql.Driver");
+        ds.setMaximumPoolSize(5);
         return ds;
+    }
+
+    private static String resolveJdbcUrl(Environment env) {
+        String databaseUrl = env.getProperty("DATABASE_URL");
+        if (databaseUrl != null && !databaseUrl.isBlank()) {
+            return toJdbcUrl(databaseUrl);
+        }
+
+        String pgUrl = env.getProperty("PG_URL");
+        if (pgUrl != null && !pgUrl.isBlank()) {
+            return ensureSsl(pgUrl.trim());
+        }
+
+        String host = env.getProperty("PGHOST");
+        if (host == null || host.isBlank()) {
+            throw new IllegalStateException(
+                    "Configure DATABASE_URL (Supabase) o PG_URL/PGHOST en Railway");
+        }
+        String port = env.getProperty("PGPORT", "5432");
+        String database = env.getProperty("PGDATABASE", "postgres");
+        return "jdbc:postgresql://" + host + ":" + port + "/" + database + "?sslmode=require";
     }
 
     static String toJdbcUrl(String raw) {
