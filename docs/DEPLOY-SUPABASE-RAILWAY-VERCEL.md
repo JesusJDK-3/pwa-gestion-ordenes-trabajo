@@ -35,8 +35,12 @@ Guía paso a paso para desplegar **KABJ GIS** en la nube.
 ### 1.2 Crear tablas
 
 1. En el proyecto → **SQL Editor** → **New query**.
-2. Abre el archivo del repo: `database/bootstrap.sql` (o `sistema_OT_BD_clean.sql`).
-3. Copia todo el contenido y **Run**.
+2. Ejecuta estos scripts del repo, en orden:
+   - `database/bootstrap.sql`
+   - `database/add_gis_vpa_hidrante.sql`
+   - `database/add_acompanantes_purgado.sql`
+   - `database/add_op_alerta.sql`
+3. Copia el contenido de cada script y **Run**.
 4. Verifica en **Table Editor** que existan tablas como `seg_usuario`, `op_orden_trabajo`, etc.
 
 > El script activa `postgis` y `pgcrypto`. Si falla PostGIS, en Supabase ve a **Database → Extensions** y habilita **postgis**.
@@ -44,14 +48,16 @@ Guía paso a paso para desplegar **KABJ GIS** en la nube.
 ### 1.3 Obtener cadena de conexión
 
 1. **Settings** → **Database** → **Connection string**.
-2. Pestaña **URI**, modo **Session** (puerto **5432**).
-3. Copia la URI (reemplaza `[YOUR-PASSWORD]` por tu contraseña real):
+2. Usa modo **Session** (puerto **5432**).
+3. Para Railway, configura preferentemente JDBC + usuario/password separados:
 
 ```
-postgresql://postgres.[REF]:[PASSWORD]@db.[REF].supabase.co:5432/postgres
+PG_URL=jdbc:postgresql://db.[REF].supabase.co:5432/postgres?sslmode=require
+PGUSER=postgres.[REF]
+PGPASSWORD=[PASSWORD]
 ```
 
-Guarda esta URI para el **Paso 2**.
+Tambien puedes usar la URI completa como alternativa compatible.
 
 > **Nota:** el plan gratuito pausa el proyecto tras ~7 días sin uso. Para reactivar: Dashboard → **Restore project**.
 
@@ -76,21 +82,21 @@ Plantilla de variables: `backend/sistema-ot/supabase.env.example`
 | Variable | Valor |
 |----------|-------|
 | `SPRING_PROFILES_ACTIVE` | `cloud` |
-| `DATABASE_URL` | URI de Supabase del Paso 1.3 |
+| `PG_URL` | `jdbc:postgresql://db.[REF].supabase.co:5432/postgres?sslmode=require` |
+| `PGUSER` | Usuario de Supabase, por ejemplo `postgres.[REF]` |
+| `PGPASSWORD` | Password de Supabase |
 | `JWT_SECRET` | Clave aleatoria ≥ 32 caracteres |
 | `CORS_ALLOWED_ORIGIN` | `https://tu-proyecto.vercel.app` (actualizar tras Paso 3) |
 | `SEED_DEMO_DATA` | `true` (primera vez) |
-| `JPA_DDL_AUTO` | `validate` (si corriste bootstrap.sql) |
+| `JPA_DDL_AUTO` | `validate` (si corriste todos los scripts SQL) |
 | `VALIDACION_FOTOS_URL` | `http://45.71.33.77/proyecto_lima/` |
 
 > **No** añadas el plugin PostgreSQL de Railway si usas Supabase. Solo un origen de BD.
 
-**Alternativa a `DATABASE_URL`:**
+**Alternativa compatible a `PG_URL`/`PGUSER`/`PGPASSWORD`:**
 
 ```
-PG_URL=jdbc:postgresql://db.xxxxx.supabase.co:5432/postgres?sslmode=require
-PGUSER=postgres
-PGPASSWORD=tu-password
+DATABASE_URL=postgresql://postgres.[REF]:[PASSWORD]@db.[REF].supabase.co:5432/postgres
 ```
 
 ### 2.3 Dominio público
@@ -172,7 +178,7 @@ Solo funcionan si `SEED_DEMO_DATA=true` en el primer deploy.
 ## Orden de despliegue (resumen)
 
 ```
-1. Supabase  → crear BD + ejecutar bootstrap.sql + copiar DATABASE_URL
+1. Supabase  → crear BD + ejecutar scripts SQL + copiar PG_URL/PGUSER/PGPASSWORD
 2. Railway   → deploy backend + variables + dominio + /api/health OK
 3. Vercel    → deploy frontend + VITE_API_URL
 4. Railway   → actualizar CORS_ALLOWED_ORIGIN con URL de Vercel
@@ -182,10 +188,10 @@ Solo funcionan si `SEED_DEMO_DATA=true` en el primer deploy.
 
 ## Checklist
 
-- [ ] `bootstrap.sql` ejecutado en Supabase SQL Editor
+- [ ] Scripts SQL de `database/README.md` ejecutados en Supabase SQL Editor
 - [ ] Railway: Root Directory = `backend/sistema-ot`
 - [ ] Railway: `SPRING_PROFILES_ACTIVE=cloud`
-- [ ] Railway: `DATABASE_URL` con contraseña real de Supabase
+- [ ] Railway: `PG_URL`, `PGUSER`, `PGPASSWORD` configurados con Supabase
 - [ ] Railway: `/api/health` responde `ok`
 - [ ] Vercel: Root Directory = `frontend`
 - [ ] Vercel: `VITE_API_URL` termina en `/api`
@@ -198,9 +204,9 @@ Solo funcionan si `SEED_DEMO_DATA=true` en el primer deploy.
 
 | Problema | Causa probable | Solución |
 |----------|----------------|----------|
-| 502 en Railway | BD no conecta | Revisa `DATABASE_URL`, contraseña, proyecto Supabase activo |
+| 502 en Railway | BD no conecta | Revisa `PG_URL`, `PGUSER`, `PGPASSWORD`, password y proyecto Supabase activo |
 | CORS error en navegador | URL Vercel no en CORS | Actualiza `CORS_ALLOWED_ORIGIN` en Railway |
-| Login falla | BD vacía sin seed | `SEED_DEMO_DATA=true` o ejecuta bootstrap.sql |
+| Login falla | BD vacía sin seed | `SEED_DEMO_DATA=true` o ejecuta los scripts SQL |
 | Supabase pausado | Plan gratuito inactivo | Dashboard → Restore project |
 | Frontend sin datos | `VITE_API_URL` mal | Debe ser `https://backend.../api` (con `/api`) |
 
@@ -210,7 +216,7 @@ Solo funcionan si `SEED_DEMO_DATA=true` en el primer deploy.
 
 | Archivo | Uso |
 |---------|-----|
-| `database/bootstrap.sql` | Schema inicial en Supabase |
+| `database/README.md` | Orden completo de scripts SQL en Supabase |
 | `backend/sistema-ot/supabase.env.example` | Variables Supabase → Railway |
 | `backend/sistema-ot/railway.env.example` | Variables Railway |
 | `frontend/vercel.env.example` | Variables Vercel |
@@ -224,5 +230,5 @@ Cuando el sistema esté estable:
 
 1. Railway: `SEED_DEMO_DATA=false`
 2. Railway: `JWT_SECRET` único y largo (nunca en el repo)
-3. Supabase: no compartir `DATABASE_URL` públicamente
+3. Supabase: no compartir credenciales ni cadenas de conexión públicamente
 4. Cambiar contraseñas demo si se usaron en pruebas

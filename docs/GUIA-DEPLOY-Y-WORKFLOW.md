@@ -98,7 +98,7 @@ Guía completa paso a paso: **[DEPLOY-SUPABASE-RAILWAY-VERCEL.md](DEPLOY-SUPABAS
 
 | Plataforma | Componente | Archivos clave |
 |------------|------------|----------------|
-| **Supabase** | PostgreSQL + PostGIS | `database/bootstrap.sql` |
+| **Supabase** | PostgreSQL + PostGIS | `database/README.md` |
 | **Railway** | Backend Spring Boot | `railway.toml`, `application-cloud.properties`, `supabase.env.example` |
 | **Vercel** | Frontend PWA | `vercel.json`, `vercel.env.example` |
 
@@ -115,10 +115,12 @@ Supabase (BD + SQL) → Railway (backend) → Vercel (frontend) → CORS en Rail
 | Variable | Ejemplo |
 |----------|---------|
 | `SPRING_PROFILES_ACTIVE` | `cloud` |
-| `DATABASE_URL` | URI de Supabase |
+| `PG_URL` | JDBC de Supabase con `sslmode=require` |
+| `PGUSER` | Usuario de Supabase |
+| `PGPASSWORD` | Password de Supabase |
 | `JWT_SECRET` | clave ≥ 32 caracteres |
 | `CORS_ALLOWED_ORIGIN` | `https://tu-app.vercel.app` |
-| `JPA_DDL_AUTO` | `validate` (con bootstrap.sql) |
+| `JPA_DDL_AUTO` | `validate` (con scripts SQL completos) |
 | `SEED_DEMO_DATA` | `true` (primera vez) |
 
 **Vercel** (`frontend/vercel.env.example`):
@@ -138,7 +140,7 @@ Credenciales demo: `supervisor@ot.com` / `password123`
 
 - [ ] CI en verde
 - [ ] Sin secretos en el repo (`.env`, `application-prod.properties` gitignored)
-- [ ] Schema BD aplicado si es instalación nueva (`database/bootstrap.sql`)
+- [ ] Schema BD aplicado si es instalación nueva (`database/README.md`)
 
 **En cloud (Supabase + Railway + Vercel)**
 

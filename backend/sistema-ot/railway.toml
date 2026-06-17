@@ -1,6 +1,6 @@
-# Railway — Backend Spring Boot (API REST)
+# Railway - Backend Spring Boot (API REST)
 # Root Directory = backend/sistema-ot
-# Base de datos = Supabase (DATABASE_URL) — ver docs/DEPLOY-SUPABASE-RAILWAY-VERCEL.md
+# Base de datos = Supabase (PG_URL/PGUSER/PGPASSWORD)
 
 [build]
 builder = "NIXPACKS"
