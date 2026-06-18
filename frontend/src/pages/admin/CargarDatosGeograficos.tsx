@@ -11,6 +11,8 @@ interface CargaResult {
   detalle: string[]
 }
 
+const UPLOAD_TIMEOUT_MS = 120_000
+
 export default function CargarDatosGeograficos() {
   const [cargaVpa, setCargaVpa] = useState<{
     archivo: File | null
@@ -69,6 +71,7 @@ export default function CargarDatosGeograficos() {
     try {
       const { data } = await api.post(endpoint, formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
+        timeout: UPLOAD_TIMEOUT_MS,
       })
       const resultado = unwrapData<CargaResult>(data)
       if (!resultado) throw new Error('Respuesta vacía del servidor')
@@ -79,10 +82,14 @@ export default function CargarDatosGeograficos() {
         archivo: null,
       }))
     } catch (err: unknown) {
-      const ax = err as { response?: { data?: { message?: string } } }
+      const ax = err as { code?: string; response?: { data?: { message?: string } } }
+      const timeoutMessage =
+        'La carga tardó más de 2 minutos y el servidor no respondió. Verifica que el backend esté desplegado y vuelve a intentar.'
       setState((prev) => ({
         ...prev,
-        error: ax.response?.data?.message ?? (err instanceof Error ? err.message : 'Error desconocido'),
+        error: ax.response?.data?.message
+          ?? (ax.code === 'ECONNABORTED' ? timeoutMessage : null)
+          ?? (err instanceof Error ? err.message : 'Error desconocido'),
         cargando: false,
       }))
     }

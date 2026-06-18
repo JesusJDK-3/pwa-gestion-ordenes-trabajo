@@ -15,9 +15,11 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * Importación masiva de OT desde Excel (formatos SEDAPAL y Preventivo VPA).
@@ -50,34 +52,85 @@ public class ExcelCargaService {
         final List<Map<String, String>> detalle = new ArrayList<>();
     }
 
+    private record VpaCargaRow(int filaExcel, GisVpa entidad) {
+    }
+
+    private record HidranteCargaRow(int filaExcel, GisHidrante entidad) {
+    }
+
     // ─────────────────────────────────────────────────────────────────────────
     // CARGA VPA
     // ─────────────────────────────────────────────────────────────────────────
     public Map<String, Object> cargarVpaExcel(MultipartFile file) throws IOException {
         int creadas = 0, duplicadas = 0, errores = 0;
         List<String> erroresList = new ArrayList<>();
+        List<VpaCargaRow> candidatas = new ArrayList<>();
+        Set<String> vcasArchivo = new HashSet<>();
+        Set<String> nisArchivo = new HashSet<>();
+        Set<String> vcasConsulta = new HashSet<>();
+        Set<String> nisConsulta = new HashSet<>();
 
         try (Workbook wb = WorkbookFactory.create(file.getInputStream())) {
             Sheet sheet = wb.getSheetAt(0);
             for (int rowIdx = 1; rowIdx <= sheet.getLastRowNum(); rowIdx++) {
                 Row row = sheet.getRow(rowIdx);
                 if (row == null) continue;
-                String vca = cellStr(row, 0);
+                String vca = trim(cellStr(row, 0));
                 if (vca == null || vca.isBlank()) continue;
 
-                if (vpaRepo.findByVca(vca).isPresent()) {
+                String vcaKey = key(vca);
+                if (!vcasArchivo.add(vcaKey)) {
                     duplicadas++;
                     continue;
                 }
+
+                String nis = trim(cellStr(row, 1));
+                if (nis == null || nis.isBlank()) {
+                    errores++;
+                    erroresList.add("Fila " + (rowIdx + 1) + ": NIS es requerido");
+                    continue;
+                }
+
+                String nisKey = key(nis);
+                if (!nisArchivo.add(nisKey)) {
+                    errores++;
+                    erroresList.add("Fila " + (rowIdx + 1) + ": NIS duplicado en el archivo");
+                    continue;
+                }
+
                 try {
-                    guardarVpaFila(vca, row);
-                    creadas++;
+                    GisVpa vpa = buildVpa(vca, nis, row);
+                    candidatas.add(new VpaCargaRow(rowIdx + 1, vpa));
+                    vcasConsulta.add(vca);
+                    nisConsulta.add(nis);
                 } catch (Exception e) {
                     errores++;
                     erroresList.add("Fila " + (rowIdx + 1) + ": " + e.getMessage());
                 }
             }
         }
+
+        Set<String> vcasExistentes = vcasExistentes(vcasConsulta);
+        Set<String> nisExistentes = nisExistentes(nisConsulta);
+        List<VpaCargaRow> nuevas = new ArrayList<>();
+
+        for (VpaCargaRow candidata : candidatas) {
+            GisVpa vpa = candidata.entidad();
+            if (vcasExistentes.contains(key(vpa.getVca()))) {
+                duplicadas++;
+                continue;
+            }
+            if (nisExistentes.contains(key(vpa.getNis()))) {
+                errores++;
+                erroresList.add("Fila " + candidata.filaExcel() + ": NIS ya existe en la base geográfica");
+                continue;
+            }
+            nuevas.add(candidata);
+        }
+
+        int guardadas = guardarVpaCandidatas(nuevas, erroresList);
+        creadas += guardadas;
+        errores += nuevas.size() - guardadas;
 
         return Map.of(
                 "message", "VPA cargados: " + creadas + " registros",
@@ -88,18 +141,17 @@ public class ExcelCargaService {
         );
     }
 
-    @Transactional
-    private void guardarVpaFila(String vca, Row row) {
+    private GisVpa buildVpa(String vca, String nis, Row row) {
         GisVpa vpa = new GisVpa();
         vpa.setVca(vca);
-        vpa.setNis(cellStr(row, 1));
+        vpa.setNis(nis);
         Double lng = cellNum(row, 2);
         Double lat = cellNum(row, 3);
         if (lng != null) vpa.setLongitud(BigDecimal.valueOf(lng));
         if (lat != null) vpa.setLatitud(BigDecimal.valueOf(lat));
         vpa.setCreatedAt(LocalDateTime.now());
         vpa.setUpdatedAt(LocalDateTime.now());
-        vpaRepo.save(vpa);
+        return vpa;
     }
 
     // ─────────────────────────────────────────────────────────────────────────
@@ -108,28 +160,74 @@ public class ExcelCargaService {
     public Map<String, Object> cargarHidranteExcel(MultipartFile file) throws IOException {
         int creadas = 0, duplicadas = 0, errores = 0;
         List<String> erroresList = new ArrayList<>();
+        List<HidranteCargaRow> candidatas = new ArrayList<>();
+        Set<String> hiasArchivo = new HashSet<>();
+        Set<String> suministrosArchivo = new HashSet<>();
+        Set<String> hiasConsulta = new HashSet<>();
+        Set<String> suministrosConsulta = new HashSet<>();
 
         try (Workbook wb = WorkbookFactory.create(file.getInputStream())) {
             Sheet sheet = wb.getSheetAt(0);
             for (int rowIdx = 1; rowIdx <= sheet.getLastRowNum(); rowIdx++) {
                 Row row = sheet.getRow(rowIdx);
                 if (row == null) continue;
-                String suministro = cellStr(row, 1);
+
+                String hia = trim(cellStr(row, 0));
+                if (hia == null || hia.isBlank()) {
+                    errores++;
+                    erroresList.add("Fila " + (rowIdx + 1) + ": HIA es requerido");
+                    continue;
+                }
+
+                String suministro = trim(cellStr(row, 1));
                 if (suministro == null || suministro.isBlank()) continue;
 
-                if (hidranteRepo.findBySuministro(suministro).isPresent()) {
+                String suministroKey = key(suministro);
+                if (!suministrosArchivo.add(suministroKey)) {
                     duplicadas++;
                     continue;
                 }
+
+                String hiaKey = key(hia);
+                if (!hiasArchivo.add(hiaKey)) {
+                    errores++;
+                    erroresList.add("Fila " + (rowIdx + 1) + ": HIA duplicado en el archivo");
+                    continue;
+                }
+
                 try {
-                    guardarHidranteFila(suministro, row);
-                    creadas++;
+                    GisHidrante hidrante = buildHidrante(hia, suministro, row);
+                    candidatas.add(new HidranteCargaRow(rowIdx + 1, hidrante));
+                    hiasConsulta.add(hia);
+                    suministrosConsulta.add(suministro);
                 } catch (Exception e) {
                     errores++;
                     erroresList.add("Fila " + (rowIdx + 1) + ": " + e.getMessage());
                 }
             }
         }
+
+        Set<String> hiasExistentes = hiasExistentes(hiasConsulta);
+        Set<String> suministrosExistentes = suministrosExistentes(suministrosConsulta);
+        List<HidranteCargaRow> nuevas = new ArrayList<>();
+
+        for (HidranteCargaRow candidata : candidatas) {
+            GisHidrante hidrante = candidata.entidad();
+            if (suministrosExistentes.contains(key(hidrante.getSuministro()))) {
+                duplicadas++;
+                continue;
+            }
+            if (hiasExistentes.contains(key(hidrante.getHia()))) {
+                errores++;
+                erroresList.add("Fila " + candidata.filaExcel() + ": HIA ya existe en la base geográfica");
+                continue;
+            }
+            nuevas.add(candidata);
+        }
+
+        int guardadas = guardarHidranteCandidatas(nuevas, erroresList);
+        creadas += guardadas;
+        errores += nuevas.size() - guardadas;
 
         return Map.of(
                 "message", "Hidrantes cargados: " + creadas + " registros",
@@ -140,10 +238,9 @@ public class ExcelCargaService {
         );
     }
 
-    @Transactional
-    private void guardarHidranteFila(String suministro, Row row) {
+    private GisHidrante buildHidrante(String hia, String suministro, Row row) {
         GisHidrante hidrante = new GisHidrante();
-        hidrante.setHia(cellStr(row, 0));
+        hidrante.setHia(hia);
         hidrante.setSuministro(suministro);
         hidrante.setDireccion(cellStr(row, 2));
         hidrante.setLocalidad(cellStr(row, 3));
@@ -155,7 +252,80 @@ public class ExcelCargaService {
         if (lat != null) hidrante.setLatitud(BigDecimal.valueOf(lat));
         hidrante.setCreatedAt(LocalDateTime.now());
         hidrante.setUpdatedAt(LocalDateTime.now());
-        hidranteRepo.save(hidrante);
+        return hidrante;
+    }
+
+    private Set<String> vcasExistentes(Set<String> vcas) {
+        Set<String> existentes = new HashSet<>();
+        if (vcas.isEmpty()) return existentes;
+        vpaRepo.findByVcaIn(vcas).forEach(vpa -> existentes.add(key(vpa.getVca())));
+        return existentes;
+    }
+
+    private Set<String> nisExistentes(Set<String> nis) {
+        Set<String> existentes = new HashSet<>();
+        if (nis.isEmpty()) return existentes;
+        vpaRepo.findByNisIn(nis).forEach(vpa -> existentes.add(key(vpa.getNis())));
+        return existentes;
+    }
+
+    private Set<String> hiasExistentes(Set<String> hias) {
+        Set<String> existentes = new HashSet<>();
+        if (hias.isEmpty()) return existentes;
+        hidranteRepo.findByHiaIn(hias).forEach(hidrante -> existentes.add(key(hidrante.getHia())));
+        return existentes;
+    }
+
+    private Set<String> suministrosExistentes(Set<String> suministros) {
+        Set<String> existentes = new HashSet<>();
+        if (suministros.isEmpty()) return existentes;
+        hidranteRepo.findBySuministroIn(suministros)
+                .forEach(hidrante -> existentes.add(key(hidrante.getSuministro())));
+        return existentes;
+    }
+
+    private int guardarVpaCandidatas(List<VpaCargaRow> candidatas, List<String> erroresList) {
+        if (candidatas.isEmpty()) return 0;
+        try {
+            vpaRepo.saveAll(candidatas.stream().map(VpaCargaRow::entidad).toList());
+            return candidatas.size();
+        } catch (Exception batchError) {
+            log.warn("Carga VPA en lote falló; reintentando fila por fila: {}", batchError.getMessage());
+            int guardadas = 0;
+            for (VpaCargaRow candidata : candidatas) {
+                try {
+                    vpaRepo.save(candidata.entidad());
+                    guardadas++;
+                } catch (Exception e) {
+                    erroresList.add("Fila " + candidata.filaExcel() + ": " + e.getMessage());
+                }
+            }
+            return guardadas;
+        }
+    }
+
+    private int guardarHidranteCandidatas(List<HidranteCargaRow> candidatas, List<String> erroresList) {
+        if (candidatas.isEmpty()) return 0;
+        try {
+            hidranteRepo.saveAll(candidatas.stream().map(HidranteCargaRow::entidad).toList());
+            return candidatas.size();
+        } catch (Exception batchError) {
+            log.warn("Carga Hidrantes en lote falló; reintentando fila por fila: {}", batchError.getMessage());
+            int guardadas = 0;
+            for (HidranteCargaRow candidata : candidatas) {
+                try {
+                    hidranteRepo.save(candidata.entidad());
+                    guardadas++;
+                } catch (Exception e) {
+                    erroresList.add("Fila " + candidata.filaExcel() + ": " + e.getMessage());
+                }
+            }
+            return guardadas;
+        }
+    }
+
+    private String key(String value) {
+        return value == null ? "" : value.trim();
     }
 
     // ─────────────────────────────────────────────────────────────────────────
