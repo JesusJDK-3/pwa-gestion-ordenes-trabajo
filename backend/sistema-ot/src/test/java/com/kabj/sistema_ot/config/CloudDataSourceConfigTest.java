@@ -12,7 +12,7 @@ class CloudDataSourceConfigTest {
         String jdbc = CloudDataSourceConfig.toJdbcUrl(
                 "postgresql://postgres.abc:secret@db.abc.supabase.co:5432/postgres");
         assertEquals(
-                "jdbc:postgresql://db.abc.supabase.co:5432/postgres?sslmode=require",
+                "jdbc:postgresql://db.abc.supabase.co:5432/postgres?sslmode=require&prepareThreshold=0",
                 jdbc);
     }
 
@@ -21,7 +21,7 @@ class CloudDataSourceConfigTest {
         CloudDataSourceConfig.ParsedDatabaseUrl parsed = CloudDataSourceConfig.parseDatabaseUrl(
                 "postgresql://postgres.abc:secret@db.abc.supabase.co:5432/postgres");
 
-        assertEquals("jdbc:postgresql://db.abc.supabase.co:5432/postgres?sslmode=require", parsed.jdbcUrl());
+        assertEquals("jdbc:postgresql://db.abc.supabase.co:5432/postgres?sslmode=require&prepareThreshold=0", parsed.jdbcUrl());
         assertEquals("postgres.abc", parsed.username());
         assertEquals("secret", parsed.password());
     }
@@ -31,5 +31,16 @@ class CloudDataSourceConfigTest {
         String jdbc = CloudDataSourceConfig.toJdbcUrl(
                 "jdbc:postgresql://localhost:5432/sistema_ot");
         assertTrue(jdbc.contains("sslmode=require"));
+        assertTrue(jdbc.contains("prepareThreshold=0"));
+    }
+
+    @Test
+    void noDuplicaPrepareThresholdSiYaExiste() {
+        String jdbc = CloudDataSourceConfig.toJdbcUrl(
+                "jdbc:postgresql://localhost:5432/sistema_ot?sslmode=require&prepareThreshold=0");
+
+        assertEquals(
+                "jdbc:postgresql://localhost:5432/sistema_ot?sslmode=require&prepareThreshold=0",
+                jdbc);
     }
 }

@@ -38,6 +38,7 @@ public class CloudDataSourceConfig {
             ds.setPassword(parsed.password());
         }
         ds.setDriverClassName("org.postgresql.Driver");
+        ds.addDataSourceProperty("prepareThreshold", "0");
         return ds;
     }
 
@@ -87,6 +88,9 @@ public class CloudDataSourceConfig {
     private static String ensureSsl(String jdbcUrl) {
         if (!jdbcUrl.contains("sslmode=")) {
             jdbcUrl += jdbcUrl.contains("?") ? "&sslmode=require" : "?sslmode=require";
+        }
+        if (!jdbcUrl.contains("prepareThreshold=")) {
+            jdbcUrl += jdbcUrl.contains("?") ? "&prepareThreshold=0" : "?prepareThreshold=0";
         }
         return jdbcUrl;
     }

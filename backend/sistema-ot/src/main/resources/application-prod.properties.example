@@ -8,6 +8,7 @@
 spring.datasource.url=${PG_URL}
 spring.datasource.username=${PG_USER}
 spring.datasource.password=${PG_PASSWORD}
+spring.datasource.hikari.data-source-properties.prepareThreshold=0
 jwt.secret=${JWT_SECRET}
 cors.allowed-origin=${CORS_ALLOWED_ORIGIN}
 
