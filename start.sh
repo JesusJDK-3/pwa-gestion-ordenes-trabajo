@@ -215,10 +215,14 @@ echo -e "${YELLOW}[5/5] Iniciando servicios...${NC}"
 
 cd "$BACKEND"
 if [[ "$OSTYPE" == "msys"* ]] || [[ "$OS" == "Windows_NT" ]]; then
+  SPRING_DB_URL="jdbc:postgresql://$PG_HOST:$PG_PORT/sistema_ot" \
+  SPRING_DB_USER="$PG_USER" SPRING_DB_PASSWORD="$PG_PASSWORD" \
   PG_USER="$PG_USER" PG_PASSWORD="$PG_PASSWORD" \
   PG_HOST="$PG_HOST" PG_PORT="$PG_PORT" \
   ./mvnw.cmd spring-boot:run --no-transfer-progress > "$ROOT/backend.log" 2>&1 &
 else
+  SPRING_DB_URL="jdbc:postgresql://$PG_HOST:$PG_PORT/sistema_ot" \
+  SPRING_DB_USER="$PG_USER" SPRING_DB_PASSWORD="$PG_PASSWORD" \
   PG_USER="$PG_USER" PG_PASSWORD="$PG_PASSWORD" \
   PG_HOST="$PG_HOST" PG_PORT="$PG_PORT" \
   ./mvnw spring-boot:run --no-transfer-progress > "$ROOT/backend.log" 2>&1 &

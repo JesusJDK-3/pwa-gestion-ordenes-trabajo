@@ -194,7 +194,7 @@ public class ExcelCargaService {
                 if (row == null) continue;
 
                 String sgio = isMnttoPrevVpa
-                        ? trim(cellStr(row, headerIndex.getOrDefault("NRO_OT", -1)))
+                        ? resolvePreventivoSgio(row, headerIndex)
                         : cellStr(row, 2);
                 if (sgio == null || sgio.isBlank()) continue;
 
@@ -279,7 +279,7 @@ public class ExcelCargaService {
 
                 String sgio;
                 if (isMnttoPrevVpa) {
-                    sgio = cellStr(row, headerIndex.getOrDefault("NRO_OT", -1));
+                    sgio = resolvePreventivoSgio(row, headerIndex);
                 } else {
                     sgio = cellStr(row, 2); // columna C = SGIO
                 }
@@ -483,7 +483,7 @@ public class ExcelCargaService {
                                            ImpOtLote lote,
                                            CoordenadaStats coordStats) {
 
-        String sgio            = trim(cellStr(row, headerIndex.getOrDefault("NRO_OT", -1)));
+        String sgio            = resolvePreventivoSgio(row, headerIndex);
         String nis             = trim(cellStr(row, headerIndex.getOrDefault("NIS_RAD", -1)));
         String actividadCodigo = trim(cellStr(row, headerIndex.getOrDefault("ACTIVIDAD", -1)));
         String actividadNombre = trim(cellStr(row, headerIndex.getOrDefault("DESC_ACTIVIDAD", -1)));
@@ -525,6 +525,19 @@ public class ExcelCargaService {
                 ot.setVca(vpa.getVca());
                 coordenadasEncontradas = true;
                 log.debug("OT {} → coords por NIS {} en VPA", sgio, nis);
+            } else {
+                Optional<GisHidrante> hidranteOpt = hidranteRepo.findBySuministro(nis);
+                if (hidranteOpt.isPresent()) {
+                    GisHidrante hidrante = hidranteOpt.get();
+                    ot.setLatitud(hidrante.getLatitud());
+                    ot.setLongitud(hidrante.getLongitud());
+                    ot.setDireccion(hidrante.getDireccion());
+                    ot.setLocalidad(hidrante.getLocalidad());
+                    ot.setDistrito(hidrante.getDistrito());
+                    ot.setSector(hidrante.getSector());
+                    coordenadasEncontradas = true;
+                    log.debug("OT {} → coords por NIS {} en hidrante", sgio, nis);
+                }
             }
         }
 
@@ -633,10 +646,30 @@ public class ExcelCargaService {
         Integer lngCol = firstHeaderCol(headerIndex, "LONGITUD", "LON", "LNG", "LONG", "X");
         Double lat = latCol != null ? cellNum(row, latCol) : null;
         Double lng = lngCol != null ? cellNum(row, lngCol) : null;
-        if (lat == null) lat = cellNum(row, 9);
-        if (lng == null) lng = cellNum(row, 10);
-        if (lat == null || lng == null) return null;
-        return new BigDecimal[]{BigDecimal.valueOf(lat), BigDecimal.valueOf(lng)};
+
+        if (lat != null && lng != null) {
+            return new BigDecimal[]{BigDecimal.valueOf(lat), BigDecimal.valueOf(lng)};
+        }
+
+        // Legacy fallback: only use raw columns 10/11 if el valor es plausible como coordenadas Perú.
+        Double fallbackLat = cellNum(row, 9);
+        Double fallbackLng = cellNum(row, 10);
+        if (fallbackLat == null || fallbackLng == null) {
+            return null;
+        }
+        if (!isLikelyLatLng(fallbackLat, fallbackLng)) {
+            return null;
+        }
+        return new BigDecimal[]{BigDecimal.valueOf(fallbackLat), BigDecimal.valueOf(fallbackLng)};
+    }
+
+    private boolean isLikelyLatLng(Double lat, Double lng) {
+        if (lat == null || lng == null) {
+            return false;
+        }
+        BigDecimal[] normalized = CoordenadaValidator.normalizarPeru(BigDecimal.valueOf(lat), BigDecimal.valueOf(lng));
+        CoordenadaValidator.Resultado resultado = CoordenadaValidator.validar(normalized[0], normalized[1]);
+        return resultado.valida() || resultado.requiereCorreccion();
     }
 
     private Integer firstHeaderCol(Map<String, Integer> headerIndex, String... keys) {
@@ -699,6 +732,14 @@ public class ExcelCargaService {
     // ─────────────────────────────────────────────────────────────────────────
     private boolean isFalta(String valor) {
         return valor != null && "FALTA".equalsIgnoreCase(valor.trim());
+    }
+
+    private String resolvePreventivoSgio(Row row, Map<String, Integer> headerIndex) {
+        String sgio = trim(cellStr(row, headerIndex.getOrDefault("NRO_OT", -1)));
+        if (sgio != null && !sgio.isBlank()) {
+            return sgio;
+        }
+        return trim(cellStr(row, headerIndex.getOrDefault("VUSUARIO", -1)));
     }
 
     private String trim(String value) {

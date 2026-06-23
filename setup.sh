@@ -102,12 +102,13 @@ else
 fi
 
 # Guardar credenciales en application.properties
-sed -i "s|PG_USER:[^}]*|PG_USER:$DB_USER|g"     "$APP_PROPS" 2>/dev/null || true
-sed -i "s|PG_PASSWORD:[^}]*|PG_PASSWORD:$DB_PASS|g" "$APP_PROPS" 2>/dev/null || true
+sed -i "s|^spring.datasource.url=.*|spring.datasource.url=jdbc:postgresql://$DB_HOST:$DB_PORT/sistema_ot|g" "$APP_PROPS" 2>/dev/null || true
+sed -i "s|^spring.datasource.username=.*|spring.datasource.username=$DB_USER|g" "$APP_PROPS" 2>/dev/null || true
+sed -i "s|^spring.datasource.password=.*|spring.datasource.password=$DB_PASS|g" "$APP_PROPS" 2>/dev/null || true
 
-# Actualizar host/puerto si cambiaron del default
+# Actualizar host/puerto si cambiaron del default (ya aplicado arriba)
 if [ "$DB_HOST" != "localhost" ] || [ "$DB_PORT" != "5432" ]; then
-  sed -i "s|jdbc:postgresql://[^/]*/|jdbc:postgresql://$DB_HOST:$DB_PORT/|g" "$APP_PROPS" 2>/dev/null || true
+  echo -e "  ${GREEN}  ✓ Host/puerto local guardados en application.properties${NC}"
 fi
 
 echo -e "${GREEN}  ✓ Configuración de BD guardada en application.properties${NC}"
