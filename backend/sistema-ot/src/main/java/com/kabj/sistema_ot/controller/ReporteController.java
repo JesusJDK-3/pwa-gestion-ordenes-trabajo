@@ -61,13 +61,17 @@ public class ReporteController {
     @GetMapping("/diario")
     @PreAuthorize("hasRole('SUPERVISOR')")
     public ResponseEntity<ApiResponse<Map<String, Object>>> diario(
+            Authentication auth,
             @RequestParam(required = false) String fecha) {
 
+        String username = auth != null ? auth.getName() : null;
         LocalDate dia    = (fecha != null && !fecha.isBlank()) ? LocalDate.parse(fecha) : LocalDate.now();
         LocalDateTime t0 = dia.atStartOfDay();
         LocalDateTime t1 = dia.plusDays(1).atStartOfDay();
 
-        var todas = ordenRepo.findByActivoTrueOrderByCreatedAtDesc();
+        var todas = username != null
+                ? ordenRepo.findByLoteSupervisorUsername(username)
+                : ordenRepo.findByActivoTrueOrderByCreatedAtDesc();
         Set<Long> idsConActividad = new HashSet<>();
         eventoService.buscar(null, null, null, t0, t1).forEach(e -> {
             if (e.getOrden() != null) idsConActividad.add(e.getOrden().getIdOt());
@@ -118,8 +122,10 @@ public class ReporteController {
     @GetMapping("/observadas-dia")
     @PreAuthorize("hasRole('SUPERVISOR')")
     public ResponseEntity<ApiResponse<Map<String, Object>>> observadasDia(
+            Authentication auth,
             @RequestParam String fecha) {
 
+        String username = auth != null ? auth.getName() : null;
         LocalDate dia = LocalDate.parse(fecha);
         LocalDateTime t0 = dia.atStartOfDay();
         LocalDateTime t1 = dia.plusDays(1).atStartOfDay();
@@ -127,6 +133,9 @@ public class ReporteController {
         Map<Long, OpOtEvento> ultimoPorOt = new LinkedHashMap<>();
         eventoService.buscar(null, null, null, t0, t1).stream()
                 .filter(e -> e.getOrden() != null && "OBSERVADA".equals(e.getEstadoNuevo()))
+                .filter(e -> username == null || (e.getOrden().getLote() != null
+                        && e.getOrden().getLote().getSupervisor() != null
+                        && username.equals(e.getOrden().getLote().getSupervisor().getUsername())))
                 .sorted(Comparator.comparing(OpOtEvento::getFechaEvento))
                 .forEach(e -> ultimoPorOt.put(e.getOrden().getIdOt(), e));
 

@@ -144,10 +144,19 @@ export const capatazService = {
     dni: string
     password: string
   }) => api.post('/capataces', data),
+  inactivar: (id: number) => api.put(`/capataces/${id}/inactivar`),
 }
 
 export const usuarioService = {
   listar: () => api.get('/usuarios'),
+  registrarSupervisor: (data: {
+    email: string
+    username: string
+    nombres: string
+    apellidos: string
+    password: string
+  }) => api.post('/usuarios', data),
+  inactivar: (id: number) => api.put(`/usuarios/${id}/inactivar`),
 }
 
 export const trabajadorService = {

@@ -291,8 +291,8 @@ public class OrdenTrabajoService {
     }
 
     @Transactional(readOnly = true)
-    public List<OrdenTrabajoResponse> historialSupervisor(String fecha, String sgio, String estado) {
-        List<OpOrdenTrabajo> base = ordenRepo.findByActivoTrueOrderByCreatedAtDesc();
+    public List<OrdenTrabajoResponse> historialSupervisor(String username, String fecha, String sgio, String estado) {
+        List<OpOrdenTrabajo> base = ordenRepo.findByLoteSupervisorUsername(username);
         return filtrarYOrdenarHistorial(base, fecha, sgio, estado, false);
     }
 

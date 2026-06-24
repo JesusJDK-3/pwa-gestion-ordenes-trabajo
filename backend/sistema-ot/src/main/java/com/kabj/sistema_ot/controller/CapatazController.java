@@ -49,4 +49,15 @@ public class CapatazController {
             return ResponseEntity.badRequest().body(new ApiResponse<>(false, e.getMessage(), null));
         }
     }
+
+    @PutMapping("/{id}/inactivar")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ApiResponse<Void>> inactivar(@PathVariable Long id) {
+        try {
+            capatazService.inactivarCapataz(id);
+            return ResponseEntity.ok(new ApiResponse<>(true, "Capataz inactivado correctamente", null));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(new ApiResponse<>(false, e.getMessage(), null));
+        }
+    }
 }
