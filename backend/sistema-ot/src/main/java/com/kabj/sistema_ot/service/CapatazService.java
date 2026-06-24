@@ -68,21 +68,10 @@ public class CapatazService {
         String nomNorm = normalizar(nombres);
         String apeNorm = normalizar(apellidos);
 
-        if (emailNorm.isEmpty() || userNorm.isEmpty() || nomNorm.isEmpty() || apeNorm.isEmpty() || dniNorm.isEmpty()) {
-            throw new IllegalArgumentException("Email, usuario, nombres, apellidos y DNI son obligatorios.");
-        }
-        if (password == null || password.length() < 8) {
-            throw new IllegalArgumentException("La contraseña inicial debe tener al menos 8 caracteres.");
-        }
-        if (usuarioRepository.findByEmail(emailNorm).isPresent()) {
-            throw new IllegalArgumentException("Ya existe un usuario con ese email.");
-        }
-        if (usuarioRepository.findByUsername(userNorm).isPresent()) {
-            throw new IllegalArgumentException("Ya existe un usuario con ese nombre de usuario.");
-        }
+        validarUsuarioBasico(emailNorm, userNorm, nomNorm, apeNorm, password);
 
         Rol rolCapataz = rolRepository.findByCodigo("capataz")
-                .orElseThrow(() -> new IllegalStateException("Rol capataz no configurado en el sistema."));
+                .orElseThrow(() -> new IllegalArgumentException("El rol capataz no está configurado en el sistema."));
 
         RrhhTrabajador trabajador = trabajadorRepository.findByDni(dniNorm).orElseGet(() -> {
             RrhhTrabajador t = new RrhhTrabajador();
@@ -105,15 +94,7 @@ public class CapatazService {
             trabajadorRepository.save(trabajador);
         }
 
-        Usuario usuario = new Usuario();
-        usuario.setEmail(emailNorm);
-        usuario.setUsername(userNorm);
-        usuario.setNombres(nomNorm);
-        usuario.setApellidos(apeNorm);
-        usuario.setPasswordHash(passwordEncoder.encode(password));
-        usuario.setRol(rolCapataz);
-        usuario.setActivo(true);
-        usuario = usuarioRepository.save(usuario);
+        Usuario usuario = crearUsuario(emailNorm, userNorm, nomNorm, apeNorm, password, rolCapataz);
 
         String codigo = "CAP-" + String.format("%03d", capatazRepository.count() + 1);
         while (capatazRepository.findByCodigoCapataz(codigo).isPresent()) {
@@ -136,6 +117,73 @@ public class CapatazService {
         res.put("dni", trabajador.getDni());
         res.put("codigoCapataz", capataz.getCodigoCapataz());
         return res;
+    }
+
+    @Transactional
+    public void inactivarCapataz(Long idCapataz) {
+        RrhhCapataz capataz = capatazRepository.findById(idCapataz)
+                .orElseThrow(() -> new IllegalArgumentException("Capataz no encontrado."));
+        capataz.setActivo(false);
+        if (capataz.getUsuario() != null) {
+            Usuario usuario = capataz.getUsuario();
+            usuario.setActivo(false);
+            usuarioRepository.save(usuario);
+        }
+        capatazRepository.save(capataz);
+    }
+
+    @Transactional
+    public Map<String, Object> registrarSupervisor(String email, String username, String nombres,
+                                                    String apellidos, String password) {
+        String emailNorm = normalizar(email);
+        String userNorm = normalizar(username);
+        String nomNorm = normalizar(nombres);
+        String apeNorm = normalizar(apellidos);
+
+        validarUsuarioBasico(emailNorm, userNorm, nomNorm, apeNorm, password);
+
+        Rol rolSupervisor = rolRepository.findByCodigo("supervisor")
+                .orElseThrow(() -> new IllegalArgumentException("El rol supervisor no está configurado en el sistema."));
+
+        Usuario usuario = crearUsuario(emailNorm, userNorm, nomNorm, apeNorm, password, rolSupervisor);
+
+        Map<String, Object> res = new LinkedHashMap<>();
+        res.put("id", usuario.getIdUsuario());
+        res.put("usuarioId", usuario.getIdUsuario());
+        res.put("nombre", usuario.getNombres() + " " + usuario.getApellidos());
+        res.put("email", usuario.getEmail());
+        res.put("username", usuario.getUsername());
+        res.put("rol", "supervisor");
+        return res;
+    }
+
+    private void validarUsuarioBasico(String emailNorm, String userNorm, String nomNorm,
+                                      String apeNorm, String password) {
+        if (emailNorm.isEmpty() || userNorm.isEmpty() || nomNorm.isEmpty() || apeNorm.isEmpty()) {
+            throw new IllegalArgumentException("Email, usuario, nombres y apellidos son obligatorios.");
+        }
+        if (password == null || password.length() < 8) {
+            throw new IllegalArgumentException("La contraseña inicial debe tener al menos 8 caracteres.");
+        }
+        if (usuarioRepository.findByEmail(emailNorm).isPresent()) {
+            throw new IllegalArgumentException("Ya existe un usuario con ese email.");
+        }
+        if (usuarioRepository.findByUsername(userNorm).isPresent()) {
+            throw new IllegalArgumentException("Ya existe un usuario con ese nombre de usuario.");
+        }
+    }
+
+    private Usuario crearUsuario(String emailNorm, String userNorm, String nomNorm,
+                                 String apeNorm, String password, Rol rol) {
+        Usuario usuario = new Usuario();
+        usuario.setEmail(emailNorm);
+        usuario.setUsername(userNorm);
+        usuario.setNombres(nomNorm);
+        usuario.setApellidos(apeNorm);
+        usuario.setPasswordHash(passwordEncoder.encode(password));
+        usuario.setRol(rol);
+        usuario.setActivo(true);
+        return usuarioRepository.save(usuario);
     }
 
     private static String normalizar(String val) {

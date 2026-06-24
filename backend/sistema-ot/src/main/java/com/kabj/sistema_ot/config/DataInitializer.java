@@ -48,13 +48,16 @@ public class DataInitializer implements ApplicationRunner {
     }
 
     private void seedRoles() {
-        if (rolRepository.count() > 0) return;
-        List.of(
-                buildRol("supervisor", "Supervisor",    "Carga OT desde Excel y supervisa el avance del equipo de campo"),
-                buildRol("capataz",    "Capataz",       "Registra actividades en campo y llena formularios por punto"),
-                buildRol("admin",      "Administrador", "Acceso total: reportes, auditoría y gestión del sistema")
-        ).forEach(rolRepository::save);
-        log.info("Roles creados.");
+        insertRoleIfMissing("supervisor", "Supervisor", "Carga OT desde Excel y supervisa el avance del equipo de campo");
+        insertRoleIfMissing("capataz",    "Capataz",    "Registra actividades en campo y llena formularios por punto");
+        insertRoleIfMissing("admin",      "Administrador", "Acceso total: reportes, auditoría y gestión del sistema");
+    }
+
+    private void insertRoleIfMissing(String codigo, String nombre, String descripcion) {
+        if (rolRepository.findByCodigo(codigo).isEmpty()) {
+            rolRepository.save(buildRol(codigo, nombre, descripcion));
+            log.info("Rol '{}' creado.", codigo);
+        }
     }
 
     private void seedUsuarios() {

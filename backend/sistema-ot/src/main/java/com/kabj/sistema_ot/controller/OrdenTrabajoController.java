@@ -210,10 +210,12 @@ public class OrdenTrabajoController {
     @GetMapping("/ordenes/historial")
     @PreAuthorize("hasAnyRole('SUPERVISOR','ADMIN')")
     public ResponseEntity<List<OrdenTrabajoResponse>> historialSupervisor(
+            Authentication auth,
             @RequestParam(required = false) String fecha,
             @RequestParam(required = false) String sgio,
             @RequestParam(required = false) String estado) {
-        return ResponseEntity.ok(ordenService.historialSupervisor(fecha, sgio, estado));
+        String username = auth != null ? auth.getName() : null;
+        return ResponseEntity.ok(ordenService.historialSupervisor(username, fecha, sgio, estado));
     }
 
     @GetMapping("/puntos/seguimiento")

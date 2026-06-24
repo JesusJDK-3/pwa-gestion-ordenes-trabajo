@@ -49,6 +49,9 @@ public interface OpOrdenTrabajoRepository extends JpaRepository<OpOrdenTrabajo, 
 
     List<OpOrdenTrabajo> findByActivoTrueOrderByCreatedAtDesc();
 
+    @Query("SELECT ot FROM OpOrdenTrabajo ot WHERE ot.activo = true AND ot.lote.supervisor.username = :username ORDER BY ot.createdAt DESC")
+    List<OpOrdenTrabajo> findByLoteSupervisorUsername(@Param("username") String username);
+
     @Query("SELECT ot FROM OpOrdenTrabajo ot WHERE ot.activo = true AND ot.visibleEnMapa = true")
     List<OpOrdenTrabajo> findVisiblesEnMapa();
 

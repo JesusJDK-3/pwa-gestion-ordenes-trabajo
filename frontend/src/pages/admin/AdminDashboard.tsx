@@ -1,18 +1,19 @@
 import { useCallback, useEffect, useMemo, useState, type FormEvent } from 'react'
 import * as XLSX from 'xlsx'
-import { ordenService, reporteService, capatazService } from '../../services/api'
-import type { OrdenTrabajo, EstadoOt } from '../../types'
+import { ordenService, reporteService, capatazService, usuarioService } from '../../services/api'
+import type { OrdenTrabajo, EstadoOt, User } from '../../types'
 import PageRefreshButton from '../../components/PageRefreshButton'
 import {
   Activity, ClipboardList, Users, Briefcase, CheckCircle2, Eye, Download, ChevronLeft, ChevronRight, UserPlus,
 } from 'lucide-react'
 import { unwrapList } from '../../utils/apiParse'
 
-type Tab = 'actividades' | 'auditoria' | 'capataces'
+type Tab = 'actividades' | 'auditoria' | 'capataces' | 'supervisores'
 
 const TABS: { id: Tab; label: string; icon: typeof Activity }[] = [
   { id: 'actividades', label: 'Todas las OTs', icon: Activity },
   { id: 'capataces',   label: 'Capataces',     icon: Users },
+  { id: 'supervisores', label: 'Supervisores', icon: UserPlus },
   { id: 'auditoria',   label: 'Auditoría',     icon: ClipboardList },
 ]
 
@@ -116,7 +117,7 @@ export default function AdminDashboard() {
         })}
       </div>
 
-      {tab === 'actividades' && (
+          {tab === 'actividades' && (
         <div className="space-y-5">
           <div className="kpi-grid">
             {kpis.map(k => {
@@ -139,6 +140,8 @@ export default function AdminDashboard() {
       )}
 
       {tab === 'capataces' && <CapatacesPanel />}
+
+      {tab === 'supervisores' && <SupervisoresPanel />}
 
       {tab === 'auditoria' && stats && (
         <div className="space-y-5">
@@ -205,6 +208,176 @@ interface CapatazRegistro {
   codigoCapataz: string
 }
 
+function SupervisoresPanel() {
+  const [lista, setLista] = useState<SupervisorRegistro[]>([])
+  const [loading, setLoading] = useState(true)
+  const [saving, setSaving] = useState(false)
+  const [error, setError] = useState('')
+  const [exito, setExito] = useState('')
+  const [form, setForm] = useState({
+    nombres: '',
+    apellidos: '',
+    email: '',
+    username: '',
+    password: '',
+  })
+
+  const cargar = useCallback(() => {
+    setLoading(true)
+    usuarioService.listar()
+      .then(r => {
+        const items = unwrapList<User>(r.data)
+          .filter(u => u.rol === 'supervisor')
+          .map(u => ({
+            id: u.id,
+            nombre: u.nombre,
+            email: u.email,
+            username: u.username ?? '',
+          }))
+        setLista(items)
+      })
+      .catch(() => setError('No se pudo cargar la lista de supervisores.'))
+      .finally(() => setLoading(false))
+  }, [])
+
+  useEffect(() => { cargar() }, [cargar])
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault()
+    setSaving(true)
+    setError('')
+    setExito('')
+    try {
+      await usuarioService.registrarSupervisor(form)
+      setExito(`Supervisor ${form.nombres} ${form.apellidos} registrado correctamente.`)
+      setForm({ nombres: '', apellidos: '', email: '', username: '', password: '' })
+      cargar()
+    } catch (err: unknown) {
+      const txt = (err as { response?: { data?: { message?: string } } })?.response?.data?.message
+        ?? 'No se pudo registrar el supervisor.'
+      setError(txt)
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  const handleInactivar = async (id: number) => {
+    setError('')
+    setExito('')
+    try {
+      await usuarioService.inactivar(id)
+      setExito('Supervisor inactivado correctamente.')
+      cargar()
+    } catch (err: unknown) {
+      const txt = (err as { response?: { data?: { message?: string } } })?.response?.data?.message
+        ?? 'No se pudo inactivar al supervisor.'
+      setError(txt)
+    }
+  }
+
+  const inputClass = 'corp-input text-sm py-2 w-full'
+
+  return (
+    <div className="space-y-5">
+      <div className="corp-card p-5">
+        <div className="flex items-start gap-3 mb-4">
+          <div className="kpi-icon-box bg-violet-50 border-violet-200 text-violet-700">
+            <UserPlus size={20} strokeWidth={1.75} />
+          </div>
+          <div>
+            <h3 className="text-sm font-bold text-slate-800">Registrar supervisor</h3>
+            <p className="text-sm text-slate-500 mt-1">
+              Crea el usuario de acceso con rol supervisor. El supervisor podrá cargar OTs, asignar cuadrillas y ver reportes.
+            </p>
+          </div>
+        </div>
+
+        {error && <div className="alert-banner alert-error text-sm mb-4" role="alert">{error}</div>}
+        {exito && <div className="alert-banner alert-success text-sm mb-4" role="status">{exito}</div>}
+
+        <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label htmlFor="sup-nombres" className="corp-label">Nombres</label>
+            <input id="sup-nombres" required maxLength={100} value={form.nombres}
+              onChange={e => setForm(f => ({ ...f, nombres: e.target.value }))} className={inputClass} />
+          </div>
+          <div>
+            <label htmlFor="sup-apellidos" className="corp-label">Apellidos</label>
+            <input id="sup-apellidos" required maxLength={100} value={form.apellidos}
+              onChange={e => setForm(f => ({ ...f, apellidos: e.target.value }))} className={inputClass} />
+          </div>
+          <div>
+            <label htmlFor="sup-email" className="corp-label">Email (login)</label>
+            <input id="sup-email" type="email" required maxLength={150} value={form.email}
+              onChange={e => setForm(f => ({ ...f, email: e.target.value }))} className={inputClass} />
+          </div>
+          <div>
+            <label htmlFor="sup-username" className="corp-label">Usuario</label>
+            <input id="sup-username" required maxLength={60} value={form.username}
+              onChange={e => setForm(f => ({ ...f, username: e.target.value }))} className={inputClass} />
+          </div>
+          <div>
+            <label htmlFor="sup-password" className="corp-label">Contraseña inicial</label>
+            <input id="sup-password" type="password" required minLength={8} maxLength={100} value={form.password}
+              onChange={e => setForm(f => ({ ...f, password: e.target.value }))} className={inputClass}
+              autoComplete="new-password" />
+          </div>
+          <div className="sm:col-span-2">
+            <button type="submit" disabled={saving} className="btn-primary min-h-11 px-5">
+              {saving ? 'Registrando…' : 'Registrar supervisor'}
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <div className="corp-card overflow-hidden">
+        <div className="corp-card-header">
+          <span>Supervisores activos</span>
+          <span className="badge-count">{lista.length}</span>
+        </div>
+        <div className="overflow-x-auto">
+          <table className="enterprise-table">
+            <thead>
+              <tr>
+                {['Nombre', 'Email', 'Usuario', ''].map(h => <th key={h}>{h}</th>)}
+              </tr>
+            </thead>
+            <tbody>
+              {loading ? (
+                <tr><td colSpan={4} className="text-center py-10 text-slate-400">Cargando…</td></tr>
+              ) : lista.length === 0 ? (
+                <tr><td colSpan={4} className="text-center py-10 text-slate-400">No hay supervisores registrados.</td></tr>
+              ) : lista.map(s => (
+                <tr key={s.id}>
+                  <td className="font-medium">{s.nombre}</td>
+                  <td>{s.email}</td>
+                  <td>{s.username}</td>
+                  <td className="text-right">
+                    <button
+                      type="button"
+                      className="btn-secondary text-xs py-1 px-2"
+                      onClick={() => handleInactivar(s.id)}
+                    >
+                      Inactivar
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+interface SupervisorRegistro {
+  id: number
+  nombre: string
+  email: string
+  username: string
+}
+
 function CapatacesPanel() {
   const [lista, setLista] = useState<CapatazRegistro[]>([])
   const [loading, setLoading] = useState(true)
@@ -246,6 +419,20 @@ function CapatacesPanel() {
       setError(txt)
     } finally {
       setSaving(false)
+    }
+  }
+
+  const handleInactivar = async (id: number) => {
+    setError('')
+    setExito('')
+    try {
+      await capatazService.inactivar(id)
+      setExito('Capataz inactivado correctamente.')
+      cargar()
+    } catch (err: unknown) {
+      const txt = (err as { response?: { data?: { message?: string } } })?.response?.data?.message
+        ?? 'No se pudo inactivar al capataz.'
+      setError(txt)
     }
   }
 
@@ -319,14 +506,14 @@ function CapatacesPanel() {
           <table className="enterprise-table">
             <thead>
               <tr>
-                {['Código', 'Nombre', 'DNI', 'Email', 'Usuario'].map(h => <th key={h}>{h}</th>)}
+                {['Código', 'Nombre', 'DNI', 'Email', 'Usuario', ''].map(h => <th key={h}>{h}</th>)}
               </tr>
             </thead>
             <tbody>
               {loading ? (
-                <tr><td colSpan={5} className="text-center py-10 text-slate-400">Cargando…</td></tr>
+                <tr><td colSpan={6} className="text-center py-10 text-slate-400">Cargando…</td></tr>
               ) : lista.length === 0 ? (
-                <tr><td colSpan={5} className="text-center py-10 text-slate-400">No hay capataces registrados.</td></tr>
+                <tr><td colSpan={6} className="text-center py-10 text-slate-400">No hay capataces registrados.</td></tr>
               ) : lista.map(c => (
                 <tr key={c.id}>
                   <td className="font-mono text-xs">{c.codigoCapataz}</td>
@@ -334,6 +521,15 @@ function CapatacesPanel() {
                   <td className="tabular-nums">{c.dni}</td>
                   <td>{c.email}</td>
                   <td>{c.username}</td>
+                  <td className="text-right">
+                    <button
+                      type="button"
+                      className="btn-secondary text-xs py-1 px-2"
+                      onClick={() => handleInactivar(c.id)}
+                    >
+                      Inactivar
+                    </button>
+                  </td>
                 </tr>
               ))}
             </tbody>
