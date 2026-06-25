@@ -7,7 +7,7 @@ builder = "NIXPACKS"
 buildCommand = "mvn -B -DskipTests package"
 
 [deploy]
-startCommand = "java -jar app.jar"
+startCommand = "java -jar target/sistema-ot-0.0.1-SNAPSHOT.jar"
 healthcheckPath = "/api/health"
 healthcheckTimeout = 120
 restartPolicyType = "ON_FAILURE"
