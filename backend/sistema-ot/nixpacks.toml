@@ -1,3 +1,4 @@
+# Nixpacks — JDK 21 + Maven para Railway
 [phases.setup]
 nixPkgs = ["jdk21", "maven"]
 
