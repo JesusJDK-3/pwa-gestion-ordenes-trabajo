@@ -1,6 +1,6 @@
 ﻿import { type FormEvent, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { User, Lock, ArrowRight, Loader2 } from 'lucide-react'
+import { User, Lock, ArrowRight, Loader2, Eye, EyeOff } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import { getRolHome } from '../utils/rolHome'
 import logoKabj from '../assets/logo-kabj-transparent.png'
@@ -19,6 +19,7 @@ export default function LoginPage() {
 
   const [email,    setEmail]    = useState('')
   const [password, setPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
   const [loading,  setLoading]  = useState(false)
   const [error,    setError]    = useState('')
   const [shake,    setShake]    = useState(false)
@@ -124,15 +125,25 @@ export default function LoginPage() {
                       <input
                         id="login-password"
                         name="password"
-                        type="password"
+                        type={showPassword ? 'text' : 'password'}
                         autoComplete="current-password"
                         value={password}
                         onChange={e => setPassword(e.target.value)}
                         placeholder="••••••••"
                         required
                         maxLength={100}
-                        className="login-input corp-input pl-11 h-12 bg-[#F8FAFB] border-slate-200 focus:bg-white placeholder:text-slate-400"
+                        className="login-input corp-input pl-11 pr-11 h-12 bg-[#F8FAFB] border-slate-200 focus:bg-white placeholder:text-slate-400"
                       />
+
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(s => !s)}
+                        aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
+                        title={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
+                        className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#1B4F72]/60 hover:text-[#1B4F72]"
+                      >
+                        {showPassword ? <EyeOff size={17} strokeWidth={1.75} /> : <Eye size={17} strokeWidth={1.75} />}
+                      </button>
                     </div>
                   </div>
 
