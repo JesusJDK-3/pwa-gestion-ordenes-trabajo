@@ -89,6 +89,7 @@ export const ordenService = {
     form.append('file', file)
     return api.post('/ordenes/preview-excel', form, {
       headers: { 'Content-Type': 'multipart/form-data' },
+      timeout: 300_000,
     })
   },
   cargarExcel: (file: File) => {
@@ -96,6 +97,7 @@ export const ordenService = {
     form.append('file', file)
     return api.post('/ordenes/carga-excel', form, {
       headers: { 'Content-Type': 'multipart/form-data' },
+      timeout: 300_000,
     })
   },
   validacionFoto: (id: number) => api.get(`/ordenes/${id}/validacion-foto`),
