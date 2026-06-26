@@ -148,9 +148,7 @@ function SidebarPanel({
             <p className="app-display text-[#1B4F72] text-[14px] font-semibold tracking-tight">
               Sistema OT
             </p>
-            <span className={`inline-flex mt-2 px-2.5 py-1 rounded border app-eyebrow ${badge.pillLight}`}>
-              {badge.label}
-            </span>
+            
           </div>
         </div>
       </div>
