@@ -148,7 +148,7 @@ public class OrdenTrabajoController {
     }
 
     @PutMapping("/puntos/{id}/coordenadas")
-    @PreAuthorize("hasAnyRole('ADMIN','SUPERVISOR')")
+    @PreAuthorize("hasAnyRole('ADMIN','SUPERVISOR','CAPATAZ')")
     public ResponseEntity<ApiResponse<OrdenTrabajoResponse>> corregirCoordenadas(
             @PathVariable Long id,
             @RequestBody Map<String, Object> body,
