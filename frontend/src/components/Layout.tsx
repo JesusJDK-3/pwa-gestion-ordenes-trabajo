@@ -37,7 +37,7 @@ const NAV_BY_ROL: Record<Rol, NavItem[]> = {
   capataz: [
     { to: '/capataz/mapa',         label: 'Mapa operativo',   icon: MapPinned,     section: 'Campo' },
     { to: '/capataz',              label: 'Mis asignaciones', icon: ClipboardList },
-    { to: '/supervisor/asignar',          label: 'Asignar cuadrillas',  icon: UserCog },
+    { to: '/capataz/coordenadas',  label: 'Georreferencia',      icon: Crosshair },
     { to: '/capataz/alertas',      label: 'Alertas',          icon: AlertTriangle },
     { to: '/historial',            label: 'Historial',        icon: Calendar },
     { to: '/capataz/ayudantes',    label: 'Apoyo en OT',      icon: HardHat },
