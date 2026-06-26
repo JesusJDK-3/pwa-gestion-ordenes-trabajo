@@ -11,7 +11,7 @@ interface CargaResult {
   detalle: string[]
 }
 
-const UPLOAD_TIMEOUT_MS = 120_000
+const UPLOAD_TIMEOUT_MS = 300_000
 
 export default function CargarDatosGeograficos() {
   const [cargaVpa, setCargaVpa] = useState<{
