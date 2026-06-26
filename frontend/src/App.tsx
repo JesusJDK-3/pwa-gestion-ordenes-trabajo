@@ -242,13 +242,10 @@ const router = createBrowserRouter([
         element: <Navigate to="/capataz/alertas" replace />,
 
       },
-
       {
-
         path: 'capataz/coordenadas',
 
-        element: <Navigate to="/capataz/alertas" replace />,
-
+        element: (<PrivateRoute roles={['capataz']}><LazyPage><CorregirCoordenadas /> </LazyPage></PrivateRoute>),
       },
 
       {
