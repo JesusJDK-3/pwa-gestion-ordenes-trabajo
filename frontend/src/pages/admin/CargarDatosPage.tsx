@@ -8,8 +8,7 @@ export default function CargarDatosPage() {
           <p className="page-breadcrumb">Administrador · Datos maestros</p>
           <h1 className="page-title">Base geográfica VPA e Hidrantes</h1>
           <p className="page-subtitle">
-            Solo el <strong>administrador</strong> carga estos archivos. El supervisor importa después
-            el Excel de mantenimiento (<em>carga mntto prev vpa</em>) para crear las OT.
+            Solo el <strong>administrador</strong> carga estos archivos. La cual brinda las coordenadas designadas para crear las (<em>OT</em>) .
           </p>
         </div>
       </div>
