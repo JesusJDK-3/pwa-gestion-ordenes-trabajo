@@ -2,7 +2,7 @@ name: Backup Base de Datos Supabase
 
 on:
   schedule:
-    - cron: '0 0 * * *'
+    - cron: '0 0 1,15 * *'   # Días 1 y 15 de cada mes a medianoche
   workflow_dispatch:
 
 jobs:
@@ -30,6 +30,7 @@ jobs:
             -p ${{ secrets.DB_PORT }} \
             -U ${{ secrets.DB_USER }} \
             -d ${{ secrets.DB_NAME }} \
+            --schema=public \
             --format=custom \
             --no-password \
             -f backup_supabase_$(date +%Y-%m-%d).dump
