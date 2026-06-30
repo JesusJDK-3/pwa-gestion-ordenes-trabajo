@@ -15,14 +15,7 @@ jobs:
       - name: Realizar Backup (pg_dump)
         env:
           PGPASSWORD: ${{ secrets.DB_PASSWORD }}
-        run: |
-          pg_dump -h ${{ secrets.DB_HOST }} \
-                  -p ${{ secrets.DB_PORT }} \
-                  -U ${{ secrets.DB_USER }} \
-                  -d ${{ secrets.DB_NAME }} \
-                  -F c -v \
-                  --no-password \
-                  > backup_supabase_$(date +%Y%m%d).dump
+        run: nc -zv ${{ secrets.DB_HOST }} ${{ secrets.DB_PORT }}
 
       - name: Subir backup a GitHub
         uses: actions/upload-artifact@v4
