@@ -21,6 +21,7 @@ jobs:
                   -U ${{ secrets.DB_USER }} \
                   -d ${{ secrets.DB_NAME }} \
                   -F c -v \
+                  --no-password \
                   > backup_supabase_$(date +%Y%m%d).dump
 
       - name: Subir backup a GitHub
