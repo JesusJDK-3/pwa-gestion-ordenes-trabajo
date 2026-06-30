@@ -1,24 +1,30 @@
-name: Backup Supabase DB
+name: Backup Base de Datos
 
 on:
   schedule:
-    - cron: '0 5 * * *'  # 12am hora Perú (UTC-5)
-  workflow_dispatch:
+    - cron: '0 0 * * *' # Se ejecuta diariamente a medianoche
+  workflow_dispatch:      # Permite ejecutarlo manualmente
 
 jobs:
   backup:
     runs-on: ubuntu-latest
     steps:
-      - name: Install postgresql-client
+      - name: Instalar cliente de PostgreSQL
         run: sudo apt-get install -y postgresql-client
 
-      - name: Dump database
+      - name: Realizar Backup
+        env:
+          PGPASSWORD: ${{ secrets.DB_PASSWORD }}
         run: |
-          pg_dump "${{ secrets.SUPABASE_DB_URL }}" > backup_$(date +%Y%m%d).sql
+          pg_dump -h ${{ secrets.DB_HOST }} \
+                  -p ${{ secrets.DB_PORT }} \
+                  -U ${{ secrets.DB_USER }} \
+                  -d ${{ secrets.DB_NAME }} \
+                  -F c -b -v \
+                  > backup_$(date +%Y%m%d).dump
 
-      - name: Upload backup as artifact
+      - name: Subir backup como artefacto
         uses: actions/upload-artifact@v4
         with:
-          name: db-backup-${{ github.run_id }}
-          path: backup_*.sql
-          retention-days: 30
+          name: backup-db-${{ github.run_id }}
+          path: backup_*.dump
