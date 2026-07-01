@@ -8,9 +8,9 @@ name: CI
 
 on:
   push:
-    branches: [main, master, melany]
+    branches: [main, master]
   pull_request:
-    branches: [main, master, melany]
+    branches: [main, master]
 
 # Cancela ejecuciones anteriores del mismo PR para ahorrar minutos de CI
 concurrency:
