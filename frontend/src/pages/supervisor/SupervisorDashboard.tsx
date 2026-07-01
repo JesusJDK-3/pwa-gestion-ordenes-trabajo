@@ -27,6 +27,7 @@ interface DiarioData {
   enProgreso: number
   detalle: DiarioItem[]
 }
+const EMPTY_ARRAY: DiarioItem[] = []
 
 type VistaTab = 'todas' | 'observadas' | 'sin-asignar' | 'activas'
 
@@ -71,7 +72,7 @@ export default function SupervisorDashboard() {
 
   useEffect(() => { cargar() }, [cargar])
 
-  const detalle = diario?.detalle ?? []
+  const detalle = diario?.detalle ?? EMPTY_ARRAY
 
   const filtrado = useMemo(() => {
     return detalle.filter(o => {
