@@ -21,7 +21,6 @@ import org.springframework.boot.autoconfigure.security.servlet.SecurityFilterAut
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;              // "application/json"
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;   // El cliente HTTP simulado
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -72,12 +71,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 )
 class AuthControllerTest {
 
-    @MockBean
-    private PasswordEncoder passwordEncoder;
-
-
-    @MockBean
-    private AuthService authService;
     /**
      * @Autowired MockMvc
      * ────────────────────────────────────────────────────────────────────────
@@ -109,6 +102,9 @@ class AuthControllerTest {
      * por eso ambos deben declararse como @MockitoBean aunque no los usemos
      * directamente en estos tests.
      */
+    @MockitoBean
+    private PasswordEncoder passwordEncoder;
+    
     @MockitoBean
     private AuthService authService;
 
