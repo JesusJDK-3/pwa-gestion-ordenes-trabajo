@@ -110,12 +110,12 @@ export default function MapaPuntos() {
   const [cacheAt, setCacheAt] = useState<number | null>(null)
   const cacheKey = user?.email ?? 'capataz'
 
-  const aplicarCache = async () => {
-    const meta = await offlineDB.obtenerPuntosCacheMeta(cacheKey)
-    setPuntos(meta.puntos)
-    setCacheAt(meta.cachedAt)
-    setDesdeCache(true)
-  }
+  const aplicarCache = useCallback(async () => {
+  const meta = await offlineDB.obtenerPuntosCacheMeta(cacheKey)
+  setPuntos(meta.puntos)
+  setCacheAt(meta.cachedAt)
+  setDesdeCache(true)
+  }, [cacheKey])
 
   const cargar = useCallback(async (esRefresh = false) => {
     if (esRefresh) setRefreshing(true)
@@ -150,7 +150,7 @@ export default function MapaPuntos() {
       setLoading(false)
       setRefreshing(false)
     }
-  }, [cacheKey, esMonitoreo])
+  }, [cacheKey, esMonitoreo, aplicarCache])
 
   useEffect(() => { void cargar() }, [cargar])
 

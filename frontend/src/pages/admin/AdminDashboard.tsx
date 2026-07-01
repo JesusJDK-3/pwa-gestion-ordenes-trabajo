@@ -659,7 +659,7 @@ function AuditoriaTimeline() {
   const [hasta, setHasta] = useState('')
   const [loading, setLoading] = useState(false)
 
-  const cargar = () => {
+  const cargar = useCallback(()=> {
     setLoading(true)
     const params: Record<string, string> = {}
     if (filtroTipo) params.tipo = filtroTipo
@@ -671,9 +671,9 @@ function AuditoriaTimeline() {
         setEventos(Array.isArray(d) ? d : (d?.data ?? []))
       })
       .finally(() => setLoading(false))
-  }
+  }, [filtroTipo, desde, hasta])
 
-  useEffect(() => { cargar() }, [])
+  useEffect(() => {cargar()}, [cargar])
 
   const exportar = () => {
     if (!eventos.length) return

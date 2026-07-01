@@ -179,7 +179,7 @@ export default function AlertasPage() {
 
     }
 
-  }, [alertas, searchParams, loading])
+  }, [alertas, searchParams, loading, setSearchParams])
 
 
 
