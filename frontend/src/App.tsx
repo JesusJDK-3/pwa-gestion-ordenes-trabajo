@@ -31,7 +31,7 @@ import ErrorBoundary from './components/ErrorBoundary'
 
 import LoginPage from './pages/LoginPage'
 
-import FloatingIssueButton from './components/FloatingIssueButton'
+import FloatingIssueButton from "./components/FloatingIssueButton";
 
 
 
@@ -383,3 +383,5 @@ export default function App() {
   )
 
 }
+
+
