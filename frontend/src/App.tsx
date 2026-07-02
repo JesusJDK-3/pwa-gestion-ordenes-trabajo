@@ -31,6 +31,8 @@ import ErrorBoundary from './components/ErrorBoundary'
 
 import LoginPage from './pages/LoginPage'
 
+import FloatingIssueButton from './components/FloatingIssueButton'
+
 
 
 function PageLoader() {
@@ -370,6 +372,8 @@ export default function App() {
 
           <RouterProvider router={router} />
 
+          <FloatingIssueButton />
+
         </OfflineSyncProvider>
 
       </AuthProvider>
@@ -379,5 +383,3 @@ export default function App() {
   )
 
 }
-
-
