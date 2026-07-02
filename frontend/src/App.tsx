@@ -31,8 +31,6 @@ import ErrorBoundary from './components/ErrorBoundary'
 
 import LoginPage from './pages/LoginPage'
 
-import FloatingIssueButton from "./components/FloatingIssueButton";
-
 
 
 function PageLoader() {
@@ -371,8 +369,6 @@ export default function App() {
         <OfflineSyncProvider>
 
           <RouterProvider router={router} />
-
-          <FloatingIssueButton />
 
         </OfflineSyncProvider>
 
